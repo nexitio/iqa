@@ -1,26 +1,549 @@
 @import "tailwindcss";
 
+/* Class-based dark mode, driven by next-themes (`attribute="class"`). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   Ilm — design tokens
+
+   A layered surface system rather than a flat wash. The application background
+   is a warm neutral, content sits on crisp raised surfaces with hairline
+   borders, and depth comes from soft two-stop shadows instead of heavy lines.
+   Emerald carries the brand, gold is reserved for emphasis, and the dark theme
+   is a deep emerald-black rather than a dimmed light theme.
+
+   Token names are stable — pages reference them directly — so this file is the
+   single place that controls the whole look.
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /*
+   * The header's own height: a 4.25rem bar plus its 1px hairline border.
+   *
+   * Anything that has to sit directly beneath the header docks here — the
+   * Qur'an reader's toolbar sticks flush under it rather than at `--pin-top`,
+   * because a sticky toolbar is *chrome* and should leave no strip of
+   * half-scrolled text between itself and the header. Both offsets describe the
+   * same bar, so it is measured once here and derived from below.
+   */
+  --header-h: 4.3125rem; /* 69px */
+
+  /*
+   * Where a pinned column stops scrolling.
+   *
+   * It must equal the *measured* offset a static column already has: the header
+   * (4.25rem bar + its 1px hairline border = 69px) plus the row's 1.75rem top
+   * padding = 97px. When the two differ the column visibly slides by the
+   * difference as scrolling starts — a 5.5rem guess here drifted 9px.
+   */
+  --pin-top: calc(var(--header-h) + 1.75rem); /* 97px = 69px header + 28px gap */
+
+  /*
+   * How much height a pinned column may use.
+   *
+   * The content block leaves a gap below itself (3rem on desktop, 6rem on
+   * phones for the tab bar). A sticky column is bounded by its container's
+   * *content* box, so a column taller than `viewport - --pin-top - that gap`
+   * gets shoved upward on the last few pixels of the page. Subtracting the gap
+   * here is what makes the pin hold to the final pixel.
+   */
+  --pin-room: calc(100vh - var(--pin-top) - 3.25rem);
+
+  /* --- surfaces: app backdrop → card → recessed --- */
+  --bg: #f5f4f0;
+  --bg-subtle: #eeede8;
+  --surface: #ffffff;
+  --surface-2: #fafaf8;
+  --surface-3: #f1f0eb;
+  --border: #e7e5dc;
+  --border-strong: #d6d3c6;
+  --overlay: rgb(11 21 17 / 0.44);
+
+  /* --- type: high contrast, three clear levels --- */
+  --fg: #0e1a15;
+  --fg-muted: #55655d;
+  --fg-subtle: #8a968f;
+  --fg-inverted: #fbfaf7;
+
+  /* --- brand: emerald --- */
+  --primary: #0a6b4c;
+  --primary-hover: #08583e;
+  --primary-soft: #e6f2ec;
+  --primary-soft-fg: #08553c;
+  --primary-fg: #ffffff;
+
+  /* --- accent: gold, used sparingly --- */
+  --accent: #a67c22;
+  --accent-hover: #8d6918;
+  --accent-soft: #f8eed6;
+  --accent-soft-fg: #7a5a12;
+  --accent-fg: #ffffff;
+
+  /* --- semantics --- */
+  --success: #0d7a4a;
+  --success-soft: #e2f3ea;
+  --success-soft-fg: #0a5c37;
+  --warning: #a9690a;
+  --warning-soft: #fdefd7;
+  --warning-soft-fg: #7d4d08;
+  --danger: #b13a35;
+  --danger-soft: #fbe8e6;
+  --danger-soft-fg: #8b2b27;
+  --info: #1c6a97;
+  --info-soft: #e3eff7;
+  --info-soft-fg: #155477;
+
+  /* --- role accents --- */
+  --role-admin: #9c3d5c;
+  --role-admin-soft: #fae7ee;
+  --role-scholar: #0a6b4c;
+  --role-scholar-soft: #e6f2ec;
+  --role-user: #216a89;
+  --role-user-soft: #e4eff5;
+
+  /* --- chart series --- */
+  --chart-1: #0a6b4c;
+  --chart-2: #a67c22;
+  --chart-3: #216a89;
+  --chart-4: #9c3d5c;
+  --chart-5: #5f7a34;
+
+  /*
+   * Elevation: a two-stop soft shadow, plus an inset top highlight so raised
+   * surfaces read as crisp objects rather than flat rectangles. Baking the
+   * highlight into the token means it applies everywhere shadows are used.
+   */
+  --elevation-1: inset 0 1px 0 rgb(255 255 255 / 0.75), 0 1px 2px rgb(14 26 21 / 0.04),
+    0 1px 3px rgb(14 26 21 / 0.05);
+  --elevation-2: inset 0 1px 0 rgb(255 255 255 / 0.8), 0 2px 4px -1px rgb(14 26 21 / 0.05),
+    0 10px 22px -10px rgb(14 26 21 / 0.14);
+  --elevation-3: 0 4px 8px -2px rgb(14 26 21 / 0.06), 0 22px 48px -18px rgb(14 26 21 / 0.22);
+  --elevation-4: 0 32px 72px -24px rgb(14 26 21 / 0.34);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #060e0b;
+  --bg-subtle: #0a1611;
+  --surface: #0e1c17;
+  --surface-2: #12241d;
+  --surface-3: #172d25;
+  --border: #1e362d;
+  --border-strong: #2b4d40;
+  --overlay: rgb(0 0 0 / 0.66);
+
+  --fg: #eaf4ee;
+  --fg-muted: #9cb0a6;
+  --fg-subtle: #71877c;
+  --fg-inverted: #08130f;
+
+  --primary: #3cb98a;
+  --primary-hover: #52cd9d;
+  --primary-soft: #10352a;
+  --primary-soft-fg: #86e3bb;
+  --primary-fg: #04150f;
+
+  --accent: #dfb65f;
+  --accent-hover: #eec97c;
+  --accent-soft: #322817;
+  --accent-soft-fg: #f0d69b;
+  --accent-fg: #1d1507;
+
+  --success: #43c684;
+  --success-soft: #10352a;
+  --success-soft-fg: #8ce7b8;
+  --warning: #e0a340;
+  --warning-soft: #352a15;
+  --warning-soft-fg: #f3d091;
+  --danger: #e0706a;
+  --danger-soft: #3a1d1b;
+  --danger-soft-fg: #f2aca6;
+  --info: #5daedd;
+  --info-soft: #112b39;
+  --info-soft-fg: #a1d6f2;
+
+  --role-admin: #e582a3;
+  --role-admin-soft: #3a1b26;
+  --role-scholar: #3cb98a;
+  --role-scholar-soft: #10352a;
+  --role-user: #71bcdd;
+  --role-user-soft: #112a35;
+
+  --chart-1: #3cb98a;
+  --chart-2: #dfb65f;
+  --chart-3: #71bcdd;
+  --chart-4: #e582a3;
+  --chart-5: #a6c06d;
+
+  /* In dark mode the inset highlight is what separates a surface from the page. */
+  --elevation-1: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.4);
+  --elevation-2: inset 0 1px 0 rgb(255 255 255 / 0.07), 0 2px 6px rgb(0 0 0 / 0.45),
+    0 12px 28px -12px rgb(0 0 0 / 0.6);
+  --elevation-3: 0 6px 14px rgb(0 0 0 / 0.5), 0 26px 56px -20px rgb(0 0 0 / 0.7);
+  --elevation-4: 0 36px 80px -28px rgb(0 0 0 / 0.8);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-background-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-overlay: var(--overlay);
+
+  --color-foreground: var(--fg);
+  --color-muted-foreground: var(--fg-muted);
+  --color-subtle-foreground: var(--fg-subtle);
+  --color-inverted: var(--fg-inverted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-fg);
+  --color-primary-foreground: var(--primary-fg);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-fg);
+  --color-accent-foreground: var(--accent-fg);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-fg);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-fg);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-foreground: var(--danger-soft-fg);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-foreground: var(--info-soft-fg);
+
+  --color-role-admin: var(--role-admin);
+  --color-role-admin-soft: var(--role-admin-soft);
+  --color-role-scholar: var(--role-scholar);
+  --color-role-scholar-soft: var(--role-scholar-soft);
+  --color-role-user: var(--role-user);
+  --color-role-user-soft: var(--role-user-soft);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-bangla: var(--font-hind-siliguri), var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-noto-serif-bengali), var(--font-hind-siliguri), serif;
+  --font-arabic: var(--font-noto-naskh), "Traditional Arabic", serif;
+  --font-quran: var(--font-amiri), var(--font-noto-naskh), serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  /* Panels and cards sit a step squarer than before: at 12/10 the surfaces read
+     as designed objects rather than soft blobs, and an 18px corner was visibly
+     rounder than anything nested inside it. */
+  --radius-card: 0.625rem;
+  --radius-panel: 0.75rem;
+  --radius-pill: 999px;
+
+  --shadow-card: var(--elevation-1);
+  --shadow-raised: var(--elevation-2);
+  --shadow-overlay: var(--elevation-3);
+  --shadow-hero: var(--elevation-4);
+  --shadow-glow: 0 0 0 1px rgb(10 107 76 / 0.16), 0 10px 32px -12px rgb(10 107 76 / 0.32);
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-scale-in: scale-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-left: slide-left 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgb(10 107 76 / 0.35); }
+  70% { box-shadow: 0 0 0 12px rgb(10 107 76 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(10 107 76 / 0); }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/*
+ * Inside `@layer base`, deliberately.
+ *
+ * Unlayered rules outrank every `@layer` in the cascade, so the same declaration
+ * written at the top level of this file — which is where it lived — silently beat
+ * every border-color utility in the app: `border-primary/40`, `border-success/45`
+ * and `border-transparent` all rendered as this one neutral hairline, and dividers
+ * could not be given a weight. A layer keeps the intent (a bare border is a
+ * hairline) while letting the utilities mean what they say.
+ */
+@layer base {
+  * {
+    border-color: var(--border);
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-bangla);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html[lang="en"] body {
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background-color: color-mix(in oklab, var(--primary) 24%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Headings default to the Bangla display face with a tight, confident rhythm. */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+html[lang="en"] h1,
+html[lang="en"] h2,
+html[lang="en"] h3,
+html[lang="en"] h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+/* Scrollbars — thin, theme-aware, never a dark slab.
+   Set on `html`, not `*`: both properties inherit, so this still reaches every
+   descendant, while leaving `.no-scrollbar` able to override it. A universal
+   selector here would win over any layered utility (unlayered styles beat
+   `@layer utilities`) and silently break scrollbar hiding. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--fg-subtle);
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Arabic / Quranic typography: generous leading, RTL, never letter-spaced. */
+@utility arabic {
+  font-family: var(--font-quran);
+  direction: rtl;
+  text-align: right;
+  letter-spacing: 0;
+  line-height: 2.2;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+@utility arabic-ui {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  letter-spacing: 0;
+  line-height: 2;
+}
+
+/*
+ * Manuscript wash for hero and reading surfaces. Two very low-contrast radial
+ * tints keep the surface alive without turning it into a gradient poster.
+ */
+@utility parchment {
+  background-image: radial-gradient(
+      circle at 8% 0%,
+      color-mix(in oklab, var(--accent) 10%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(circle at 92% 100%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 44%);
+}
+
+/* Eight-point Islamic star lattice, used only as a quiet section motif. */
+@utility pattern-girih {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%230a6b4c' stroke-opacity='0.12' stroke-width='1'%3E%3Cpath d='M32 2 42 12 56 12 56 26 62 32 56 38 56 52 42 52 32 62 22 52 8 52 8 38 2 32 8 26 8 12 22 12Z'/%3E%3Cpath d='M32 12 44 24 32 36 20 24Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 56px 56px;
+}
+
+@utility pattern-dots {
+  background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Emerald gradient sheen for hero/CTA surfaces. */
+@utility sheen {
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--primary) 7%, var(--surface)) 0%,
+    var(--surface) 46%,
+    color-mix(in oklab, var(--accent) 5%, var(--surface)) 100%
+  );
+}
+
+@utility shimmer-bg {
+  background-image: linear-gradient(
+    90deg,
+    var(--surface-3) 0%,
+    var(--surface-2) 40%,
+    var(--surface-3) 80%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Long-form scholar writing. */
+@utility prose-ilm {
+  font-size: 1.0625rem;
+  line-height: 2;
+  color: var(--fg);
+
+  & > * + * {
+    margin-top: 1.2em;
+  }
+  & h2 {
+    font-size: 1.4375rem;
+    font-weight: 700;
+    line-height: 1.55;
+    margin-top: 2.25rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
+  }
+  & h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  & p {
+    margin-block: 0;
+  }
+  & ul,
+  & ol {
+    padding-inline-start: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  & ul {
+    list-style: disc;
+  }
+  & ol {
+    list-style: decimal;
+  }
+  & li::marker {
+    color: var(--primary);
+  }
+  & blockquote {
+    border-inline-start: 3px solid var(--primary);
+    background-color: var(--primary-soft);
+    padding: 1.1rem 1.3rem;
+    border-radius: 0 0.75rem 0.75rem 0;
+    color: var(--primary-soft-fg);
+    font-style: normal;
+  }
+  & strong {
+    font-weight: 700;
+    color: var(--fg);
+  }
+  & a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Small-caps label used above section titles and in metadata rows. */
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }

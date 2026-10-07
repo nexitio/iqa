@@ -1,0 +1,62 @@
+
+> ilm@0.1.0 verify E:\nexitio\iqa
+> pnpm typecheck && pnpm verify:data && pnpm verify:prayer && pnpm lint
+
+
+> ilm@0.1.0 typecheck E:\nexitio\iqa
+> tsc --noEmit
+
+
+> ilm@0.1.0 verify:data E:\nexitio\iqa
+> node --experimental-strip-types scripts/verify-data.ts
+
+Dataset counts: {
+  departments: 15,
+  topics: 44,
+  scholars: 12,
+  surahs: 40,
+  surahsWithText: 16,
+  ayahs: 67,
+  hadithCollections: 8,
+  hadithBooks: 50,
+  hadiths: 30,
+  articles: 10,
+  fatwas: 8,
+  questions: 12,
+  answers: 14,
+  routingMaps: 12,
+  suggestions: 22,
+  discussions: 10,
+  replies: 22,
+  bookmarks: 14,
+  journeys: 5,
+  feed: 18,
+  notifications: 10
+}
+
+Departments referenced but not defined: 15 known
+
+
+✓ All referential integrity checks passed.
+(node:24336) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/nexitio/iqa/scripts/verify-data.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\nexitio\iqa\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+> ilm@0.1.0 verify:prayer E:\nexitio\iqa
+> node --experimental-strip-types scripts/verify-prayer-times.ts && node --experimental-strip-types scripts/verify-prayer-day.ts
+
+✓ Prayer schedule verified: 354 checks across 3 districts (Dhaka Asr today: Hanafi 16:03, Shafi'i 15:11, gap 52 min).
+(node:19892) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/nexitio/iqa/scripts/verify-prayer-times.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\nexitio\iqa\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✓ Salah card context verified: 756 checks across 3 districts.
+(node:14084) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/nexitio/iqa/scripts/verify-prayer-day.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\nexitio\iqa\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+> ilm@0.1.0 lint E:\nexitio\iqa
+> eslint
+

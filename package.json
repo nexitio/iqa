@@ -1,17 +1,28 @@
 {
-  "name": "scaffold",
+  "name": "ilm",
   "version": "0.1.0",
   "private": true,
+  "description": "Ilm - a living Islamic knowledge platform for Bangladeshi Muslims: Quran, Hadith, Q&A, Fatwa, Articles and scholarly guidance.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "verify:data": "node --experimental-strip-types scripts/verify-data.ts",
+    "verify:prayer": "node --experimental-strip-types scripts/verify-prayer-times.ts && node --experimental-strip-types scripts/verify-prayer-day.ts",
+    "verify": "pnpm typecheck && pnpm verify:data && pnpm verify:prayer && pnpm lint"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.544.0",
     "next": "16.3.8",
+    "next-themes": "^0.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

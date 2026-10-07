@@ -1,0 +1,107 @@
+
+> ilm@0.1.0 build E:\nexitio\iqa
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 34ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.1s
+  Running TypeScript ...
+  Finished TypeScript in 2.8s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/229) ...
+  Generating static pages using 11 workers (57/229) 
+  Generating static pages using 11 workers (114/229) 
+  Generating static pages using 11 workers (171/229) 
+✓ Generating static pages using 11 workers (229/229) in 3.0s
+  Finalizing page optimization ...
+
+Route (app)                                               Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ○ /admin/departments
+├ ƒ /admin/questions
+├ ○ /admin/reports
+├ ○ /admin/review
+├ ○ /admin/scholars
+├ ○ /admin/scholars/new
+├ ○ /admin/users
+├ ƒ /articles
+├   /articles/[slug]
+│ ├ ● /articles/sud-mukt-jibon-halal-uparjon
+│ ├ ● /articles/joutuk-samajik-byadhi-islami-samadhan
+│ ├ ● /articles/islami-dristite-sontan-lalonpalon
+│ └ ● [+7 more paths]
+├ ○ /daily                                                       30m      1y
+├ ○ /departments
+├   /departments/[slug]
+│ ├ ● /departments/aqeedah
+│ ├ ● /departments/fiqh
+│ ├ ● /departments/quran-tafsir
+│ └ ● [+12 more paths]
+├ ○ /discussions
+├   /discussions/[slug]
+│ ├ ● /discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+│ ├ ● /discussions/chakurik-chele-quran-mukhosto-kora
+│ ├ ● /discussions/sud-bhitti-rin-theke-mukti-dhapa
+│ └ ● [+7 more paths]
+├ ƒ /fatwas
+├   /fatwas/[slug]
+│ ├ ● /fatwas/mobail-banking-sud-o-kashbyak
+│ ├ ● /fatwas/joutuk-dabi-o-bibaho
+│ ├ ● /fatwas/denmohor-er-poriman-o-dabi
+│ └ ● [+5 more paths]
+├ ○ /hadith
+├   /hadith/[collection]
+│ ├ ● /hadith/bukhari
+│ ├ ● /hadith/muslim
+│ ├ ● /hadith/abu-dawud
+│ └ ● [+5 more paths]
+├   /hadith/[collection]/[hadithId]
+│ ├ ● /hadith/bukhari/hadith-1
+│ ├ ● /hadith/bukhari/hadith-2
+│ ├ ● /hadith/bukhari/hadith-3
+│ └ ● [+27 more paths]
+├ ○ /journey
+├   /journey/[slug]
+│ ├ ● /journey/sat-dine-namajer-prostuti
+│ ├ ● /journey/thirty-dine-quran-bojha
+│ ├ ● /journey/ramjaner-prostuti
+│ └ ● [+2 more paths]
+├ ƒ /library
+├ ○ /login
+├ ○ /notifications
+├ ƒ /profile
+├ ○ /questions
+├   /questions/[slug]
+│ ├ ● /questions/bikash-sonchoy-skim-e-sud-hoy-ki
+│ ├ ● /questions/joutuk-char-lakh-taka-dabi
+│ ├ ● /questions/kaja-namaz-kivabe-ada-korbo
+│ └ ● [+9 more paths]
+├ ○ /questions/ask
+├ ○ /quran
+├ ƒ /quran/[surah]
+├ ○ /register
+├ ○ /scholar
+├ ƒ /scholar/articles
+├ ƒ /scholar/fatwas
+├ ○ /scholar/profile
+├ ○ /scholar/questions
+├ ○ /scholar/write
+├ ○ /scholars
+├ ƒ /scholars/[slug]
+├ ○ /settings
+├ ○ /topics
+└   /topics/[slug]
+  ├ ● /topics/dowry
+  ├ ● /topics/riba-banking
+  ├ ● /topics/halal-investment
+  └ ● [+41 more paths]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

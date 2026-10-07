@@ -1,0 +1,718 @@
+import type {
+  AppNotification,
+  Bookmark,
+  BookmarkCollection,
+  Journey,
+  JourneyDay,
+  ReadingProgress,
+  User,
+} from "@/lib/types";
+
+/**
+ * The signed-in user, their personal library and their learning journeys.
+ * Everything here belongs to Abdullah Al Mamun, a Dhaka-based user, so the
+ * "personal" surfaces of the UI have believable state to render.
+ */
+
+export const CURRENT_USER: User = {
+  id: "user-me",
+  name: "আব্দুল্লাহ আল-মামুন",
+  email: "abdullah.almamun@gmail.com",
+  role: "user",
+  avatarColor: "#0d6b4f",
+  district: "dhaka",
+  joinedAt: "2025-11-14T10:20:00+06:00",
+  interests: ["fiqh", "family", "finance", "quran-tafsir", "akhlaq", "youth", "ibadah", "seerah"],
+  followingScholarIds: ["scholar-1", "scholar-3", "scholar-5", "scholar-6", "scholar-10"],
+  followingDepartmentSlugs: ["fiqh", "family", "finance", "akhlaq"],
+  isVerified: true,
+};
+
+export const USER_PROFILES: User[] = [
+  {
+    id: "user-1",
+    name: "মোহাম্মদ রফিকুল ইসলাম",
+    email: "rafiqul.islam@example.com",
+    role: "user",
+    avatarColor: "#1f6f9e",
+    district: "dhaka",
+    joinedAt: "2025-08-02T09:00:00+06:00",
+    interests: ["fiqh", "akhlaq", "seerah"],
+    followingScholarIds: ["scholar-1", "scholar-4"],
+    followingDepartmentSlugs: ["fiqh", "akhlaq"],
+    isVerified: false,
+  },
+  {
+    id: "user-2",
+    name: "সাদিয়া আফরিন",
+    email: "sadia.afrin@example.com",
+    role: "user",
+    avatarColor: "#a3405f",
+    district: "chattogram",
+    joinedAt: "2025-09-11T20:30:00+06:00",
+    interests: ["quran-tafsir", "youth", "women"],
+    followingScholarIds: ["scholar-8", "scholar-10"],
+    followingDepartmentSlugs: ["quran-tafsir", "youth"],
+    isVerified: true,
+  },
+  {
+    id: "user-3",
+    name: "আবু বকর সিদ্দিক",
+    email: "abubakar.siddique@example.com",
+    role: "user",
+    avatarColor: "#a97a1f",
+    district: "sylhet",
+    joinedAt: "2025-06-19T13:45:00+06:00",
+    interests: ["finance", "fiqh", "halal-food"],
+    followingScholarIds: ["scholar-3", "scholar-12"],
+    followingDepartmentSlugs: ["finance", "fiqh"],
+    isVerified: false,
+  },
+  {
+    id: "user-4",
+    name: "তানজিলা রহমান",
+    email: "tanjila.rahman@example.com",
+    role: "user",
+    avatarColor: "#0f7a4a",
+    district: "rajshahi",
+    joinedAt: "2026-01-07T18:10:00+06:00",
+    interests: ["family", "fiqh", "medical"],
+    followingScholarIds: ["scholar-5", "scholar-9"],
+    followingDepartmentSlugs: ["family", "medical"],
+    isVerified: true,
+  },
+  {
+    id: "user-5",
+    name: "নূর মোহাম্মদ আকন্দ",
+    email: "nur.mohammad@example.com",
+    role: "user",
+    avatarColor: "#256d8c",
+    district: "rangpur",
+    joinedAt: "2025-04-25T07:20:00+06:00",
+    interests: ["youth", "seerah", "dawah"],
+    followingScholarIds: ["scholar-11", "scholar-7"],
+    followingDepartmentSlugs: ["youth", "seerah"],
+    isVerified: false,
+  },
+  {
+    id: "user-6",
+    name: "ফারহানা ইয়াসমিন",
+    email: "farhana.yasmin@example.com",
+    role: "user",
+    avatarColor: "#b03434",
+    district: "khulna",
+    joinedAt: "2025-12-30T15:55:00+06:00",
+    interests: ["akhlaq", "women", "family"],
+    followingScholarIds: ["scholar-10", "scholar-5"],
+    followingDepartmentSlugs: ["akhlaq", "women"],
+    isVerified: false,
+  },
+  {
+    id: "user-7",
+    name: "ইমরান কবির",
+    email: "imran.kabir@example.com",
+    role: "user",
+    avatarColor: "#6b7f3a",
+    district: "barishal",
+    joinedAt: "2026-02-14T11:05:00+06:00",
+    interests: ["medical", "akhlaq", "ibadah"],
+    followingScholarIds: ["scholar-9", "scholar-6"],
+    followingDepartmentSlugs: ["medical", "akhlaq"],
+    isVerified: true,
+  },
+  {
+    id: "user-8",
+    name: "শাহাদাত হোসেন",
+    email: "shahadat.hossain@example.com",
+    role: "user",
+    avatarColor: "#0d6b4f",
+    district: "cumilla",
+    joinedAt: "2025-10-01T09:40:00+06:00",
+    interests: ["dawah", "youth", "hadith"],
+    followingScholarIds: ["scholar-4", "scholar-7"],
+    followingDepartmentSlugs: ["dawah", "youth"],
+    isVerified: false,
+  },
+  {
+    id: "user-9",
+    name: "মারইয়াম সুলতানা",
+    email: "maryam.sultana@example.com",
+    role: "user",
+    avatarColor: "#a3405f",
+    district: "mymensingh",
+    joinedAt: "2025-07-22T16:25:00+06:00",
+    interests: ["quran-tafsir", "ibadah", "akhlaq"],
+    followingScholarIds: ["scholar-8", "scholar-6"],
+    followingDepartmentSlugs: ["quran-tafsir", "ibadah"],
+    isVerified: true,
+  },
+  {
+    id: "user-10",
+    name: "হাসান মাহমুদ",
+    email: "hasan.mahmud@example.com",
+    role: "user",
+    avatarColor: "#1f6f9e",
+    district: "bogura",
+    joinedAt: "2026-03-05T21:50:00+06:00",
+    interests: ["technology", "youth", "finance"],
+    followingScholarIds: ["scholar-12", "scholar-7"],
+    followingDepartmentSlugs: ["technology", "youth"],
+    isVerified: false,
+  },
+  {
+    id: "user-11",
+    name: "রাশেদা বেগম",
+    email: "rasheda.begum@example.com",
+    role: "user",
+    avatarColor: "#a97a1f",
+    district: "noakhali",
+    joinedAt: "2026-01-19T08:35:00+06:00",
+    interests: ["family", "women", "fiqh"],
+    followingScholarIds: ["scholar-5", "scholar-10"],
+    followingDepartmentSlugs: ["family", "women"],
+    isVerified: false,
+  },
+  {
+    id: "user-12",
+    name: "গোলাম মোস্তফা",
+    email: "golam.mostafa@example.com",
+    role: "user",
+    avatarColor: "#0f7a4a",
+    district: "jashore",
+    joinedAt: "2025-05-30T14:05:00+06:00",
+    interests: ["ibadah", "quran-tafsir", "akhlaq"],
+    followingScholarIds: ["scholar-6", "scholar-8"],
+    followingDepartmentSlugs: ["ibadah", "quran-tafsir"],
+    isVerified: true,
+  },
+];
+
+export function getUser(id: string): User | undefined {
+  if (id === CURRENT_USER.id) return CURRENT_USER;
+  return USER_PROFILES.find((u) => u.id === id);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Library                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export const BOOKMARK_COLLECTIONS: BookmarkCollection[] = [
+  { id: "col-ramadan", nameBn: "রমজান প্রস্তুতি", tone: "accent", count: 2 },
+  { id: "col-family", nameBn: "পারিবারিক ফিকহ", tone: "primary", count: 3 },
+  { id: "col-finance", nameBn: "যাকাত ও অর্থ", tone: "success", count: 4 },
+  { id: "col-favourite-ayah", nameBn: "প্রিয় আয়াত", tone: "info", count: 3 },
+  { id: "col-youth", nameBn: "তরুণদের প্রশ্ন", tone: "user", count: 2 },
+];
+
+export const BOOKMARKS: Bookmark[] = [
+  {
+    id: "bm-1",
+    kind: "ayah",
+    titleBn: "আয়াতুল কুরসি",
+    previewBn:
+      "আল্লাহ, তিনি ছাড়া কোনো উপাস্য নেই। তিনি চিরঞ্জীব, সর্বসত্তার ধারক।",
+    refBn: "সূরা আল-বাকারা, আয়াত ২৫৫",
+    href: "/quran/2?ayah=255",
+    savedAt: "2026-09-12T08:15:00+06:00",
+    collectionId: "col-favourite-ayah",
+  },
+  {
+    id: "bm-2",
+    kind: "ayah",
+    titleBn: "কষ্টের পরই স্বস্তি",
+    previewBn: "নিশ্চয়ই কষ্টের সাথে স্বস্তি রয়েছে।",
+    refBn: "সূরা আশ-শারহ, আয়াত ৫",
+    href: "/quran/94?ayah=5",
+    savedAt: "2026-09-20T22:40:00+06:00",
+    collectionId: "col-favourite-ayah",
+  },
+  {
+    id: "bm-3",
+    kind: "ayah",
+    titleBn: "যিকিরে অন্তরের প্রশান্তি",
+    previewBn: "জেনে রাখুন, আল্লাহর স্মরণেই অন্তর প্রশান্তি লাভ করে।",
+    refBn: "সূরা আর-রা'দ, আয়াত ২৮",
+    href: "/quran/13?ayah=28",
+    savedAt: "2026-08-30T06:05:00+06:00",
+    collectionId: "col-favourite-ayah",
+  },
+  {
+    id: "bm-4",
+    kind: "hadith",
+    titleBn: "নিয়তের উপর আমলের মূল্য",
+    previewBn: "নিশ্চয়ই সকল আমল নিয়তের উপর নির্ভরশীল।",
+    refBn: "সহীহ বুখারী, হাদীস ১",
+    href: "/hadith/bukhari/hadith-bukhari-1",
+    savedAt: "2026-09-01T10:30:00+06:00",
+    collectionId: "col-youth",
+  },
+  {
+    id: "bm-5",
+    kind: "hadith",
+    titleBn: "জ্ঞানের পথে চললে জান্নাতের পথ সহজ হয়",
+    previewBn: "যে ব্যক্তি জ্ঞান অন্বেষণে বের হয়, আল্লাহ তার জন্য জান্নাতের পথ সহজ করে দেন।",
+    refBn: "সহীহ মুসলিম, হাদীস ২৬৯৯",
+    href: "/hadith/muslim/hadith-muslim-1",
+    savedAt: "2026-09-05T19:20:00+06:00",
+    collectionId: "col-youth",
+  },
+  {
+    id: "bm-6",
+    kind: "article",
+    titleBn: "সুদমুক্ত জীবন: ব্যাংক, মোবাইল ব্যাংকিং ও হালাল উপার্জনের পথ",
+    previewBn:
+      "সুদ একটি কাঠামোগত ফাঁদ। এখানে আলোচনা করা হয়েছে কীভাবে সংখ্যা বুঝে, ব্যাংক ও মোবাইল ব্যাংকিং থেকে ধাপে ধাপে বেরিয়ে হালাল উপার্জনে ফেরা যায়।",
+    refBn: "প্রবন্ধ · অর্থনীতি ও ব্যাংকিং",
+    href: "/articles/sud-mukt-jibon-halal-uparjon",
+    savedAt: "2026-09-25T14:10:00+06:00",
+    collectionId: "col-finance",
+  },
+  {
+    id: "bm-7",
+    kind: "article",
+    titleBn: "স্বর্ণ, সঞ্চয় ও ব্যবসার যাকাত: সহজ হিসাব",
+    previewBn:
+      "সালে একবার নিসাব অতিক্রম করলে যাকাত ফরজ হয়। এখানে ধাপে ধাপে সম্পদের হিসাব করার একটি সরল পদ্ধতি দেওয়া হয়েছে।",
+    refBn: "প্রবন্ধ · যাকাত ও অর্থ",
+    href: "/articles/swarno-sonchoy-o-byabosar-zakat-hisab",
+    savedAt: "2026-09-28T09:00:00+06:00",
+    collectionId: "col-finance",
+  },
+  {
+    id: "bm-8",
+    kind: "fatwa",
+    titleBn: "মোবাইল ব্যাংকিং ও সঞ্চয় স্কিমের মুনাফা কি হালাল?",
+    previewBn: "মুনাফার হার পূর্বনির্ধারিত থাকলে সেটি সুদের শামিল হয় — বিস্তারিত রায় দলিলসহ।",
+    refBn: "ফতোয়া · অর্থনীতি ও ব্যাংকিং",
+    href: "/fatwas/mobail-banking-sud-o-kashbyak",
+    savedAt: "2026-09-29T17:35:00+06:00",
+    collectionId: "col-finance",
+  },
+  {
+    id: "bm-9",
+    kind: "fatwa",
+    titleBn: "কুরবানির পশুর বয়স ও ত্রুটির বিধান",
+    previewBn: "ছাগলের বয়স আট মাস না এক বছর — আর পশুতে দোষ থাকলে কুরবানি হবে কি?",
+    refBn: "ফতোয়া · ইবাদত",
+    href: "/fatwas/qurbanir-poshur-boyosh-o-triuti",
+    savedAt: "2026-10-01T20:05:00+06:00",
+    collectionId: "col-ramadan",
+  },
+  {
+    id: "bm-10",
+    kind: "question",
+    titleBn: "ছেলের পরিবার বিয়েতে চার লাখ টাকা যৌতুক চাইছে — ইসলামে এর বিধান কী?",
+    previewBn:
+      "আমি যৌতুক দিতে চাই না, কিন্তু পারিবারিক চাপ অনেক। ইসলামসম্মত পথে করণীয় কী?",
+    refBn: "প্রশ্ন · পরিবার ও বিবাহ",
+    href: "/questions/joutuk-char-lakh-taka-dabi",
+    savedAt: "2026-09-26T21:15:00+06:00",
+    collectionId: "col-family",
+  },
+  {
+    id: "bm-11",
+    kind: "answer",
+    titleBn: "তালাকের পর সন্তানের ভরণপোষণের দায়িত্ব কার?",
+    previewBn:
+      "ভরণপোষণ সন্তানের অধিকার ও পিতার দায়িত্ব, আর ইদ্দতকালীন স্ত্রীর খরচও তাঁর উপর — বিস্তারিত উত্তরের সারাংশ।",
+    refBn: "উত্তর · পরিবার ও বিবাহ",
+    href: "/questions/talaq-poddhoti-o-sontaner-bharonposhon",
+    savedAt: "2026-09-23T11:45:00+06:00",
+    collectionId: "col-family",
+  },
+  {
+    id: "bm-12",
+    kind: "discussion",
+    titleBn: "মানসিক অসুস্থতা ও তাওয়াক্কুল — দুটোকে কেমন করে মেলাব?",
+    previewBn:
+      "পরিবারের কেউ বলেন ঈমান দুর্বল তাই এই সমস্যা, কেউ বলেন ডাক্তার লাগবে না। সঠিক পথ কোনটি?",
+    refBn: "আলোচনা · চিকিৎসা ও স্বাস্থ্য",
+    href: "/discussions/moner-ashaanti-tawakkul-o-pesonal-care",
+    savedAt: "2026-10-03T09:30:00+06:00",
+    collectionId: "col-family",
+  },
+  {
+    id: "bm-13",
+    kind: "discussion",
+    titleBn: "সুদভিত্তিক ঋণ থেকে বের হওয়ার বাস্তব ধাপ কী?",
+    previewBn:
+      "ব্যাংকের ঋণে সুদই মূল আসলের সমান হয়ে গেছে। বাস্তব পরামর্শ চাই, তিরস্কার নয়।",
+    refBn: "আলোচনা · অর্থনীতি ও ব্যাংকিং",
+    href: "/discussions/sud-bhitti-rin-theke-mukti-dhapa",
+    savedAt: "2026-09-24T15:20:00+06:00",
+    collectionId: "col-finance",
+  },
+  {
+    id: "bm-14",
+    kind: "ayah",
+    titleBn: "রমজানের রোযার নির্দেশ",
+    previewBn: "হে ঈমানদারগণ, তোমাদের উপর রোযা ফরজ করা হয়েছে, যেমন তোমাদের পূর্ববর্তীদের উপর ফরজ করা হয়েছিল।",
+    refBn: "সূরা আল-বাকারা, আয়াত ১৮৩",
+    href: "/quran/2?ayah=183",
+    savedAt: "2026-10-02T05:50:00+06:00",
+    collectionId: "col-ramadan",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Reading progress                                                           */
+/* -------------------------------------------------------------------------- */
+
+export const READING_PROGRESS: ReadingProgress[] = [
+  {
+    id: "prog-1",
+    kind: "quran",
+    titleBn: "সূরা আল-বাকারা",
+    subtitleBn: "২৮৬ আয়াত · মাদানী",
+    href: "/quran/2?ayah=254",
+    progress: 62,
+    lastReadAt: "2026-10-05T22:30:00+06:00",
+    resumeLabelBn: "আয়াত ২৫৪ থেকে চালিয়ে যান",
+  },
+  {
+    id: "prog-2",
+    kind: "journey",
+    titleBn: "৩০ দিনে কুরআন বোঝা",
+    subtitleBn: "১২ / ৩০ দিন সম্পন্ন",
+    href: "/journey/thirty-dine-quran-bojha",
+    progress: 40,
+    lastReadAt: "2026-10-06T06:10:00+06:00",
+    resumeLabelBn: "আজকের ১৩তম দিন শুরু করুন",
+  },
+  {
+    id: "prog-3",
+    kind: "article",
+    titleBn: "সুদমুক্ত জীবন: ব্যাংক, মোবাইল ব্যাংকিং ও হালাল উপার্জনের পথ",
+    subtitleBn: "৯ মিনিটের পড়া · অর্থনীতি ও ব্যাংকিং",
+    href: "/articles/sud-mukt-jibon-halal-uparjon",
+    progress: 35,
+    lastReadAt: "2026-10-04T20:15:00+06:00",
+    resumeLabelBn: "«হালাল উপার্জনের পথ» অংশ থেকে",
+  },
+  {
+    id: "prog-4",
+    kind: "hadith",
+    titleBn: "সহীহ বুখারী — ঈমান অধ্যায়",
+    subtitleBn: "হাদীস ৮ / ৫১",
+    href: "/hadith/bukhari/hadith-bukhari-8",
+    progress: 16,
+    lastReadAt: "2026-10-03T19:05:00+06:00",
+    resumeLabelBn: "হাদীস ৮ থেকে চালিয়ে যান",
+  },
+  {
+    id: "prog-5",
+    kind: "journey",
+    titleBn: "১৪ দিনে রমজানের প্রস্তুতি",
+    subtitleBn: "এখনো শুরু করেননি",
+    href: "/journey/ramjaner-prostuti",
+    progress: 0,
+    lastReadAt: "2026-09-30T08:00:00+06:00",
+    resumeLabelBn: "১ম দিন দিয়ে শুরু করুন",
+  },
+  {
+    id: "prog-6",
+    kind: "article",
+    titleBn: "ইসলামি দৃষ্টিতে সন্তান লালনপালন: শাসন নয়, শিক্ষা",
+    subtitleBn: "৬ মিনিটের পড়া · পরিবার ও বিবাহ",
+    href: "/articles/islami-dristite-sontan-lalonpalon",
+    progress: 100,
+    lastReadAt: "2026-09-22T16:40:00+06:00",
+    resumeLabelBn: "পড়া সম্পন্ন — আবার পড়তে পারেন",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Learning journeys                                                          */
+/* -------------------------------------------------------------------------- */
+
+type DaySeed = [title: string, subtitle: string, kind: JourneyDay["kind"], minutes: number];
+
+function buildDays(seeds: DaySeed[], completedDays: number, hrefBase: string): JourneyDay[] {
+  return seeds.map(([titleBn, subtitleBn, kind, minutes], index) => ({
+    day: index + 1,
+    titleBn,
+    subtitleBn,
+    kind,
+    minutes,
+    completed: index < completedDays,
+    href: `${hrefBase}?day=${index + 1}`,
+  }));
+}
+
+const SALAH_DAYS: DaySeed[] = [
+  ["নামাজের ফরজ ও ওয়াক্ত", "পাঁচ ওয়াক্তের সময়সীমা ও ওয়াক্ত ছুটে গেলে কী হবে", "article", 8],
+  ["ওযুর সুন্নত ও ভুল", "ওযুর ধাপ, মাসনূন দুআ এবং প্রচলিত ভুল", "article", 9],
+  ["খুশু অর্জনের 첫 ধাপ", "নামাজে মনোযোগ রাখার ব্যবহারিক কৌশল", "reflection", 7],
+  ["সূরা ফাতিহার অর্থ", "প্রতিদিন যেটি ১৭ বার পড়ি, তার অনুবাদ", "quran", 12],
+  ["সিজদার দুআ ও তাসবীহ", "সিজদায় কী বলবেন এবং কেন", "hadith", 8],
+  ["জামাতে নামাজের ফজিলত", "২৭ গুণ সাওয়াব কীভাবে বাস্তবে প্রযোজ্য", "hadith", 10],
+  ["নামাজে ওয়াসওয়াসার সমাধান", "সন্দেহ হলে ফিকহি নিয়ম কী বলে", "quiz", 9],
+];
+
+const QURAN_DAYS: DaySeed[] = [
+  ["কুরআন কীভাবে নাযিল হলো", "ওহির সূচনা ও জিব্রীল (আ.)-এর ভূমিকা", "article", 10],
+  ["সূরা ফাতিহা — কুরআনের সারাংশ", "উম্মুল কুরআনের প্রতিটি অংশের অর্থ", "quran", 12],
+  ["আয়াতুল কুরসি", "প্রতিটি বাক্যের অর্থ ও মর্যাদা", "quran", 11],
+  ["সূরা আর-রাহমানের ছন্দ", "'ফাবি আইয়্যি আলা' বারবার কেন", "quran", 13],
+  ["সূরা ইউসুফ — সবচেয়ে সুন্দর কাহিনী", "ধৈর্য ও ক্ষমার শিক্ষা", "article", 14],
+  ["সূরা আল-কাহফের চার কাহিনী", "ফিতনা ও যুগের চ্যালেঞ্জ", "article", 15],
+  ["সূরা আল-মুলক", "প্রতিরাতে পড়ার ফজিলত", "hadith", 10],
+  ["শানে নুযুল কী", "আয়াতের পটভূমি জানলে অর্থ বদলায়", "article", 11],
+  ["তাফসীর পড়ার সঠিক পদ্ধতি", "কোন কিতাব, কোন ক্রমে", "article", 12],
+  ["কুরআনের অলৌকিক দিক", "ভাষা, বিজ্ঞান ও ভবিষ্যদ্বাণী", "article", 13],
+  ["নাসিখ ও মানসুখ", "প্রচলিত ভুল বোঝাবুঝির সমাধান", "quiz", 10],
+  ["মুহকাম ও মুতাশাবিহ", "স্পষ্ট ও অস্পষ্ট আয়াত", "article", 11],
+  ["কুরআন হিফজের পদ্ধতি", "দীর্ঘমেয়াদি মুখস্থ কৌশল", "reflection", 12],
+  ["সূরা ইয়াসীন — হৃদয়ের সূরা", "মূল বার্তা ও শহরের কাহিনী", "quran", 14],
+  ["প্রতিদিন এক আয়াত", "২০ মিনিটের টেকসই রুটিন", "reflection", 9],
+  ["কুরআন ও বিজ্ঞান", "ভ্রূণের বিকাশের আয়াত", "article", 12],
+  ["আদম (আ.)-এর সৃষ্টি", "মানুষের মর্যাদা ও স্বাধীন ইচ্ছা", "quran", 12],
+  ["সূরা আন-নিসার পারিবারিক বিধান", "উত্তরাধিকার ও নারীর অধিকার", "article", 15],
+  ["আখিরাতের বিবরণ", "আয়াতের ভাষায় জান্নাত ও জাহান্নাম", "article", 13],
+  ["সূরা ইব্রাহিমের দুআ", "পরিবারের জন্য নবীর দুআ", "quran", 11],
+  ["সূরা কাহফ ও দাজ্জালের ফিতনা", "নবীজির সতর্কবার্তা", "hadith", 12],
+  ["কুরআনে নারীর মর্যাদা", "আয়াতভিত্তিক তুলনা", "article", 13],
+  ["সূরা নামলের শিক্ষা", "সুলাইমান (আ.) ও বালকিসের কাহিনী", "quran", 13],
+  ["কুরআনের বর্ণনাশৈলী", "মক্কী ও মাদানী সূরার পার্থক্য", "article", 12],
+  ["কুরআন কীভাবে পড়বেন", "তিলাওয়াতের আদব ও সাওয়াব", "reflection", 10],
+  ["সূরা বাকারার প্রথম পাঁচ আয়াত", "মুত্তাকীদের গুণাবলি", "quran", 11],
+  ["আল্লাহর নামসমূহ", "আসমাউল হুসনার অর্থ", "article", 12],
+  ["সূরা ফীল থেকে কুরাইশ", "আল্লাহর হেফাজতের প্রমাণ", "quran", 10],
+  ["৩০ দিনের রিভিশন", "যা শিখেছেন তার সারসংক্ষেপ পরীক্ষা", "quiz", 15],
+  ["পরবর্তী ৩০ দিনের পরিকল্পনা", "টেকসই অভ্যাস গড়ার নীতি", "reflection", 12],
+];
+
+const RAMADAN_DAYS: DaySeed[] = [
+  ["রোযার ফরজ ও নিয়ত", "নিয়তের প্রকৃত অর্থ ও সময়", "article", 9],
+  ["সেহরি ও ইফতারের সুন্নত", "সময়, দুআ ও প্রচলিত ভুল", "hadith", 8],
+  ["যাকাতুল ফিতর", "পরিমাণ, সময় ও হকদার", "article", 11],
+  ["তারাবীহর ফজিলত", "রাকাত সংখ্যা নিয়ে মতপার্থক্যের আদব", "article", 10],
+  ["ইতিকাফের বিধান", "শেষ দশকের গুরুত্ব", "article", 12],
+  ["লাইলাতুল কদর", "কখন ও কী দুআ করবেন", "reflection", 9],
+  ["রমজানে কুরআন", "নবীর রমজানের অভ্যাস", "quran", 13],
+  ["রাগ নিয়ন্ত্রণ ও রোযা", "রোযা নষ্ট না করে সংযম রাখা", "reflection", 8],
+  ["ফিদইয়া ও কাযা", "অসুস্থ ও মুসাফিরের বিধান", "article", 11],
+  ["রমজানের দান-সদকা", "দানের সর্বোচ্চ সময়", "hadith", 9],
+  ["ঈদের ফিতরা ও তাকবির", "নিয়ম ও সময়সীমা", "article", 8],
+  ["সামর্থ্যবানদের যাকাত হিসাব", "সম্পদের নিসাব নির্ণয়", "article", 12],
+  ["রমজানে পরিবার", "সন্তানদের সাথে ইবাদত গড়া", "reflection", 10],
+  ["রমজান-পরবর্তী স্থিরতা", "ঈদের পর আমল ধরে রাখা", "reflection", 11],
+];
+
+const NEW_MUSLIM_DAYS: DaySeed[] = [
+  ["আল্লাহকে জানা", "তাওহীদ — এক আল্লাহয় বিশ্বাসের অর্থ", "article", 10],
+  ["নামাজ শুরু করা", "প্রথম পাঁচ ওয়াক্ত কীভাবে আদায় করবেন", "article", 12],
+  ["পবিত্রতা শেখা", "ওযু ও গোসলের সহজ নিয়ম", "article", 9],
+  ["কুরআনের সাথে পরিচয়", "কোথা থেকে পড়া শুরু করবেন", "quran", 11],
+  ["নতুন জীবনের শুরূ", "পুরনো অভ্যাস ত্যাগের ধৈর্যশীল পথ", "reflection", 9],
+];
+
+const FAMILY_DAYS: DaySeed[] = [
+  ["পরিবার গঠনের নিয়ত", "ইসলামে বিবাহের উদ্দেশ্য", "article", 10],
+  ["পাত্র-পাত্রী নির্বাচনের মানদণ্ড", "কোন গুণগুলো আগে দেখা উচিত", "article", 12],
+  ["মোহর ও কাবিননামা", "মোহরের বিধান ও সঠিক নিবন্ধন", "article", 11],
+  ["যৌতুক প্রত্যাখ্যানের কৌশল", "সম্মান রেখে না বলা", "reflection", 10],
+  ["বাসর দিনের দুআ ও বিধান", "সুন্নত ও শিষ্টাচার", "hadith", 9],
+  ["দাম্পত্য অধিকার", "দুই পক্ষের দায়িত্বের সীমা", "article", 13],
+  ["প্রথম মাসের ভুল বোঝাবুঝি", "ঝগড়াকে সংলাপে রূপ দেওয়া", "reflection", 11],
+  ["সন্তানের প্রথম ৭ বছর", "ঈমান গড়ার বয়সকাল", "article", 12],
+  ["পিতা-মাতার হক", "বৃদ্ধ বাবা-মায়ের ভরণপোষণ", "article", 11],
+  ["আত্মীয়তার সম্পর্ক", "রক্তের সম্পর্ক ও সদাচরণ", "article", 9],
+  ["পারিবারিক সিদ্ধান্তে পরামর্শ", "পরিবারে সুরা (শূরা)", "reflection", 10],
+  ["অর্থ ব্যবস্থাপনা", "পরিবারের বাজেট ও হক", "article", 11],
+  ["পুরুষ ও নারীর ভিন্ন দায়িত্ব", "ইসলামের ভারসাম্য", "article", 10],
+  ["সন্তানকে নামাজ শেখানো", "৭ বছরের নিয়ম", "hadith", 9],
+  ["তালাক — শেষ উপায়", "কখন বৈধ ও কতটা অপছন্দনীয়", "article", 14],
+  ["তালাকের পরের ইদ্দত", "বিধান ও সন্তানের অধিকার", "article", 11],
+  ["সতর্কতামূলক বিচ্ছেদ", "শেষ চেষ্টা ও মধ্যস্থতা", "article", 10],
+  ["সৎকর্মের প্রতিযোগিতা", "পরিবারে দ্বীনি পরিবেশ", "reflection", 9],
+  ["সন্তানদের জন্য দুআ", "নবীজির দুআগুলোর অর্থ", "quran", 10],
+  ["একসাথে জান্নাতের পথ", "পরিবারের সম্মিলিত লক্ষ্য", "reflection", 12],
+  ["২১ দিনের রিভিশন", "পরিবার নিয়ে যা শিখেছেন তার সংক্ষিপ্ত পুনরালোচনা", "quiz", 12],
+];
+
+export const JOURNEYS: Journey[] = [
+  {
+    id: "journey-1",
+    slug: "sat-dine-namajer-prostuti",
+    titleBn: "৭ দিনে নামাজের প্রস্তুতি",
+    descriptionBn:
+      "নামাজ প্রতিদিনের ইবাদত, অথচ অনেকেই এর ফরজ-সুন্নত ও আত্মিক দিকটি জানি না। এই ৭ দিনে আপনি ওযু থেকে সিজদার দুআ পর্যন্ত প্রতিটি ধাপ আরামে শিখবেন — প্রতিদিন মাত্র ১০ মিনিট দিয়ে।",
+    durationLabelBn: "৭ দিন · প্রতিদিন ১০ মিনিট",
+    enrolled: 24580,
+    completedDays: 5,
+    totalDays: 7,
+    days: buildDays(SALAH_DAYS, 5, "/journey/sat-dine-namajer-prostuti"),
+    tone: "primary",
+    categoryBn: "ইবাদত",
+  },
+  {
+    id: "journey-2",
+    slug: "thirty-dine-quran-bojha",
+    titleBn: "৩০ দিনে কুরআন বোঝা",
+    descriptionBn:
+      "শুধু পড়া নয়, বোঝা — এই যাত্রার লক্ষ্য। প্রতিদিন একটি আয়াত, একটি সূরার প্রেক্ষাপট কিংবা একটি তাফসীরের অংশ শিখবেন এবং দিনশেষে ২০ মিনিটের রিফ্লেকশন লিখবেন। এক মাস শেষে কুরআনের মূল বার্তা আপনার কাছে পরিষ্কার হয়ে উঠবে ইনশাআল্লাহ।",
+    durationLabelBn: "৩০ দিন · প্রতিদিন ২০ মিনিট",
+    enrolled: 41200,
+    completedDays: 12,
+    totalDays: 30,
+    days: buildDays(QURAN_DAYS, 12, "/journey/thirty-dine-quran-bojha"),
+    tone: "accent",
+    categoryBn: "কুরআন",
+  },
+  {
+    id: "journey-3",
+    slug: "ramjaner-prostuti",
+    titleBn: "১৪ দিনে রমজানের প্রস্তুতি",
+    descriptionBn:
+      "রমজান শুরু হওয়ার দুই সপ্তাহ আগে থেকেই প্রস্তুতি নিলে মাসটি অনেক বেশি কাজে আসে। রোযার বিধান, যাকাতুল ফিতর, ইতিকাফ ও লাইলাতুল কদর — সবকিছুর ব্যবহারিক নির্দেশনা একসাথে।",
+    durationLabelBn: "১৪ দিন · প্রতিদিন ১০ মিনিট",
+    enrolled: 33870,
+    completedDays: 0,
+    totalDays: 14,
+    days: buildDays(RAMADAN_DAYS, 0, "/journey/ramjaner-prostuti"),
+    tone: "success",
+    categoryBn: "ইবাদত",
+  },
+  {
+    id: "journey-4",
+    slug: "notun-muslimer-prothom-dhap",
+    titleBn: "নতুন মুসলিমের প্রথম ধাপ",
+    descriptionBn:
+      "ইসলাম গ্রহণ করেছেন কিন্তু কোথা থেকে শুরু করবেন বুঝতে পারছেন না? এই পাঁচ দিনের যাত্রা একেবারে ভিত্তি থেকে শুরু — তাওহীদ, নামাজ, পবিত্রতা ও কুরআনের পরিচয়, কোনো তাড়াহুড়ো ছাড়াই।",
+    durationLabelBn: "৫ দিন · প্রতিদিন ১২ মিনিট",
+    enrolled: 12480,
+    completedDays: 5,
+    totalDays: 5,
+    days: buildDays(NEW_MUSLIM_DAYS, 5, "/journey/notun-muslimer-prothom-dhap"),
+    tone: "info",
+    categoryBn: "আকীদা",
+  },
+  {
+    id: "journey-5",
+    slug: "poribar-gorar-islami-vitti",
+    titleBn: "পরিবার গড়ার ইসলামি ভিত্তি",
+    descriptionBn:
+      "বিবাহ মানে শুধু অনুষ্ঠান নয়, একটি আমানত। পাত্র নির্বাচন, মোহর, যৌতুক প্রত্যাখ্যান, দাম্পত্য অধিকার থেকে সন্তান পালন — ২১ দিনে পরিবার গঠনের ইসলামি ভিত্তি শিখুন।",
+    durationLabelBn: "২১ দিন · প্রতিদিন ১৫ মিনিট",
+    enrolled: 18960,
+    completedDays: 3,
+    totalDays: 21,
+    days: buildDays(FAMILY_DAYS, 3, "/journey/poribar-gorar-islami-vitti"),
+    tone: "user",
+    categoryBn: "পরিবার",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Notifications & learning stats                                             */
+/* -------------------------------------------------------------------------- */
+
+export const NOTIFICATIONS: AppNotification[] = [
+  {
+    id: "notif-1",
+    kind: "answer",
+    titleBn: "আপনার প্রশ্নের উত্তর এসেছে",
+    bodyBn:
+      "মুফতি আব্দুর রহমান আপনার প্রশ্ন 'ছেলের পরিবার বিয়েতে চার লাখ টাকা যৌতুক চাইছে' — এর উত্তর দিয়েছেন।",
+    createdAt: "2026-10-06T08:20:00+06:00",
+    read: false,
+    href: "/questions/joutuk-char-lakh-taka-dabi",
+    actorId: "scholar-1",
+  },
+  {
+    id: "notif-2",
+    kind: "daily",
+    titleBn: "আজকের আয়াত প্রস্তুত",
+    bodyBn: "সূরা আল-বাকারা, আয়াত ২৫৫ — আজকের পাঠ শুরু করুন।",
+    createdAt: "2026-10-06T05:00:00+06:00",
+    read: false,
+    href: "/daily",
+  },
+  {
+    id: "notif-3",
+    kind: "journey",
+    titleBn: "আপনার যাত্রার ১৩তম দিন",
+    bodyBn: "৩০ দিনে কুরআন বোঝা — আজকের দিনটি এখনো সম্পন্ন হয়নি।",
+    createdAt: "2026-10-06T06:00:00+06:00",
+    read: false,
+    href: "/journey/thirty-dine-quran-bojha?day=13",
+  },
+  {
+    id: "notif-4",
+    kind: "follow",
+    titleBn: "নতুন আলেম ফলো করছেন",
+    bodyBn: "আপনি ড. ফরিদা ইয়াসমিনকে ফলো করছেন। তাঁর নতুন লেখা আপনার ফিডে দেখা যাবে।",
+    createdAt: "2026-10-05T19:40:00+06:00",
+    read: false,
+    href: "/scholars/dr-faridah-yasmin",
+    actorId: "scholar-5",
+  },
+  {
+    id: "notif-5",
+    kind: "reshare",
+    titleBn: "আপনার সংরক্ষিত প্রবন্ধ অনেকে পড়ছেন",
+    bodyBn:
+      "'সুদমুক্ত জীবন' প্রবন্ধটি এই সপ্তাহে ১,২০০ বারের বেশি পড়া হয়েছে।",
+    createdAt: "2026-10-05T12:15:00+06:00",
+    read: true,
+    href: "/articles/sud-mukt-jibon-halal-uparjon",
+  },
+  {
+    id: "notif-6",
+    kind: "mention",
+    titleBn: "আলোচনায় আপনাকে উল্লেখ করা হয়েছে",
+    bodyBn: "মারইয়াম সুলতানা 'যাকাত হিসাব' আলোচনায় আপনার প্রশ্নটি উল্লেখ করেছেন।",
+    createdAt: "2026-10-04T21:05:00+06:00",
+    read: true,
+    href: "/discussions/madhhab-parthokkye-adab-kivabe-rakhbo",
+    actorId: "user-9",
+  },
+  {
+    id: "notif-7",
+    kind: "moderation",
+    titleBn: "একটি রিপোর্ট পর্যালোচনায় রয়েছে",
+    bodyBn:
+      "আপনি যে উত্তরটি রিপোর্ট করেছিলেন সেটি মডারেটরের পর্যালোচনায় আছে এবং বিষয়টি সক্রিয় রাখা হয়েছে।",
+    createdAt: "2026-10-03T17:25:00+06:00",
+    read: true,
+    href: "/discussions/joutuk-chara-bibaho-bangladesh-somaj",
+  },
+  {
+    id: "notif-8",
+    kind: "system",
+    titleBn: "নামাজের সময় এখন আপনার জেলা অনুযায়ী",
+    bodyBn: "সেটিংসে আপনার জেলা চট্টগ্রাম থেকে ঢাকা করা হয়েছে। সময়সূচি হালনাগাদ হয়েছে।",
+    createdAt: "2026-10-02T09:50:00+06:00",
+    read: true,
+    href: "/settings",
+  },
+  {
+    id: "notif-9",
+    kind: "daily",
+    titleBn: "জুমার দিনের স্মারক",
+    bodyBn: "আজ শুক্রবার — সূরা আল-কাহফ পাঠ ও দরুদ পাঠের অভ্যাস করুন।",
+    createdAt: "2026-10-02T06:00:00+06:00",
+    read: true,
+    href: "/quran/18",
+  },
+  {
+    id: "notif-10",
+    kind: "answer",
+    titleBn: "একটি প্রশ্নে আপনার ভোট কাজে লেগেছে",
+    bodyBn:
+      "মুফতি নুরুল আমিনের উত্তরটি 'তালাক ও সন্তানের ভরণপোষণ' প্রশ্নে 'সহায়ক' হিসেবে চিহ্নিত হয়েছে এবং এখন উপরে দেখানো হচ্ছে।",
+    createdAt: "2026-10-01T14:35:00+06:00",
+    read: true,
+    href: "/questions/talaq-poddhoti-o-sontaner-bharonposhon",
+    actorId: "scholar-6",
+  },
+];
+
+/** Consecutive days the user has opened the platform and learned something. */
+export const USER_STREAK_DAYS = 12;
+
+/** Minutes of learning for the last 7 days, oldest first. */
+export const WEEKLY_LEARNING_MINUTES: number[] = [18, 12, 0, 25, 22, 16, 14];
+
+export const LEARNING_GOAL_MINUTES_PER_DAY = 15;
