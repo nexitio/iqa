@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BookOpen, ScrollText, Heart, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { AYAH_OF_THE_DAY, getSurah } from "@/lib/data/quran";
 import { HADITH_OF_THE_DAY } from "@/lib/data/hadith";
-import { DUAS, getTodayIndex } from "@/lib/data/daily";
+import { duaOfToday } from "@/lib/data/duas";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * what keeps them out of the way once all three cards fit side by side.
  */
 export function DailyStories({ className }: { className?: string }) {
-  const { t } = useI18n();
+  const { t, pick } = useI18n();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScroll, setCanScroll] = useState({ back: false, forward: false });
 
@@ -72,7 +72,7 @@ export function DailyStories({ className }: { className?: string }) {
   const ayah = AYAH_OF_THE_DAY;
   const surah = getSurah(ayah.surah);
   const hadith = HADITH_OF_THE_DAY;
-  const dua = DUAS[getTodayIndex(DUAS.length)];
+  const dua = duaOfToday();
 
   const cards = [
     {
@@ -101,10 +101,11 @@ export function DailyStories({ className }: { className?: string }) {
       id: "dua",
       tag: "আজকের দুআ",
       icon: Heart,
-      href: "/daily#dua",
-      meta: dua?.situationBn ?? "",
-      arabic: dua?.arabic ?? "",
-      text: dua?.meaningBn ?? "",
+      // Straight to the dua itself, not to the daily page's section of them.
+      href: `/duas#${dua.slug}`,
+      meta: pick(dua.occasion),
+      arabic: dua.arabic,
+      text: pick(dua.meaning),
       accent: "text-amber-600 dark:text-amber-400",
       tagBg: "bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300",
     },

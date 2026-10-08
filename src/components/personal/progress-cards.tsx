@@ -7,6 +7,7 @@ import {
   Bookmark,
   FileText,
   Flame,
+  HandHeart,
   MessageCircleQuestion,
   MessagesSquare,
   Play,
@@ -36,6 +37,7 @@ import {
 const KIND_ICONS: Record<BookmarkRecord["kind"], LucideIcon> = {
   ayah: BookOpen,
   hadith: ScrollText,
+  dua: HandHeart,
   article: FileText,
   fatwa: Scale,
   answer: MessageCircleQuestion,
@@ -46,6 +48,7 @@ const KIND_ICONS: Record<BookmarkRecord["kind"], LucideIcon> = {
 const KIND_TONES: Record<BookmarkRecord["kind"], Tone> = {
   ayah: "primary",
   hadith: "accent",
+  dua: "info",
   article: "info",
   fatwa: "success",
   answer: "scholar",
@@ -231,6 +234,7 @@ export function BookmarkCard({ bookmark, className }: { bookmark: BookmarkRecord
   const kindLabel: Record<BookmarkRecord["kind"], string> = {
     ayah: t("label.ayah"),
     hadith: t("label.hadith"),
+    dua: t("nav.duas"),
     article: t("label.article"),
     fatwa: t("label.fatwa"),
     answer: t("label.answer"),

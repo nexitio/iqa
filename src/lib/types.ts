@@ -202,6 +202,55 @@ export interface Hadith {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Dua                                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A group of duas by the moment they belong to — waking, eating, travelling.
+ *
+ * The grouping is by *occasion* rather than by source, because that is how a
+ * reader arrives at a dua: nobody wakes up wanting "a hadith-collection dua",
+ * they want the one for waking up.
+ */
+export interface DuaCategory {
+  id: string;
+  slug: string;
+  name: Localized;
+  description: Localized;
+  /** Lucide icon name, resolved through the icon map. */
+  icon: string;
+  tone: "primary" | "accent" | "info" | "success" | "warning" | "danger";
+}
+
+/**
+ * One dua, with everything needed to say it and to trust it.
+ *
+ * `arabic` is never optional and `reference` is never guessed: a dua without a
+ * source is not a dua this app will show. The transliteration is Bangla script
+ * (উচ্চারণ) rather than Latin, matching the Quran reader — a Bangladeshi reader
+ * who cannot read Arabic fluently still needs to say the words correctly.
+ */
+export interface Dua {
+  id: string;
+  slug: string;
+  categorySlug: string;
+  title: Localized;
+  arabic: string;
+  transliterationBn: string;
+  meaning: Localized;
+  /** e.g. "সূরা আল-বাকারা ২:২৫৫" or "সহীহ বুখারী ৬৩২৪". */
+  reference: Localized;
+  /** When to say it — the line a reader scans before reading the Arabic. */
+  occasion: Localized;
+  /** How many times, where a count is part of the practice. */
+  repeat?: Localized;
+  /** The virtue or promise attached to it, when the source states one. */
+  virtue?: Localized;
+  /** Search keywords in both scripts plus Latin, for the palette and the filter. */
+  tags: string[];
+}
+
+/* -------------------------------------------------------------------------- */
 /* Authored content                                                           */
 /* -------------------------------------------------------------------------- */
 
@@ -381,7 +430,15 @@ export interface DiscussionReply {
 /* Personal library & learning journey                                        */
 /* -------------------------------------------------------------------------- */
 
-export type BookmarkKind = "ayah" | "hadith" | "article" | "fatwa" | "answer" | "question" | "discussion";
+export type BookmarkKind =
+  | "ayah"
+  | "hadith"
+  | "dua"
+  | "article"
+  | "fatwa"
+  | "answer"
+  | "question"
+  | "discussion";
 
 export interface Bookmark {
   id: string;

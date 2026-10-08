@@ -7,6 +7,7 @@ import {
   Compass,
   FileText,
   Flag,
+  HandHeart,
   Home,
   LayoutDashboard,
   Library,
@@ -74,6 +75,7 @@ export const SIDEBAR_GROUPS: { title: Localized; links: NavLink[] }[] = [
     title: { bn: "আমার চর্চা", en: "My Practice" },
     links: [
       { href: "/daily", label: { bn: "দৈনিক আয়াত", en: "Daily Ayah" }, icon: Sparkles },
+      { href: "/duas", label: { bn: "দুআ ও জিকির", en: "Duas & Dhikr" }, icon: HandHeart },
       { href: "/journey", label: { bn: "শিক্ষা যাত্রা", en: "Learning Journey" }, icon: Route },
       { href: "/library", label: { bn: "আমার লাইব্রেরি", en: "My Library" }, icon: Bookmark },
       { href: "/topics", label: { bn: "বিষয়সমূহ", en: "Topics" }, icon: Compass },
@@ -141,6 +143,7 @@ export const FOOTER_LINKS: { title: Localized; links: { href: string; label: Loc
     title: { bn: "আমার জন্য", en: "For me" },
     links: [
       { href: "/daily", label: { bn: "দৈনিক আয়াত", en: "Daily Ayah" } },
+      { href: "/duas", label: { bn: "দুআ ও জিকির", en: "Duas & Dhikr" } },
       { href: "/journey", label: { bn: "শিক্ষা যাত্রা", en: "Journeys" } },
       { href: "/library", label: { bn: "লাইব্রেরি", en: "Library" } },
       { href: "/settings", label: { bn: "সেটিংস", en: "Settings" } },

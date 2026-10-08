@@ -202,6 +202,7 @@ export const BOOKMARK_COLLECTIONS: BookmarkCollection[] = [
   { id: "col-finance", nameBn: "যাকাত ও অর্থ", tone: "success", count: 4 },
   { id: "col-favourite-ayah", nameBn: "প্রিয় আয়াত", tone: "info", count: 3 },
   { id: "col-youth", nameBn: "তরুণদের প্রশ্ন", tone: "user", count: 2 },
+  { id: "col-dua", nameBn: "দুআ ও জিকির", tone: "accent", count: 2 },
 ];
 
 export const BOOKMARKS: Bookmark[] = [
@@ -351,6 +352,28 @@ export const BOOKMARKS: Bookmark[] = [
     href: "/quran/2?ayah=183",
     savedAt: "2026-10-02T05:50:00+06:00",
     collectionId: "col-ramadan",
+  },
+  {
+    id: "bm-15",
+    kind: "dua",
+    titleBn: "সফরে রওনা হওয়ার দুআ",
+    previewBn:
+      "হে আল্লাহ, এই সফরে আমরা আপনার কাছে নেকি ও তাকওয়া চাই, আর এমন আমল চাই যা আপনি পছন্দ করেন।",
+    refBn: "সহীহ মুসলিম ১৩৪২",
+    href: "/duas#setting-out-on-a-journey",
+    savedAt: "2026-10-04T05:20:00+06:00",
+    collectionId: "col-dua",
+  },
+  {
+    id: "bm-16",
+    kind: "dua",
+    titleBn: "দুশ্চিন্তা, দুঃখ ও ঋণের দুআ",
+    previewBn:
+      "হে আল্লাহ, আমি আপনার কাছে দুশ্চিন্তা ও দুঃখ, অক্ষমতা ও অলসতা, কৃপণতা ও ভীরুতা এবং ঋণের বোঝা থেকে আশ্রয় চাই।",
+    refBn: "সহীহ বুখারী ২৮৯৩",
+    href: "/duas#anxiety-and-sorrow",
+    savedAt: "2026-10-06T21:05:00+06:00",
+    collectionId: "col-dua",
   },
 ];
 

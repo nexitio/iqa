@@ -4,6 +4,7 @@ import {
   Bookmark,
   BookOpen,
   FileText,
+  HandHeart,
   MessageCircleQuestion,
   MessagesSquare,
   NotebookPen,
@@ -43,6 +44,7 @@ export const metadata: Metadata = {
 const KINDS: { kind: BookmarkKind; labelBn: string; icon: typeof BookOpen }[] = [
   { kind: "ayah", labelBn: "আয়াত", icon: BookOpen },
   { kind: "hadith", labelBn: "হাদীস", icon: ScrollText },
+  { kind: "dua", labelBn: "দুআ", icon: HandHeart },
   { kind: "article", labelBn: "প্রবন্ধ", icon: FileText },
   { kind: "fatwa", labelBn: "ফতোয়া", icon: Scale },
   { kind: "answer", labelBn: "উত্তর", icon: MessageCircleQuestion },

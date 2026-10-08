@@ -29,6 +29,7 @@ export const DICTIONARY: Dict = {
   "nav.library": { bn: "আমার লাইব্রেরি", en: "My Library" },
   "nav.journey": { bn: "শিক্ষা যাত্রা", en: "Learning Journey" },
   "nav.daily": { bn: "দৈনিক আয়াত", en: "Daily Ayah" },
+  "nav.duas": { bn: "দুআ ও জিকির", en: "Duas & Dhikr" },
   "nav.profile": { bn: "প্রোফাইল", en: "Profile" },
   "nav.settings": { bn: "সেটিংস", en: "Settings" },
   "nav.notifications": { bn: "বিজ্ঞপ্তি", en: "Notifications" },
@@ -386,6 +387,18 @@ export const DICTIONARY: Dict = {
       "On knowledge matters, defer to the scholars' position.",
     ],
   },
+
+  /* -------- dua -------- */
+  "dua.title": { bn: "দুআ সংকলন", en: "Dua Collection" },
+  "dua.subtitle": {
+    bn: "প্রতিদিনের ও বিশেষ মুহূর্তের প্রামাণ্য দুআ — আরবি, বাংলা উচ্চারণ, অর্থ ও সূত্রসহ",
+    en: "Authentic duas for every moment — Arabic, Bangla pronunciation, meaning and source",
+  },
+  "dua.today": { bn: "আজকের দুআ", en: "Today's dua" },
+  "dua.all": { bn: "সব দুআ", en: "All duas" },
+  "dua.categories": { bn: "বিভাগ", en: "Categories" },
+  /* Follows a number: <Num /> দুআ · 25 duas. */
+  "dua.countLabel": { bn: "টি দুআ", en: "duas" },
 
   /* -------- library -------- */
   "library.title": { bn: "আমার ইসলামিক লাইব্রেরি", en: "My Islamic Library" },

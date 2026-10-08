@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   FileText,
+  HandHeart,
   MessageCircleQuestion,
   Scale,
   ScrollText,
@@ -18,6 +19,7 @@ import { DEPARTMENTS } from "@/lib/data/departments";
 import { SCHOLARS } from "@/lib/data/scholars";
 import { QURAN_SURAHS } from "@/lib/data/quran";
 import { ARTICLES, FATWAS } from "@/lib/data/content";
+import { DUAS, duaSearchText } from "@/lib/data/duas";
 import { QUESTIONS } from "@/lib/data/questions";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -30,6 +32,8 @@ interface Hit {
   href: string;
   group: string;
   icon: React.ComponentType<{ className?: string }>;
+  /** Matched but not shown — tags, pronunciation, Arabic. */
+  keywords?: string;
 }
 
 /**
@@ -106,6 +110,17 @@ export function SearchCommand({ onClose }: { onClose: () => void }) {
         group: t("label.questions"),
         icon: MessageCircleQuestion,
       })),
+      // A dua is searched by what a reader remembers of it: the occasion, the
+      // pronunciation, or the Arabic itself — none of which fit in the title.
+      ...DUAS.map((d) => ({
+        id: `dua-${d.id}`,
+        title: pick(d.title),
+        subtitle: `${pick(d.occasion)} · ${pick(d.reference)}`,
+        href: `/duas#${d.slug}`,
+        group: t("nav.duas"),
+        icon: HandHeart,
+        keywords: duaSearchText(d),
+      })),
     ],
     [pick, t],
   );
@@ -116,7 +131,7 @@ export function SearchCommand({ onClose }: { onClose: () => void }) {
     const terms = q.split(/\s+/);
     return index
       .map((hit) => {
-        const haystack = `${hit.title} ${hit.subtitle} ${hit.group}`.toLowerCase();
+        const haystack = `${hit.title} ${hit.subtitle} ${hit.group} ${hit.keywords ?? ""}`.toLowerCase();
         let score = 0;
         for (const term of terms) {
           if (hit.title.toLowerCase().includes(term)) score += 3;

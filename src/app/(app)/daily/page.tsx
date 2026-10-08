@@ -3,7 +3,6 @@ import {
   Compass,
   HandHeart,
   Heart,
-  Moon,
   ScrollText,
   Sparkles,
   Sun,
@@ -11,7 +10,6 @@ import {
 } from "@/components/icons";
 import { Num, T } from "@/components/i18n-text";
 import {
-  Badge,
   Button,
   Callout,
   Card,
@@ -28,7 +26,9 @@ import {
   NextPrayerBanner,
   QiblaCompass,
 } from "@/components/personal";
-import { DHIKR_ROUTINE, DUAS, FOCUS_THEMES, getTodayIndex } from "@/lib/data/daily";
+import { DuaCard } from "@/components/knowledge";
+import { DHIKR_ROUTINE, FOCUS_THEMES, getTodayIndex } from "@/lib/data/daily";
+import { DUAS, getDuaCategory } from "@/lib/data/duas";
 import { getDepartment } from "@/lib/data/departments";
 
 /**
@@ -45,6 +45,20 @@ export const metadata: Metadata = {
 };
 
 const TODAY_DHIKR_INDEX = getTodayIndex(DHIKR_ROUTINE.length);
+
+/**
+ * The day's three duas, taken in rotation from the collection.
+ *
+ * Three rather than all of them: this page is a routine, and the collection has
+ * its own home now — the section's job is to put a few in front of the reader and
+ * hand them the rest on request, not to be a second, staler copy of /duas.
+ */
+const DAILY_DUA_COUNT = 3;
+const TODAY_DUA_INDEX = getTodayIndex(DUAS.length);
+const TODAY_DUAS = Array.from(
+  { length: DAILY_DUA_COUNT },
+  (_, offset) => DUAS[(TODAY_DUA_INDEX + offset) % DUAS.length],
+);
 
 const FOCUS_MINUTES_TOTAL = FOCUS_THEMES.reduce((sum, theme) => sum + theme.targetMinutes, 0);
 
@@ -104,45 +118,28 @@ export default function DailyPage() {
         <section className="min-w-0">
           <SectionHeader
             title="প্রয়োজনের দুআ"
-            description="ঘুম, খাবার, ভ্রমণ, অসুস্থতা ও জ্ঞান — প্রতিদিনের জন্য প্রামাণ্য দুআ।"
+            description="আজকের জন্য বেছে নেওয়া তিনটি দুআ — সূত্র, উচ্চারণ ও অর্থসহ।"
             icon={HandHeart}
+            href="/duas"
+            actionLabel="সব দুআ"
           />
-          <div className="space-y-4">
-            {DUAS.map((dua) => (
-              <Card key={dua.id} className="parchment">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="font-display text-[0.9375rem] font-semibold text-foreground">
-                      {dua.titleBn}
-                    </h3>
-                    <p className="mt-0.5 text-[0.75rem] text-muted-foreground">
-                      {dua.situationBn}
-                    </p>
-                  </div>
-                  <Badge tone="accent" size="xs" icon={Moon}>
-                    দুআ
-                  </Badge>
-                </div>
-
-                <p className="arabic mt-4 text-xl leading-loose text-foreground">{dua.arabic}</p>
-
-                <p className="mt-3 text-[0.8125rem] italic leading-relaxed text-muted-foreground">
-                  {dua.transliterationBn}
-                </p>
-
-                <div className="mt-3 border-t border-border pt-3">
-                  <p className="text-[0.9375rem] leading-loose text-foreground">
-                    {dua.meaningBn}
-                  </p>
-                </div>
-              </Card>
+          <div className="space-y-3">
+            {TODAY_DUAS.map((dua, index) => (
+              // The first one is the anchor other pages link to ("#dua").
+              <div key={dua.slug} id={index === 0 ? "dua" : undefined} className="scroll-mt-24">
+                <DuaCard
+                  dua={dua}
+                  category={getDuaCategory(dua.categorySlug)}
+                  defaultOpen={index === 0}
+                />
+              </div>
             ))}
           </div>
 
           <Callout tone="info" className="mt-6" icon={Target}>
-            আজকের আয়াত ও হাদীস প্রতিদিন স্বয়ংক্রিয়ভাবে বদলায়, যাতে পুরো
-            কুরআন ও হাদীস সংকলনের ভেতর দিয়ে ধীরে ধীরে চলতে পারেন। পূর্বের দিনগুলোর
-            একটি পূর্ণ সংকলনও শীঘ্রই যুক্ত হবে ইনশাআল্লাহ।
+            আজকের আয়াত, হাদীস ও দুআ প্রতিদিন স্বয়ংক্রিয়ভাবে বদলায়, যাতে পুরো কুরআন,
+            হাদীস ও দুআর সংকলনের ভেতর দিয়ে ধীরে ধীরে চলতে পারেন। সব দুআ এখন
+            আলাদা সংকলনে — বিভাগ অনুযায়ী সাজানো ও সূত্রসহ।
           </Callout>
         </section>
 
