@@ -236,31 +236,21 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                             <Select
                               id={`icon-${department.slug}`}
                               value={draft.icon}
-                              onChange={(e) => update(department.slug, department, { icon: e.target.value })}
-                            >
-                              {ICON_CHOICES.map((name) => (
-                                <option key={name} value={name}>
-                                  {name}
-                                </option>
-                              ))}
-                            </Select>
+                              onChange={(value) => update(department.slug, department, { icon: value })}
+                              options={ICON_CHOICES.map((name) => ({ value: name, label: name }))}
+                            />
                           </Field>
                           <Field label="রঙ" htmlFor={`tone-${department.slug}`}>
                             <Select
                               id={`tone-${department.slug}`}
                               value={draft.tone}
-                              onChange={(e) =>
+                              onChange={(value) =>
                                 update(department.slug, department, {
-                                  tone: e.target.value as Department["tone"],
+                                  tone: value as Department["tone"],
                                 })
                               }
-                            >
-                              {TONE_CHOICES.map((tone) => (
-                                <option key={tone} value={tone}>
-                                  {tone}
-                                </option>
-                              ))}
-                            </Select>
+                              options={TONE_CHOICES.map((tone) => ({ value: tone, label: tone }))}
+                            />
                           </Field>
                         </div>
                         <Switch

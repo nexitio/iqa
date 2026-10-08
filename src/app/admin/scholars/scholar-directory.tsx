@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
 import type { Scholar } from "@/lib/types";
 import { DEPARTMENTS } from "@/lib/data/departments";
-import { DISTRICTS } from "@/lib/bn";
+import { districtOptions } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import { ScholarTable } from "@/components/console";
 import { Badge, Button, Chip, ChipList, SearchInput, Select } from "@/components/ui";
@@ -25,10 +25,12 @@ export function ScholarDirectory({
   scholars: Scholar[];
   className?: string;
 }) {
-  const { pick } = useI18n();
+  const { pick, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [deptFilter, setDeptFilter] = useState<string[]>([]);
-  const [district, setDistrict] = useState("all");
+  // Several districts at once: an admin comparing coverage across a division
+  // should not have to re-pick the filter for every district in it.
+  const [districts, setDistricts] = useState<string[]>([]);
   const [sort, setSort] = useState<SortKey>("contribution");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
 
@@ -39,7 +41,7 @@ export function ScholarDirectory({
     const q = query.trim().toLowerCase();
     const list = scholars.filter((scholar) => {
       if (verifiedOnly && !scholar.verified) return false;
-      if (district !== "all" && scholar.district !== district) return false;
+      if (districts.length > 0 && !districts.includes(scholar.district)) return false;
       if (deptFilter.length > 0 && !deptFilter.some((slug) => scholar.departmentIds.includes(slug))) {
         return false;
       }
@@ -72,14 +74,14 @@ export function ScholarDirectory({
           );
       }
     });
-  }, [scholars, query, deptFilter, district, sort, verifiedOnly]);
+  }, [scholars, query, deptFilter, districts, sort, verifiedOnly]);
 
-  const activeFilters = deptFilter.length + (district !== "all" ? 1 : 0) + (verifiedOnly ? 1 : 0);
+  const activeFilters = deptFilter.length + (districts.length > 0 ? 1 : 0) + (verifiedOnly ? 1 : 0);
 
   const reset = () => {
     setQuery("");
     setDeptFilter([]);
-    setDistrict("all");
+    setDistricts([]);
     setVerifiedOnly(false);
   };
 
@@ -107,27 +109,24 @@ export function ScholarDirectory({
             aria-label="আলেম খুঁজুন"
           />
           <Select
-            value={district}
-            onChange={(e) => setDistrict(e.target.value)}
+            multiple
+            value={districts}
+            onChange={setDistricts}
             aria-label="জেলা নির্বাচন"
-          >
-            <option value="all">সব জেলা</option>
-            {DISTRICTS.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name.bn}
-              </option>
-            ))}
-          </Select>
+            placeholder="সব জেলা"
+            options={districtOptions(locale)}
+          />
           <Select
             value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
+            onChange={(value) => setSort(value as SortKey)}
             aria-label="সাজানোর ধরন"
-          >
-            <option value="contribution">অবদান অনুসারে</option>
-            <option value="followers">অনুসারী অনুসারে</option>
-            <option value="response">দ্রুত উত্তরদাতা</option>
-            <option value="name">নাম অনুসারে</option>
-          </Select>
+            options={[
+              { value: "contribution", label: "অবদান অনুসারে" },
+              { value: "followers", label: "অনুসারী অনুসারে" },
+              { value: "response", label: "দ্রুত উত্তরদাতা" },
+              { value: "name", label: "নাম অনুসারে" },
+            ]}
+          />
           <div className="flex items-center gap-2">
             <Button
               variant={verifiedOnly ? "primary" : "outline"}

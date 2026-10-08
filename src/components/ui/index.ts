@@ -6,6 +6,7 @@ export * from "./card";
 export * from "./badge";
 export * from "./avatar";
 export * from "./form";
+export * from "./select";
 export * from "./chip";
 export * from "./tabs";
 export * from "./progress";

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { ArrowLeft, Bell, ShieldCheck, GraduationCap } from "lucide-react";
+import { ArrowLeft, ShieldCheck, GraduationCap } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Avatar, Badge, Button, CountPill } from "@/components/ui";
 import { LocaleToggle, ThemeToggle } from "./toggles";
+import { NotificationBell } from "./notification-bell";
 import { ADMIN_NAV, SCHOLAR_NAV } from "./nav-config";
 
 /**
@@ -55,7 +56,7 @@ export function ConsoleShell({
   return (
     <div className="min-h-screen bg-background-subtle">
       <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-xl">
-        <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
+        <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
           <Link href="/" className="flex shrink-0 items-center gap-2.5">
             <span
               className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-card"
@@ -76,14 +77,11 @@ export function ConsoleShell({
           <div className="ml-auto flex items-center gap-2">
             <LocaleToggle className="hidden sm:inline-flex" />
             <ThemeToggle className="hidden sm:grid" />
-            <Link
-              href="/notifications"
-              aria-label={t("nav.notifications")}
-              className="relative grid size-9 place-items-center rounded-full text-muted-foreground hover:bg-surface-3 hover:text-foreground"
-            >
-              <Bell className="size-5" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-danger" />
-            </Link>
+            {/* The public header's bell, in this header's pill idiom. It used to
+                be a plain link with a permanently lit dot — the console claimed
+                unread mail whether or not anything had arrived, and never let a
+                scholar read it where they were working. */}
+            <NotificationBell triggerClassName="rounded-full border border-border bg-surface hover:border-primary/40 hover:text-primary" />
             <Button href="/" variant="ghost" size="sm" icon={ArrowLeft} className="hidden md:inline-flex">
               {t("action.back")}
             </Button>
@@ -102,7 +100,7 @@ export function ConsoleShell({
 
       <div className="flex">
         <aside className="hidden w-[16rem] shrink-0 border-r border-border bg-surface lg:block">
-          <div className="no-scrollbar sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto p-3">
+          <div className="no-scrollbar sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto p-3">
             <nav aria-label={identity.badge}>
               <ul className="space-y-0.5">
                 {nav.map((item) => {

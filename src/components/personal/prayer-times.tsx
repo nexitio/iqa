@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { Compass, MoonStar, Sun, Sunrise, Sunset } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { CloudSun, Compass, MoonStar, Sun, SunDim, Sunrise, Sunset } from "lucide-react";
 import {
   computePrayerTimes,
   countdownBn,
-  DISTRICTS,
+  districtOptions,
   findDistrict,
   formatNumber,
   gregorianDateBn,
@@ -14,7 +15,15 @@ import {
   isJumuah,
   toBnDigits,
 } from "@/lib/bn";
-import { describePrayerCard, prayerRowTag, secondsUntil } from "@/lib/prayer-day";
+import {
+  daySegments,
+  describePrayerCard,
+  prayerRowTag,
+  secondsUntil,
+  segmentAt,
+  type DaySegment,
+  type PrayerCardPhase,
+} from "@/lib/prayer-day";
 import { useI18n } from "@/lib/i18n";
 import { useNow } from "@/lib/use-now";
 import {
@@ -25,16 +34,78 @@ import {
 } from "@/lib/prayer-prefs";
 import { cn } from "@/lib/utils";
 import type { PrayerSchedule, PrayerTime } from "@/lib/types";
-import { Badge, Card, Chip, Progress, Select, Skeleton } from "@/components/ui";
+import { Badge, Card, Chip, Progress, Select, Skeleton, type Tone } from "@/components/ui";
 
-const PRAYER_ICONS = {
+/**
+ * One icon per row of the day — every salah, and the intervals between them.
+ *
+ * Sunrise carries its own icon rather than sharing Dhuhr's sun: in this list it
+ * is not a prayer at all but the moment Fajr's window closes.
+ */
+const SEGMENT_ICONS: Record<DaySegment["key"], LucideIcon> = {
   fajr: Sunrise,
-  sunrise: Sun,
+  sunrise: Sunrise,
+  duha: CloudSun,
+  zenith: SunDim,
   dhuhr: Sun,
   asr: Sun,
   maghrib: Sunset,
+  sunset: Sunset,
   isha: MoonStar,
-} as const;
+};
+
+/**
+ * How the headline reads in each phase.
+ *
+ * The tone is the point: a running salah window is the card's normal state, a
+ * forbidden stretch is a warning the reader must not miss, and the forenoon is
+ * deliberately quiet because nothing is wrong — there is simply no obligation.
+ */
+interface PhaseStyle {
+  panel: string;
+  accent: string;
+  dot: string;
+  ping: string;
+  note: string;
+  tone: Tone;
+  /** True while a window is running, so the eyebrow's dot pulses. */
+  live: boolean;
+}
+
+/** A running salah and a running fast are the same state, visually. */
+const ACTIVE_WINDOW: PhaseStyle = {
+  panel: "border-primary/15 bg-gradient-to-br from-primary-soft via-primary-soft/40 to-surface",
+  accent: "text-primary",
+  dot: "bg-primary",
+  ping: "bg-primary/50",
+  note: "text-subtle-foreground",
+  tone: "primary",
+  live: true,
+};
+
+const PHASE_STYLE: Record<PrayerCardPhase, PhaseStyle> = {
+  salah: ACTIVE_WINDOW,
+  fasting: ACTIVE_WINDOW,
+  suhoor: ACTIVE_WINDOW,
+  forbidden: {
+    panel: "border-warning/25 bg-gradient-to-br from-warning-soft via-warning-soft/40 to-surface",
+    accent: "text-warning-soft-foreground",
+    dot: "bg-warning",
+    ping: "bg-warning/50",
+    note: "text-warning-soft-foreground",
+    tone: "warning",
+    live: false,
+  },
+  duha: {
+    panel: "border-border bg-gradient-to-br from-surface-2 via-surface-2/50 to-surface",
+    accent: "text-muted-foreground",
+    dot: "bg-border-strong",
+    ping: "bg-border-strong",
+    note: "text-subtle-foreground",
+    tone: "neutral",
+    live: false,
+  },
+};
 
 function pad(n: number) {
   return String(Math.floor(n)).padStart(2, "0");
@@ -101,7 +172,7 @@ export function PrayerTimesWidget({
         </div>
         <div className="space-y-2 px-4 py-3.5">
           <Skeleton className="h-[5.75rem] w-full rounded-xl" />
-          {Array.from({ length: 6 }, (_, i) => (
+          {Array.from({ length: 9 }, (_, i) => (
             <Skeleton key={i} className="h-7 w-full rounded-lg" />
           ))}
         </div>
@@ -113,7 +184,12 @@ export function PrayerTimesWidget({
   // names (Jumu'ah on Fridays), and whether the card is measuring a salah
   // window, the fast, or the night that ends at suhoor.
   const day = describePrayerCard(schedule, now, locale);
+  const style = PHASE_STYLE[day.phase];
   const countdown = clockFromSeconds(day.remaining);
+  // The whole day as intervals, plus which one is running: the list and the
+  // headline are then two readings of a single model rather than two opinions.
+  const segments = daySegments(schedule);
+  const activeKey = segmentAt(segments, now).key;
 
   return (
     <Card className={cn("overflow-hidden", className)} padding="none">
@@ -136,27 +212,30 @@ export function PrayerTimesWidget({
         <Select
           aria-label={t("settings.location")}
           value={selected}
-          onChange={(e) => setSelected(e.target.value)}
-          className="h-8 w-[6.75rem] shrink-0 bg-[length:0.875rem] bg-[right_0.6rem_center] pr-7 text-[0.75rem]"
-        >
-          {DISTRICTS.map((district) => (
-            <option key={district.id} value={district.id}>
-              {pick(district.name)}
-            </option>
-          ))}
-        </Select>
+          onChange={setSelected}
+          options={districtOptions(locale)}
+          className="h-8 w-[6.75rem] shrink-0 text-[0.75rem]"
+        />
       </div>
 
       {/* Now. One row answers the whole question — which salah we are in, how long
-          is left, and how much of its window has gone. */}
+          its own window still has, and how much of that window has gone. When no
+          salah is running it answers the next best thing: the forbidden stretch or
+          the forenoon the reader is standing in, and the clock that ends it. */}
       <div className="px-4 pt-3">
-        <div className="rounded-xl border border-primary/15 bg-gradient-to-br from-primary-soft via-primary-soft/40 to-surface px-3.5 py-2.5">
+        <div className={cn("rounded-xl border px-3.5 py-2.5", style.panel)}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="flex items-center gap-1.5 text-[0.6875rem] font-semibold text-primary">
+              <p className={cn("flex items-center gap-1.5 text-[0.6875rem] font-semibold", style.accent)}>
                 <span className="relative flex size-1.5" aria-hidden>
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/50" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
+                  {/* A running salah (or fast) pulses; a closed stretch is a fact,
+                      not a clock, so it holds still. */}
+                  {style.live ? (
+                    <span
+                      className={cn("absolute inline-flex size-full animate-ping rounded-full", style.ping)}
+                    />
+                  ) : null}
+                  <span className={cn("relative inline-flex size-1.5 rounded-full", style.dot)} />
                 </span>
                 {day.stateLabel}
               </p>
@@ -165,7 +244,7 @@ export function PrayerTimesWidget({
               </p>
             </div>
             <div className="shrink-0 text-right">
-              <p className="font-mono text-[1.0625rem] font-bold leading-tight tabular text-primary">
+              <p className={cn("font-mono text-[1.0625rem] font-bold leading-tight tabular", style.accent)}>
                 {countdown}
               </p>
               <p className="mt-0.5 text-[0.6875rem] font-medium text-muted-foreground">
@@ -177,6 +256,7 @@ export function PrayerTimesWidget({
           <div className="mt-2 flex items-center gap-2.5">
             <Progress
               value={day.percent}
+              tone={style.tone}
               size="sm"
               className="flex-1"
               label={
@@ -185,32 +265,43 @@ export function PrayerTimesWidget({
                   : "How much of the current window has passed"
               }
             />
-            <span className="shrink-0 text-[0.6875rem] font-semibold tabular text-primary">
+            <span className={cn("shrink-0 text-[0.6875rem] font-semibold tabular", style.accent)}>
               {formatNumber(Math.round(day.percent), locale)}%
             </span>
           </div>
 
           {/* Both ends of the bar, so the fill means something: it started at one
-              clock and it ends at the other. */}
-          {day.startAnchor ? (
-            <div className="mt-1 flex items-baseline justify-between gap-3 text-[0.6875rem]">
-              <span className="truncate text-subtle-foreground">{day.startAnchor}</span>
-              <span className="truncate font-semibold tabular text-primary">{day.endAnchor}</span>
-            </div>
-          ) : null}
+              clock and the next interval opens at the other. */}
+          <div className="mt-1 flex items-baseline justify-between gap-3 text-[0.6875rem]">
+            <span className="truncate text-subtle-foreground">{day.startAnchor}</span>
+            <span className={cn("truncate font-semibold tabular", style.accent)}>
+              {day.endAnchor}
+            </span>
+          </div>
+
+          {/* Why the stretch is closed — the one line that turns a clock into an
+              instruction. */}
+          {day.note ? <p className={cn("mt-1 text-[0.6875rem]", style.note)}>{pick(day.note)}</p> : null}
         </div>
       </div>
 
-      {/* The day in order. Passed prayers recede, the window you are in is filled
-          and the next is outlined, so the list answers "where am I" at a glance. */}
+      {/* The day in order, as the intervals it is made of. Passed rows recede, the
+          interval you are standing in is filled, and the next salah is outlined,
+          so the list answers "where am I" and "when does this end" at a glance. */}
       <ul className="space-y-0.5 px-2 py-3">
-        {schedule.times.map((time) => (
-          <PrayerRow
-            key={time.name}
-            time={time}
+        {segments.map((segment) => (
+          <DayRow
+            key={segment.key}
+            segment={segment}
+            time={schedule.times.find((entry) => entry.name === segment.key)}
+            activeKey={activeKey}
             nextName={schedule.nextPrayer.name}
             jumuah={day.jumuah}
-            tag={day.phase === "salah" ? null : prayerRowTag(time.name, locale)}
+            tag={
+              day.phase === "fasting" || day.phase === "suhoor"
+                ? prayerRowTag(segment.key, locale)
+                : null
+            }
           />
         ))}
       </ul>
@@ -239,47 +330,73 @@ export function PrayerTimesWidget({
   );
 }
 
-function PrayerRow({
+/**
+ * One row of the day.
+ *
+ * Salehs and the stretches between them share a row shape on purpose: the list is
+ * a single timeline, so a forbidden stretch has to sit in the same column as the
+ * prayers around it. And every row carries its *own* window — the clock it opens
+ * at and the clock the next interval opens at — because a start time without an
+ * end time is only half of what a reader looking at a clock needs.
+ */
+function DayRow({
+  segment,
   time,
+  activeKey,
   nextName,
   jumuah,
   tag,
 }: {
-  time: PrayerTime;
-  nextName: string;
+  segment: DaySegment;
+  /** The schedule row behind a salah segment; absent for the intervals between. */
+  time?: PrayerTime;
+  /** The segment `now` falls in. Exactly one row is highlighted, ever. */
+  activeKey: DaySegment["key"];
+  nextName: PrayerTime["name"];
   /** Friday: the Dhuhr row is Jumu'ah, not a name of its own in the data. */
   jumuah: boolean;
   /** Ramadan only: the row's fasting meaning (suhoor ends, iftar). */
   tag: string | null;
 }) {
   const { pick, isBn } = useI18n();
-  const Icon = PRAYER_ICONS[time.name];
-  const name = jumuah && time.name === "dhuhr" ? (isBn ? "জুমা" : "Jumu'ah") : pick(time.label);
+  const Icon = SEGMENT_ICONS[segment.key];
+  const name =
+    time && jumuah && time.name === "dhuhr" ? (isBn ? "জুমা" : "Jumu'ah") : pick(segment.label);
+  const isCurrent = segment.key === activeKey;
+  const forbidden = segment.kind === "forbidden";
   // Identity, not the row's own flags: after Isha the next prayer is tomorrow's
   // Fajr — the same row that already flashed past this morning — and sunrise is
   // never "next" at all because nobody prays at it.
-  const isNext = !time.isCurrent && time.name === nextName;
+  const isNext = !isCurrent && segment.kind === "salah" && time?.name === nextName;
 
   return (
     <li
       className={cn(
         "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 transition-colors",
-        time.isCurrent && "bg-primary-soft",
-        isNext && "bg-surface-2/70",
+        isCurrent && (forbidden ? "bg-warning-soft" : "bg-primary-soft"),
+        !isCurrent && isNext && "bg-surface-2/70",
       )}
     >
       <Icon
         className={cn(
           "size-4 shrink-0",
-          time.isCurrent ? "text-primary" : isNext ? "text-foreground" : "text-subtle-foreground",
+          isCurrent
+            ? forbidden
+              ? "text-warning-soft-foreground"
+              : "text-primary"
+            : isNext
+              ? "text-foreground"
+              : "text-subtle-foreground",
         )}
         aria-hidden
       />
       <span
         className={cn(
           "min-w-0 flex-1 truncate text-[0.8125rem]",
-          time.isCurrent
-            ? "font-semibold text-primary-soft-foreground"
+          isCurrent
+            ? forbidden
+              ? "font-semibold text-warning-soft-foreground"
+              : "font-semibold text-primary-soft-foreground"
             : isNext
               ? "font-medium text-foreground"
               : "text-muted-foreground",
@@ -287,13 +404,23 @@ function PrayerRow({
       >
         {name}
       </span>
-      {time.isCurrent ? (
+      {isCurrent && !forbidden && segment.kind === "salah" ? (
         <Badge tone="primary" size="xs">
           {isBn ? "চলছে" : "Now"}
         </Badge>
       ) : isNext ? (
         <Badge tone="accent" size="xs">
           {isBn ? "পরবর্তী" : "Next"}
+        </Badge>
+      ) : null}
+      {forbidden ? (
+        <Badge tone="warning" size="xs">
+          {isBn ? "নিষিদ্ধ" : "Forbidden"}
+        </Badge>
+      ) : null}
+      {segment.kind === "duha" ? (
+        <Badge tone="neutral" size="xs">
+          {isBn ? "নফল" : "Nafl"}
         </Badge>
       ) : null}
       {tag ? (
@@ -303,13 +430,26 @@ function PrayerRow({
           {tag}
         </Badge>
       ) : null}
-      <span
-        className={cn(
-          "shrink-0 text-[0.8125rem] font-semibold tabular",
-          time.isCurrent ? "text-primary" : isNext ? "text-foreground" : "text-subtle-foreground",
-        )}
-      >
-        {toBnDigits(time.time)}
+      {/* Only the window's start carries weight; its end reads as a limit. */}
+      <span className="shrink-0 whitespace-nowrap text-[0.75rem] tabular text-subtle-foreground">
+        <span
+          className={cn(
+            "font-semibold",
+            isCurrent
+              ? forbidden
+                ? "text-warning-soft-foreground"
+                : "text-primary"
+              : isNext
+                ? "text-foreground"
+                : "text-muted-foreground",
+          )}
+        >
+          {toBnDigits(segment.start)}
+        </span>
+        <span className="mx-1" aria-hidden>
+          –
+        </span>
+        {toBnDigits(segment.end)}
       </span>
     </li>
   );

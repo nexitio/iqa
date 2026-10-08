@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { DEPARTMENTS, getDepartment } from "@/lib/data/departments";
 import { SCHOLARS, getScholarsByDepartment } from "@/lib/data/scholars";
-import { DISTRICTS, formatNumber, toBnDigits } from "@/lib/bn";
+import { districtOptions, findDistrict, formatNumber, toBnDigits } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import {
   Badge,
@@ -165,23 +165,21 @@ export function AddScholarForm() {
               <Select
                 id="honorific"
                 value={honorific}
-                onChange={(e) => setHonorific(e.target.value)}
-              >
-                {HONORIFICS.map((h) => (
-                  <option key={h.value} value={h.value}>
-                    {h.label} ({h.en})
-                  </option>
-                ))}
-              </Select>
+                onChange={setHonorific}
+                options={HONORIFICS.map((h) => ({
+                  value: h.value,
+                  label: `${h.label} (${h.en})`,
+                  keywords: h.en,
+                }))}
+              />
             </Field>
             <Field label="জেলা" htmlFor="district" required>
-              <Select id="district" value={district} onChange={(e) => setDistrict(e.target.value)}>
-                {DISTRICTS.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name.bn} — {d.division.bn} বিভাগ
-                  </option>
-                ))}
-              </Select>
+              <Select
+                id="district"
+                value={district}
+                onChange={setDistrict}
+                options={districtOptions(locale)}
+              />
             </Field>
             <Field label="পুরো নাম (বাংলা)" htmlFor="name-bn" required hint="যেভাবে প্রোফাইলে দেখা যাবে">
               <Input
@@ -267,20 +265,17 @@ export function AddScholarForm() {
               <Select
                 id="primary-dept"
                 value={primaryDepartment}
-                onChange={(e) => setPrimaryDepartment(e.target.value)}
+                onChange={setPrimaryDepartment}
                 disabled={departmentIds.length === 0}
-              >
-                <option value="">— নির্বাচন করুন —</option>
-                {departmentIds.map((slug) => {
+                placeholder="— নির্বাচন করুন —"
+                searchable={departmentIds.length > 8}
+                options={departmentIds.flatMap((slug) => {
                   const department = getDepartment(slug);
-                  if (!department) return null;
-                  return (
-                    <option key={slug} value={slug}>
-                      {department.name.bn}
-                    </option>
-                  );
+                  return department
+                    ? [{ value: slug, label: department.name.bn, keywords: department.name.en }]
+                    : [];
                 })}
-              </Select>
+              />
             </Field>
             {departmentIds.length === 0 ? (
               <p className="mt-2 text-[0.75rem] text-warning">
@@ -479,7 +474,7 @@ export function AddScholarForm() {
             <div>
               <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">অবস্থান</dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
-                {DISTRICTS.find((d) => d.id === district)?.name.bn}
+                {findDistrict(district).name.bn}
               </dd>
             </div>
             <div>

@@ -1,7 +1,6 @@
 import type {
   InputHTMLAttributes,
   ReactNode,
-  SelectHTMLAttributes,
   TextareaHTMLAttributes,
 } from "react";
 import { cn } from "@/lib/utils";
@@ -98,28 +97,11 @@ export function Textarea({
   return <textarea className={cn(controlBase, "min-h-28 resize-y py-3 leading-relaxed", className)} {...props} />;
 }
 
-export function Select({
-  className,
-  children,
-  ...props
-}: SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select
-      className={cn(
-        controlBase,
-        "h-11 cursor-pointer appearance-none bg-[length:1rem] bg-[right_0.85rem_center] bg-no-repeat pr-10",
-        className,
-      )}
-      style={{
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c6b64' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
-      }}
-      {...props}
-    >
-      {children}
-    </select>
-  );
-}
+/*
+ * `Select` lives in its own file: unlike the text controls, it is a popover —
+ * it owns open state, a portal and a search field — and the native control it
+ * replaces could not be themed at all. See ./select.tsx.
+ */
 
 export function Checkbox({
   label,

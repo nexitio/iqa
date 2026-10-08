@@ -83,6 +83,12 @@ export const DICTIONARY: Dict = {
   "action.previous": { bn: "পূর্ববর্তী", en: "Previous" },
   "action.close": { bn: "বন্ধ করুন", en: "Close" },
   "action.clear": { bn: "মুছুন", en: "Clear" },
+  "action.select": { bn: "নির্বাচন করুন", en: "Select" },
+  "action.selected": { bn: "নির্বাচিত", en: "Selected" },
+  "action.markAllRead": {
+    bn: "সব পড়া হয়েছে বলে চিহ্নিত করুন",
+    en: "Mark all as read",
+  },
   "action.addScholar": { bn: "নতুন আলেম যোগ করুন", en: "Add Scholar" },
   "action.edit": { bn: "সম্পাদনা", en: "Edit" },
   "action.delete": { bn: "মুছে ফেলুন", en: "Delete" },

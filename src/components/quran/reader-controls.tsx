@@ -121,15 +121,14 @@ export function ReaderControls({
         <Select
           aria-label={t("label.reciter")}
           value={reciter ?? "afasy"}
-          onChange={(e) => onReciter?.(e.target.value as ReciterId)}
+          onChange={(value) => onReciter?.(value as ReciterId)}
           className="h-7 w-auto min-w-[9.5rem] text-[0.75rem]"
-        >
-          {RECITERS.map((r) => (
-            <option key={r.id} value={r.id}>
-              {pick({ bn: r.labelBn, en: r.labelEn })}
-            </option>
-          ))}
-        </Select>
+          options={RECITERS.map((r) => ({
+            value: r.id,
+            label: pick({ bn: r.labelBn, en: r.labelEn }),
+            keywords: `${r.labelBn} ${r.labelEn}`,
+          }))}
+        />
         <Badge tone="info" size="xs" className="hidden sm:inline-flex">
           {t("state.comingSoon")}
         </Badge>

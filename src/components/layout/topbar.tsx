@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
-  Bell,
   ChevronDown,
   GraduationCap,
   LogOut,
   Menu,
+  PenLine,
   Plus,
   Search,
   Settings,
@@ -19,9 +19,21 @@ import {
 import { CURRENT_USER, NOTIFICATIONS } from "@/lib/data/personal";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useDismissable } from "@/lib/use-dismissable";
 import { Avatar, CountPill } from "@/components/ui";
 import { LocaleToggle, ThemeToggle } from "./toggles";
+import { NotificationBell } from "./notification-bell";
 import { SIDEBAR_GROUPS, SIDEBAR_TOP, ACCOUNT_NAV } from "./nav-config";
+
+/**
+ * The bar is 3.5rem (56px), not the 4.25rem it started at.
+ *
+ * Nothing in it needs more: every control is a 36px square and the wordmark is
+ * two lines of small type. The extra 12px bought nothing and cost the reader a
+ * strip of content on every page. `--header-h` in globals.css is derived from
+ * this value, so the pinned columns and the reader's docked toolbar follow.
+ */
+const BAR_HEIGHT = "h-14";
 
 /** Brand lockup: an Arabic letterform tile plus the bilingual wordmark. */
 export function BrandMark({ compact = false }: { compact?: boolean }) {
@@ -48,13 +60,37 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
   );
 }
 
+/** One square, quiet control — the shared shape of the ask, bell and menu buttons. */
+const iconButton =
+  "grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground";
+
 export function Topbar() {
   const pathname = usePathname();
   const { t, pick } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-  const unread = NOTIFICATIONS.filter((n) => !n.read).length;
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * The bell owns read state and the badge on its own trigger; this mirrors the
+   * count so the account menu can show the same number beside its
+   * "notifications" row. Seeded from the fixture so the first paint is right.
+   */
+  const [unread, setUnread] = useState(
+    () => NOTIFICATIONS.filter((notification) => !notification.read).length,
+  );
+
+  const closeAccount = () => setAccountOpen(false);
+  const closeNotifications = () => setNotificationsOpen(false);
+
+  // Outside pointer-down and Escape, on the document. Not a `fixed inset-0`
+  // sheet: the bar's `backdrop-blur` makes it a containing block for fixed
+  // descendants, so that sheet only ever covered the bar itself.
+  useDismissable(accountOpen, closeAccount, (target) =>
+    Boolean(accountRef.current?.contains(target)),
+  );
 
   // Reset every transient overlay when the route changes. Adjusting state during
   // render (rather than in an effect) is React's documented pattern for
@@ -64,6 +100,7 @@ export function Topbar() {
     setLastPath(pathname);
     if (menuOpen) setMenuOpen(false);
     if (accountOpen) setAccountOpen(false);
+    if (notificationsOpen) setNotificationsOpen(false);
   }
 
   /**
@@ -84,12 +121,12 @@ export function Topbar() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-border bg-surface/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-[4.25rem] w-full max-w-[1440px] items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <div className={cn("mx-auto flex w-full max-w-[1440px] items-center gap-3 px-4 sm:px-6 lg:px-8", BAR_HEIGHT)}>
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label={t("nav.menu")}
-            className="grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground lg:hidden"
+            className={cn(iconButton, "lg:hidden")}
           >
             <Menu className="size-[1.15rem]" />
           </button>
@@ -109,7 +146,7 @@ export function Topbar() {
             </div>
           ) : null}
 
-          <div className="ml-auto flex items-center gap-1.5">
+          <div className="ml-auto flex items-center gap-1">
             <button
               type="button"
               onClick={openSearch}
@@ -125,36 +162,43 @@ export function Topbar() {
               type="button"
               onClick={openSearch}
               aria-label={t("action.search")}
-              className="grid size-9 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground md:hidden"
+              className={cn(iconButton, "md:hidden")}
             >
               <Search className="size-[1.15rem]" />
             </button>
 
+            {/* Ask sits at the weight of the bell, not above it: a filled CTA in
+                the bar competed with every page's own primary action, and the
+                destination is already reachable from the sidebar, the drawer and
+                the floating button. */}
             <Link
               href="/questions/ask"
-              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-3.5 text-[0.8125rem] font-semibold text-primary-foreground shadow-card transition-all duration-200 hover:bg-primary-hover hover:shadow-raised active:translate-y-px"
+              aria-label={t("action.ask")}
+              title={t("action.ask")}
+              className={iconButton}
             >
-              <Plus className="size-4" strokeWidth={2.5} aria-hidden />
-              <span className="hidden sm:inline">{t("action.ask")}</span>
+              <PenLine className="size-[1.15rem]" />
             </Link>
 
-            <Link
-              href="/notifications"
-              aria-label={t("nav.notifications")}
-              className="relative grid size-9 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
-            >
-              <Bell className="size-[1.15rem]" />
-              {unread > 0 ? (
-                <span className="absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-danger text-[0.5625rem] font-bold text-white ring-2 ring-surface">
-                  {unread}
-                </span>
-              ) : null}
-            </Link>
+            {/* Controlled here only so the two menus cannot be open at once:
+                opening the bell closes the account menu, and opening the account
+                menu closes the bell. */}
+            <NotificationBell
+              open={notificationsOpen}
+              onOpenChange={(next) => {
+                setNotificationsOpen(next);
+                if (next) setAccountOpen(false);
+              }}
+              onUnreadChange={setUnread}
+            />
 
-            <div className="relative">
+            <div className="relative" ref={accountRef}>
               <button
                 type="button"
-                onClick={() => setAccountOpen((v) => !v)}
+                onClick={() => {
+                  setAccountOpen((open) => !open);
+                  closeNotifications();
+                }}
                 aria-expanded={accountOpen}
                 aria-haspopup="menu"
                 className="flex items-center gap-1 rounded-full p-0.5 transition-colors hover:bg-surface-3"
@@ -174,76 +218,77 @@ export function Topbar() {
               </button>
 
               {accountOpen ? (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setAccountOpen(false)} aria-hidden />
-                  <div
-                    role="menu"
-                    className="absolute right-0 top-full z-50 mt-2 w-[17rem] animate-scale-in overflow-hidden rounded-panel border border-border bg-surface shadow-overlay"
-                  >
-                    <div className="flex items-center gap-3 border-b border-border bg-surface-2 p-4">
-                      <Avatar name={CURRENT_USER.name} color={CURRENT_USER.avatarColor} size="md" verified />
-                      <div className="min-w-0">
-                        <p className="truncate text-[0.875rem] font-semibold text-foreground">
-                          {CURRENT_USER.name}
-                        </p>
-                        <p className="truncate text-[0.75rem] text-muted-foreground">{CURRENT_USER.email}</p>
-                      </div>
-                    </div>
-
-                    <div className="p-1.5">
-                      {ACCOUNT_NAV.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          role="menuitem"
-                          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
-                        >
-                          <item.icon className="size-4 text-subtle-foreground" aria-hidden />
-                          {pick(item.label)}
-                          {item.href === "/notifications" && unread > 0 ? (
-                            <CountPill value={unread} tone="danger" className="ml-auto" />
-                          ) : null}
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Locale and theme live here too, so the bar stays calm. */}
-                    <div className="flex items-center justify-between gap-2 border-t border-border p-3">
-                      <LocaleToggle />
-                      <ThemeToggle />
-                    </div>
-
-                    <div className="border-t border-border p-1.5">
-                      <Link
-                        href="/scholar"
-                        role="menuitem"
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
-                      >
-                        <GraduationCap className="size-4 text-role-scholar" aria-hidden />
-                        {t("nav.scholarConsole")}
-                      </Link>
-                      <Link
-                        href="/admin"
-                        role="menuitem"
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
-                      >
-                        <ShieldCheck className="size-4 text-role-admin" aria-hidden />
-                        {t("nav.adminConsole")}
-                      </Link>
-                    </div>
-
-                    <div className="border-t border-border p-1.5">
-                      <Link
-                        href="/login"
-                        role="menuitem"
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-danger transition-colors hover:bg-danger-soft"
-                      >
-                        <LogOut className="size-4" aria-hidden />
-                        {t("action.signOut")}
-                      </Link>
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full z-50 mt-2 w-[17rem] animate-scale-in overflow-hidden rounded-panel border border-border bg-surface shadow-overlay"
+                >
+                  <div className="flex items-center gap-3 border-b border-border bg-surface-2 p-4">
+                    <Avatar name={CURRENT_USER.name} color={CURRENT_USER.avatarColor} size="md" verified />
+                    <div className="min-w-0">
+                      <p className="truncate text-[0.875rem] font-semibold text-foreground">
+                        {CURRENT_USER.name}
+                      </p>
+                      <p className="truncate text-[0.75rem] text-muted-foreground">{CURRENT_USER.email}</p>
                     </div>
                   </div>
-                </>
+
+                  <div className="p-1.5">
+                    {ACCOUNT_NAV.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        role="menuitem"
+                        onClick={closeAccount}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
+                      >
+                        <item.icon className="size-4 text-subtle-foreground" aria-hidden />
+                        {pick(item.label)}
+                        {item.href === "/notifications" && unread > 0 ? (
+                          <CountPill value={unread} tone="danger" className="ml-auto" />
+                        ) : null}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Locale and theme live here too, so the bar stays calm. */}
+                  <div className="flex items-center justify-between gap-2 border-t border-border p-3">
+                    <LocaleToggle />
+                    <ThemeToggle />
+                  </div>
+
+                  <div className="border-t border-border p-1.5">
+                    <Link
+                      href="/scholar"
+                      role="menuitem"
+                      onClick={closeAccount}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
+                    >
+                      <GraduationCap className="size-4 text-role-scholar" aria-hidden />
+                      {t("nav.scholarConsole")}
+                    </Link>
+                    <Link
+                      href="/admin"
+                      role="menuitem"
+                      onClick={closeAccount}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
+                    >
+                      <ShieldCheck className="size-4 text-role-admin" aria-hidden />
+                      {t("nav.adminConsole")}
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-border p-1.5">
+                    <Link
+                      href="/login"
+                      role="menuitem"
+                      onClick={closeAccount}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-danger transition-colors hover:bg-danger-soft"
+                    >
+                      <LogOut className="size-4" aria-hidden />
+                      {t("action.signOut")}
+                    </Link>
+                  </div>
+                </div>
               ) : null}
             </div>
           </div>
@@ -259,13 +304,13 @@ export function Topbar() {
             aria-hidden
           />
           <div className="absolute inset-y-0 left-0 flex w-[19rem] max-w-[86vw] animate-slide-left flex-col bg-surface shadow-overlay">
-            <div className="flex h-[4.25rem] items-center justify-between border-b border-border px-4">
+            <div className="flex h-14 items-center justify-between border-b border-border px-4">
               <BrandMark />
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
                 aria-label={t("action.close")}
-                className="grid size-9 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3"
+                className={iconButton}
               >
                 <X className="size-[1.15rem]" />
               </button>
@@ -346,7 +391,6 @@ export function Topbar() {
           </div>
         </div>
       ) : null}
-
     </>
   );
 }

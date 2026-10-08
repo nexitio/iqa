@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, GraduationCap, Lock, Mail, MapPin, UserRound } from "@/components/icons";
-import { DISTRICTS } from "@/lib/bn";
-import { Button, Callout, Field, Input, Select } from "@/components/ui";
+import { ArrowRight, GraduationCap, Lock, Mail, UserRound } from "@/components/icons";
+import { Button, Callout, Field, Input } from "@/components/ui";
+import { DistrictField } from "./district-field";
 
 export const metadata: Metadata = {
   title: "নতুন অ্যাকাউন্ট",
@@ -134,25 +134,7 @@ export default function RegisterPage() {
           </div>
         </Field>
 
-        <Field
-          label="আপনার জেলা"
-          htmlFor="district"
-          hint="নামাজের সময়সূচি ও স্থানীয় কনটেন্টের জন্য — পরে সেটিংসে বদলাতে পারবেন"
-        >
-          <div className="relative">
-            <MapPin
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-subtle-foreground"
-              aria-hidden
-            />
-            <Select id="district" name="district" defaultValue="dhaka" className="pl-10">
-              {DISTRICTS.map((district) => (
-                <option key={district.id} value={district.id}>
-                  {district.name.bn}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </Field>
+        <DistrictField />
 
         <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-surface p-3.5">
           <input type="checkbox" name="terms" className="mt-0.5 size-4 cursor-pointer accent-[var(--primary)]" />

@@ -181,18 +181,19 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
                   <p className="mb-2 text-[0.75rem] font-semibold text-foreground">ভূমিকা নির্ধারণ</p>
                   <Select
                     value={roleOf(selected)}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setRoles((prev) => ({
                         ...prev,
-                        [selected.id]: e.target.value as AdminUserRow["role"],
+                        [selected.id]: value as AdminUserRow["role"],
                       }))
                     }
                     aria-label="ভূমিকা"
-                  >
-                    <option value="user">ব্যবহারকারী</option>
-                    <option value="scholar">আলেম</option>
-                    <option value="admin">অ্যাডমিন</option>
-                  </Select>
+                    options={[
+                      { value: "user", label: "ব্যবহারকারী" },
+                      { value: "scholar", label: "আলেম" },
+                      { value: "admin", label: "অ্যাডমিন" },
+                    ]}
+                  />
                 </div>
 
                 <div className="flex flex-wrap gap-2">

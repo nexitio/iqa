@@ -109,18 +109,19 @@ export function SurahExplorer({ surahs = QURAN_SURAHS }: { surahs?: QuranSurah[]
           <Select
             aria-label={t("label.juz")}
             value={juz === "all" ? "all" : String(juz)}
-            onChange={(e) => setJuz(e.target.value === "all" ? "all" : Number(e.target.value))}
+            onChange={(value) => setJuz(value === "all" ? "all" : Number(value))}
             className="h-9 w-auto min-w-[8.5rem] text-[0.8125rem]"
-          >
-            <option value="all">
-              {isBn ? `সব ${t("label.juz")}` : `All ${t("label.juz")}`}
-            </option>
-            {juzNumbers.map((n) => (
-              <option key={n} value={n}>
-                {t("label.juz")} {formatNumber(n, "bn")}
-              </option>
-            ))}
-          </Select>
+            options={[
+              { value: "all", label: isBn ? `সব ${t("label.juz")}` : `All ${t("label.juz")}` },
+              ...juzNumbers.map((n) => ({
+                value: String(n),
+                label: `${t("label.juz")} ${formatNumber(n, "bn")}`,
+                // The label carries Bengali numerals, so searching "15" needs the
+                // Latin number as a keyword.
+                keywords: `${t("label.juz")} ${n}`,
+              })),
+            ]}
+          />
         </div>
       </div>
 

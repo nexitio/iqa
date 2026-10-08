@@ -2,25 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { LucideIcon } from "lucide-react";
-import {
-  AtSign,
-  BellRing,
-  Bookmark,
-  CheckCheck,
-  Info,
-  MessageCircleQuestion,
-  Route,
-  Share2,
-  ShieldAlert,
-  Sparkles,
-  UserPlus,
-  X,
-} from "lucide-react";
-import type { AppNotification, NotificationKind } from "@/lib/types";
+import { BellRing, Bookmark, CheckCheck, X } from "lucide-react";
+import type { AppNotification } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime } from "@/lib/utils";
-import { Badge, Button, Card, EmptyState, softTone, type Tone } from "@/components/ui";
+import { Badge, Button, Card, EmptyState, softTone } from "@/components/ui";
+import { NOTIFICATION_KIND, NotificationKindIcon } from "@/components/personal/notification-item";
 
 /**
  * Notifications list with real local interaction.
@@ -30,17 +17,6 @@ import { Badge, Button, Card, EmptyState, softTone, type Tone } from "@/componen
  * evaluated properly. Bengali day buckets are derived from the notification
  * timestamps instead of being hard-coded.
  */
-
-const KIND_META: Record<NotificationKind, { icon: LucideIcon; tone: Tone; labelBn: string }> = {
-  answer: { icon: MessageCircleQuestion, tone: "success", labelBn: "উত্তর" },
-  mention: { icon: AtSign, tone: "info", labelBn: "উল্লেখ" },
-  follow: { icon: UserPlus, tone: "primary", labelBn: "ফলো" },
-  reshare: { icon: Share2, tone: "accent", labelBn: "শেয়ার" },
-  moderation: { icon: ShieldAlert, tone: "warning", labelBn: "মডারেশন" },
-  daily: { icon: Sparkles, tone: "primary", labelBn: "দৈনিক" },
-  journey: { icon: Route, tone: "accent", labelBn: "যাত্রা" },
-  system: { icon: Info, tone: "neutral", labelBn: "সিস্টেম" },
-};
 
 function bengaliDayKey(iso: string): string {
   const then = new Date(iso).getTime();
@@ -146,8 +122,7 @@ export function NotificationsList({ notifications }: { notifications: AppNotific
 
           <ul className="space-y-2.5">
             {items.map((notification) => {
-              const meta = KIND_META[notification.kind];
-              const Icon = meta.icon;
+              const meta = NOTIFICATION_KIND[notification.kind];
               const isUnread = !read[notification.id];
               return (
                 <li key={notification.id}>
@@ -159,9 +134,7 @@ export function NotificationsList({ notifications }: { notifications: AppNotific
                     )}
                   >
                     <div className="flex items-start gap-3.5">
-                      <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", softTone[meta.tone])}>
-                        <Icon className="size-5" aria-hidden />
-                      </span>
+                      <NotificationKindIcon kind={notification.kind} />
 
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">

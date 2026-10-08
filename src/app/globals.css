@@ -20,7 +20,7 @@
   color-scheme: light;
 
   /*
-   * The header's own height: a 4.25rem bar plus its 1px hairline border.
+   * The header's own height: the 3.5rem bar plus its 1px hairline border.
    *
    * Anything that has to sit directly beneath the header docks here — the
    * Qur'an reader's toolbar sticks flush under it rather than at `--pin-top`,
@@ -28,17 +28,17 @@
    * half-scrolled text between itself and the header. Both offsets describe the
    * same bar, so it is measured once here and derived from below.
    */
-  --header-h: 4.3125rem; /* 69px */
+  --header-h: 3.5625rem; /* 57px */
 
   /*
    * Where a pinned column stops scrolling.
    *
    * It must equal the *measured* offset a static column already has: the header
-   * (4.25rem bar + its 1px hairline border = 69px) plus the row's 1.75rem top
-   * padding = 97px. When the two differ the column visibly slides by the
+   * (3.5rem bar + its 1px hairline border = 57px) plus the row's 1.75rem top
+   * padding = 85px. When the two differ the column visibly slides by the
    * difference as scrolling starts — a 5.5rem guess here drifted 9px.
    */
-  --pin-top: calc(var(--header-h) + 1.75rem); /* 97px = 69px header + 28px gap */
+  --pin-top: calc(var(--header-h) + 1.75rem); /* 85px = 57px header + 28px gap */
 
   /*
    * How much height a pinned column may use.

@@ -51,11 +51,17 @@ function fmt(n: number) {
  * the only thing to the left of the text and the row reads as one page rather
  * than a stack of left-aligned fragments.
  *
+ * Only from `sm` up, though. On a phone that gutter is a fifth of the reading
+ * width spent on empty paper — the body pays for it in extra line-wraps — so
+ * below the breakpoint the row falls back to its own left edge and uses the full
+ * column. The avatar stays in the header either way; it is the body that stops
+ * pretending to live underneath it.
+ *
  * Row padding (0.875rem, `px-3.5`) + avatar (2.5rem, `size-10`) + gap after it
  * (0.625rem, `gap-2.5`) = 4rem. Keep these three in step: if the avatar or the
  * row padding changes, this does not follow it.
  */
-const CONTENT_COLUMN = "pl-16 pr-3.5";
+const CONTENT_COLUMN = "pl-3.5 pr-3.5 sm:pl-16";
 
 export function ReactionBar({
   postId,
@@ -189,9 +195,12 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
                 </span>
               </>
             ) : null}
-            <span className="inline-flex items-center gap-1">
+            {/* `min-w-0` on both the item and its label: this is the longest line
+                in the row, and a flex item's automatic minimum size would let it
+                push past the card on a narrow screen instead of ellipsising. */}
+            <span className="inline-flex min-w-0 items-center gap-1">
               <Sparkles className="size-3 shrink-0 text-primary" aria-hidden />
-              <span className="truncate">কারণ: {post.reasonBn}</span>
+              <span className="min-w-0 truncate">কারণ: {post.reasonBn}</span>
             </span>
             {post.stats.views > 0 ? (
               <span className="ml-auto inline-flex shrink-0 items-center gap-1">

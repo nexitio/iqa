@@ -13,7 +13,7 @@ import {
   Sparkles,
   Type as TypeIcon,
 } from "lucide-react";
-import { DISTRICTS, findDistrict } from "@/lib/bn";
+import { DISTRICTS, districtOptions, findDistrict } from "@/lib/bn";
 import { MADHABS, normalizeMadhab, useMadhab } from "@/lib/prayer-prefs";
 import { DEPARTMENTS } from "@/lib/data/departments";
 import { CURRENT_USER, USER_STREAK_DAYS } from "@/lib/data/personal";
@@ -266,14 +266,9 @@ export function SettingsPanels() {
             <Select
               id="district"
               value={districtId}
-              onChange={(event) => changeDistrict(event.target.value)}
-            >
-              {DISTRICTS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {pick(item.name)}
-                </option>
-              ))}
-            </Select>
+              onChange={changeDistrict}
+              options={districtOptions(locale)}
+            />
           </Field>
           <div className="rounded-xl border border-border bg-surface-2 p-3.5">
             <p className="text-[0.75rem] font-semibold text-foreground">বর্তমান অবস্থান</p>
@@ -298,14 +293,13 @@ export function SettingsPanels() {
             <Select
               id="madhab"
               value={madhab}
-              onChange={(event) => setMadhab(normalizeMadhab(event.target.value))}
-            >
-              {MADHABS.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name[locale]} ({option.asr[locale]})
-                </option>
-              ))}
-            </Select>
+              onChange={(value) => setMadhab(normalizeMadhab(value))}
+              options={MADHABS.map((option) => ({
+                value: option.id,
+                label: `${option.name[locale]} (${option.asr[locale]})`,
+                keywords: `${option.name.bn} ${option.name.en}`,
+              }))}
+            />
           </Field>
         </div>
       </Card>

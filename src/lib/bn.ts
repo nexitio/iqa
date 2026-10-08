@@ -411,6 +411,26 @@ export function findDistrict(id: string): District {
   return DISTRICTS.find((d) => d.id === id) ?? DISTRICTS[0];
 }
 
+/**
+ * The district list as `Select` options — the picker appears in five places
+ * (register, settings, the prayer widget, an admin filter, the scholar form),
+ * so the shape is built once instead of five times.
+ *
+ * Both scripts are search keywords: a reader whose interface is Bangla may
+ * still type "Cox's Bazar", and typing a division should surface its districts.
+ * The division is also the quiet second line, which is what makes sixteen rows
+ * scannable at a glance.
+ */
+export function districtOptions(locale: Locale = "bn") {
+  return DISTRICTS.map((district) => ({
+    value: district.id,
+    label: district.name[locale],
+    keywords: `${district.name.bn} ${district.name.en} ${district.division.bn} ${district.division.en}`,
+    description:
+      locale === "bn" ? `${district.division.bn} বিভাগ` : `${district.division.en} Division`,
+  }));
+}
+
 /** Direction to the Ka'bah in degrees from true north. */
 export function qiblaDirection(district: District): number {
   const kaabaLat = 21.4225;
