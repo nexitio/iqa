@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from "react";
 import {
   Bold,
   Heading2,
@@ -12,7 +12,8 @@ import {
   Wand2,
 } from "lucide-react";
 import type { ReferenceHit } from "@/lib/reference-index";
-import { REFERENCE_CORPUS, searchReferences } from "@/lib/reference-index";
+import { REFERENCE_CORPUS, searchReferences, toContentReference } from "@/lib/reference-index";
+import type { ContentReference } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,19 @@ import { cn } from "@/lib/utils";
 
 /** The popup's preferred width; a narrow editor gets a narrower menu. */
 const PICKER_WIDTH = 22 * 16;
+
+/**
+ * What the composer may ask the editor to do on its behalf.
+ *
+ * The reference rail recommends citations, but the caret belongs to the editor.
+ * Instead of lifting the caret up into the composer, the editor exposes the one
+ * action that needs it — so the rail's button and the `#` picker write into the
+ * draft through the same code and can never drift apart.
+ */
+export interface RichTextEditorHandle {
+  /** Write a citation where the scholar is writing, as the picker would. */
+  insert: (reference: ContentReference) => void;
+}
 
 /**
  * How far past the trigger character the picker keeps listening.
@@ -139,6 +153,7 @@ function caretPoint(el: HTMLTextAreaElement, index: number) {
 }
 
 export function RichTextEditor({
+  ref,
   id,
   value,
   onChange,
@@ -147,17 +162,24 @@ export function RichTextEditor({
   className,
   ariaLabel,
 }: {
+  /** Lets the composer write a citation the scholar picked somewhere else. */
+  ref?: Ref<RichTextEditorHandle>;
   id?: string;
   value: string;
   onChange: (next: string) => void;
-  /** Called with the chosen citation so the composer can attach its text. */
-  onReference?: (hit: ReferenceHit) => void;
+  /** Called with the inserted citation so the composer can attach its text. */
+  onReference?: (reference: ContentReference) => void;
   placeholder?: string;
   className?: string;
   ariaLabel?: string;
 }) {
   const { t, locale } = useI18n();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // Where the scholar last had the caret. The rail's button takes focus when it
+  // is clicked, and a blurred textarea can report position 0 — which would mean
+  // "the top of the draft" — so the caret is remembered rather than re-read from
+  // a field that is no longer in the scholar's hands.
+  const caretRef = useRef<number | null>(null);
   const [picker, setPicker] = useState<PickerState | null>(null);
   // Where the popup goes, and how wide it may be: on a phone the editor is
   // narrower than the popup's preferred width, and a menu that hangs off the
@@ -226,29 +248,58 @@ export function RichTextEditor({
     });
   }
 
-  /** Insert a citation: plain in the sentence, or as a full quotation block. */
-  function insertReference(hit: ReferenceHit, asQuote: boolean) {
+  /**
+   * Write a citation into the body, replacing `from`..`to`.
+   *
+   * One writer for both callers: the picker replaces the `#query` it was opened
+   * with, the rail inserts at a caret. A quotation is a paragraph, so mid-sentence
+   * it opens on a line of its own — otherwise the `> ` prefix would sit behind
+   * the scholar's words and the renderer, which reads quotes by line, would not
+   * see a quote at all. The same reasoning gives an inline citation a leading
+   * space when it would otherwise glue itself to the word before it.
+   */
+  function writeCitation(reference: ContentReference, from: number, to: number, asQuote: boolean) {
     const el = textareaRef.current;
-    const state = picker;
-    if (!el || !state) return;
-    const citation = `**${hit.refBn}**`;
-    // A quotation is a paragraph: if the scholar is mid-sentence, it opens on a
-    // line of its own first, or the `> ` prefix would sit behind their words
-    // and the renderer — which reads quotes by line — would not see a quote.
-    const atLineStart = state.start === 0 || /\n\s*$/.test(el.value.slice(0, state.start));
-    const lead = asQuote && !atLineStart ? "\n\n" : "";
+    if (!el) return;
+    const before = el.value.slice(0, from);
+    const citation = `**${reference.refBn}**`;
+    const atLineStart = from === 0 || /\n\s*$/.test(before);
     const replacement = asQuote
-      ? `${lead}> ${citation}\n> ${hit.arabic}\n> ${hit.translationBn}\n\n`
-      : `${citation} `;
-    const text = el.value.slice(0, state.start) + replacement + el.value.slice(state.end);
-    const caret = state.start + replacement.length;
+      ? `${atLineStart ? "" : "\n\n"}> ${citation}\n> ${reference.arabic}\n> ${reference.translationBn}\n\n`
+      : `${atLineStart || /\s$/.test(before) ? "" : " "}${citation} `;
+    const text = before + replacement + el.value.slice(to);
+    const caret = from + replacement.length;
+    caretRef.current = caret;
     onChange(text);
-    onReference?.(hit);
+    onReference?.(reference);
     setPicker(null);
     window.requestAnimationFrame(() => {
       el.focus();
       el.setSelectionRange(caret, caret);
     });
+  }
+
+  /**
+   * The rail's entry point: a citation chosen in the panel, written where the
+   * scholar last had the caret — the live selection while they are in the text,
+   * the remembered one while a button holds focus, and the end of the draft
+   * when they have not written in it yet.
+   */
+  function insertAtCaret(reference: ContentReference) {
+    const el = textareaRef.current;
+    if (!el) return;
+    const inText = document.activeElement === el;
+    const at = (inText ? el.selectionStart : caretRef.current) ?? el.value.length;
+    writeCitation(reference, at, at, false);
+  }
+
+  useImperativeHandle(ref, () => ({ insert: insertAtCaret }));
+
+  /** Insert a citation the picker chose: plain in the sentence, or as a quote. */
+  function insertReference(hit: ReferenceHit, asQuote: boolean) {
+    const state = picker;
+    if (!state) return;
+    writeCitation(toContentReference(hit), state.start, state.end, asQuote);
   }
 
   /** Open the picker at the caret with no query (the toolbar's entry point). */
@@ -280,6 +331,7 @@ export function RichTextEditor({
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const next = event.target.value;
     const caret = event.target.selectionStart;
+    caretRef.current = caret;
     onChange(next);
 
     // A trigger character at a word boundary opens the picker; anything else in
@@ -376,6 +428,10 @@ export function RichTextEditor({
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onSelect={() => {
+          const el = textareaRef.current;
+          if (el) caretRef.current = el.selectionStart;
+        }}
         onBlur={() => setPicker(null)}
         placeholder={placeholder}
         aria-label={ariaLabel}

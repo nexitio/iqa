@@ -99,7 +99,7 @@ export const DICTIONARY: Dict = {
   "action.approve": { bn: "অনুমোদন", en: "Approve" },
   "action.reject": { bn: "প্রত্যাখ্যান", en: "Reject" },
   "action.suspend": { bn: "স্থগিত", en: "Suspend" },
-  "action.useReference": { bn: "ব্যবহার করুন", en: "Use" },
+  "action.useReference": { bn: "লেখায় বসান", en: "Insert in draft" },
   "action.insert": { bn: "যোগ করুন", en: "Insert" },
   "action.signIn": { bn: "প্রবেশ করুন", en: "Sign in" },
   "action.signUp": { bn: "অ্যাকাউন্ট খুলুন", en: "Create account" },

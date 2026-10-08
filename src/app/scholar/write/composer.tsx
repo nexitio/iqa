@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -16,7 +16,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { ContentReference, ReferenceSuggestion } from "@/lib/types";
-import { toContentReference, type ReferenceHit } from "@/lib/reference-index";
 import { getSuggestionsForKeywords } from "@/lib/data/questions";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
@@ -26,6 +25,7 @@ import {
   ReferenceSuggester,
   RichTextEditor,
   SmartReferenceCounter,
+  type RichTextEditorHandle,
 } from "@/components/console";
 import {
   Badge,
@@ -83,6 +83,8 @@ export function Composer({
 }) {
   const { t, locale } = useI18n();
 
+  const editorRef = useRef<RichTextEditorHandle>(null);
+
   const [kind, setKind] = useState<DraftKind>(defaultKind);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -119,6 +121,11 @@ export function Composer({
   );
   const minutes = readingMinutes(body);
 
+  /**
+   * Where every citation lands: the panel keeps the full verse beside the draft
+   * so it can be verified — and removed — independently of the sentence it was
+   * written into.
+   */
   function attach(reference: ContentReference) {
     setAttached((prev) =>
       prev.some((existing) => existing.id === reference.id) ? prev : [...prev, reference],
@@ -126,17 +133,17 @@ export function Composer({
     setNotice({ tone: "success", text: `“${reference.refBn}” খসড়ায় যুক্ত করা হয়েছে।` });
   }
 
-  function handleInsert(suggestion: ReferenceSuggestion) {
-    attach(toReference(suggestion));
-  }
-
   /**
-   * The editor inserted a citation where the scholar's cursor was; the panel
-   * keeps the full verse beside the draft so it can be verified and removed
-   * independently of the sentence it was written into.
+   * The rail's suggestion does exactly what the editor's `#` picker does: the
+   * citation is written into the sentence at the caret *and* kept beside the
+   * draft — the editor reports it back through `attach`, so both roads end in
+   * the same place. When the editor is not mounted (the preview is showing),
+   * there is nowhere to write, so the reference is only attached.
    */
-  function handleReference(hit: ReferenceHit) {
-    attach(toContentReference(hit));
+  function handleInsert(suggestion: ReferenceSuggestion) {
+    const reference = toReference(suggestion);
+    if (editorRef.current) editorRef.current.insert(reference);
+    else attach(reference);
   }
 
   const canSubmit = title.trim().length > 3 && body.trim().length > 20;
@@ -327,13 +334,14 @@ export function Composer({
                   </div>
                 ) : (
                   <RichTextEditor
+                    ref={editorRef}
                     id="draft-body"
                     value={body}
                     onChange={(next) => {
                       setBody(next);
                       setDirty(true);
                     }}
-                    onReference={handleReference}
+                    onReference={attach}
                     placeholder={t("console.bodyPlaceholder")}
                   />
                 )}
