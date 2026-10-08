@@ -1,9 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useId, useMemo, useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { CloudSun, Compass, MoonStar, Sun, SunDim, Sunrise, Sunset } from "lucide-react";
+import {
+  ChevronDown,
+  CloudSun,
+  Compass,
+  MoonStar,
+  Sun,
+  SunDim,
+  Sunrise,
+  Sunset,
+} from "lucide-react";
 import {
   computePrayerTimes,
   countdownBn,
@@ -159,6 +168,11 @@ export function PrayerTimesWidget({
   const [selected, setSelected] = useDistrictPreference(districtId);
   const [madhab] = useMadhab();
   const { schedule, now } = usePrayerClock(selected, madhab);
+  // The card opens compact. It sits in a pinned rail, where a nine-row table of
+  // the whole day is a wall; the reader who wants the day asks for it, and the
+  // panel above answers everything the compact card is for.
+  const [expanded, setExpanded] = useState(false);
+  const dayListId = useId();
 
   if (!schedule || !now) {
     return (
@@ -170,11 +184,11 @@ export function PrayerTimesWidget({
             <Skeleton className="h-2.5 w-20" />
           </div>
         </div>
-        <div className="space-y-2 px-4 py-3.5">
+        {/* The skeleton is the compact card's shape, not the expanded one: the
+            card must not promise nine rows and then hand over one. */}
+        <div className="space-y-2 px-4 py-3">
           <Skeleton className="h-[5.75rem] w-full rounded-xl" />
-          {Array.from({ length: 9 }, (_, i) => (
-            <Skeleton key={i} className="h-7 w-full rounded-lg" />
-          ))}
+          <Skeleton className="h-7 w-full rounded-lg" />
         </div>
       </Card>
     );
@@ -222,7 +236,7 @@ export function PrayerTimesWidget({
           its own window still has, and how much of that window has gone. When no
           salah is running it answers the next best thing: the forbidden stretch or
           the forenoon the reader is standing in, and the clock that ends it. */}
-      <div className="px-4 pt-3">
+      <div className="px-4 py-3">
         <div className={cn("rounded-xl border px-3.5 py-2.5", style.panel)}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -283,48 +297,69 @@ export function PrayerTimesWidget({
               instruction. */}
           {day.note ? <p className={cn("mt-1 text-[0.6875rem]", style.note)}>{pick(day.note)}</p> : null}
         </div>
+
+        {/* One control, two heights. Collapsed is the answer to "now" — the panel
+            above; expanded adds the rest of the day as the timeline it is. */}
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+          aria-controls={dayListId}
+          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-surface-2/60 px-2 py-1.5 text-[0.6875rem] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+        >
+          {expanded ? t("action.collapse") : t("action.expand")}
+          <ChevronDown
+            className={cn("size-3.5 transition-transform", expanded && "rotate-180")}
+            aria-hidden
+          />
+        </button>
       </div>
 
-      {/* The day in order, as the intervals it is made of. Passed rows recede, the
-          interval you are standing in is filled, and the next salah is outlined,
-          so the list answers "where am I" and "when does this end" at a glance. */}
-      <ul className="space-y-0.5 px-2 py-3">
-        {segments.map((segment) => (
-          <DayRow
-            key={segment.key}
-            segment={segment}
-            time={schedule.times.find((entry) => entry.name === segment.key)}
-            activeKey={activeKey}
-            nextName={schedule.nextPrayer.name}
-            jumuah={day.jumuah}
-            tag={
-              day.phase === "fasting" || day.phase === "suhoor"
-                ? prayerRowTag(segment.key, locale)
-                : null
-            }
-          />
-        ))}
-      </ul>
+      {/* Kept in the DOM while collapsed and hidden, rather than unmounted: the
+          toggle's `aria-controls` has to name something that exists, and a row
+          that was never rendered cannot be the target of that reference. */}
+      <div id={dayListId} hidden={!expanded}>
+        {/* The day in order, as the intervals it is made of. Passed rows recede, the
+            interval you are standing in is filled, and the next salah is outlined,
+            so the list answers "where am I" and "when does this end" at a glance. */}
+        <ul className="space-y-0.5 px-2 py-3">
+          {segments.map((segment) => (
+            <DayRow
+              key={segment.key}
+              segment={segment}
+              time={schedule.times.find((entry) => entry.name === segment.key)}
+              activeKey={activeKey}
+              nextName={schedule.nextPrayer.name}
+              jumuah={day.jumuah}
+              tag={
+                day.phase === "fasting" || day.phase === "suhoor"
+                  ? prayerRowTag(segment.key, locale)
+                  : null
+              }
+            />
+          ))}
+        </ul>
 
-      <div className="flex items-center justify-between gap-2 border-t border-border bg-surface-2/60 px-4 py-2">
-        {/* Friday's one line is about the day itself; the calculation method can
-            wait for a day that is not Jumu'ah. */}
-        <p className="truncate text-[0.6875rem] text-subtle-foreground">
-          {day.jumuah
-            ? isBn
-              ? "জুমার জামাত যোহরের ওয়াক্তে"
-              : "Jumu'ah jama'ah falls in the Dhuhr window"
-            : isBn
-              ? `${madhabName(madhab, locale)} মাযহাব অনুসারে`
-              : `${madhabName(madhab, locale)} calculation`}
-        </p>
-        <Link
-          href="/daily#qibla"
-          className="inline-flex items-center gap-1 text-[0.6875rem] font-medium text-primary hover:underline"
-        >
-          <Compass className="size-3" aria-hidden />
-          {t("label.qibla")}
-        </Link>
+        <div className="flex items-center justify-between gap-2 border-t border-border bg-surface-2/60 px-4 py-2">
+          {/* Friday's one line is about the day itself; the calculation method can
+              wait for a day that is not Jumu'ah. */}
+          <p className="truncate text-[0.6875rem] text-subtle-foreground">
+            {day.jumuah
+              ? isBn
+                ? "জুমার জামাত যোহরের ওয়াক্তে"
+                : "Jumu'ah jama'ah falls in the Dhuhr window"
+              : isBn
+                ? `${madhabName(madhab, locale)} মাযহাব অনুসারে`
+                : `${madhabName(madhab, locale)} calculation`}
+          </p>
+          <Link
+            href="/daily#qibla"
+            className="inline-flex items-center gap-1 text-[0.6875rem] font-medium text-primary hover:underline"
+          >
+            <Compass className="size-3" aria-hidden />
+            {t("label.qibla")}
+          </Link>
+        </div>
       </div>
     </Card>
   );

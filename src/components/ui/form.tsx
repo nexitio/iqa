@@ -51,7 +51,10 @@ export function Field({
 }
 
 const controlBase =
-  "w-full rounded-xl border border-border bg-surface px-3.5 text-[0.875rem] text-foreground placeholder:text-subtle-foreground transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/12 disabled:cursor-not-allowed disabled:bg-surface-3 disabled:opacity-70";
+  // Focus is the border turning primary, not a halo around the field: a ring
+  // draws a second rectangle around a control that already has a shape, and on a
+  // form of several fields it reads as a glow rather than as "you are here".
+  "w-full rounded-xl border border-border bg-surface px-3.5 text-[0.875rem] text-foreground placeholder:text-subtle-foreground transition-colors focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:bg-surface-3 disabled:opacity-70";
 
 const controlSizes = {
   sm: "h-9",

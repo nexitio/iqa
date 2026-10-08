@@ -8,7 +8,6 @@ import {
   GraduationCap,
   LogOut,
   Menu,
-  PenLine,
   Plus,
   Search,
   Settings,
@@ -167,18 +166,12 @@ export function Topbar() {
               <Search className="size-[1.15rem]" />
             </button>
 
-            {/* Ask sits at the weight of the bell, not above it: a filled CTA in
-                the bar competed with every page's own primary action, and the
-                destination is already reachable from the sidebar, the drawer and
-                the floating button. */}
-            <Link
-              href="/questions/ask"
-              aria-label={t("action.ask")}
-              title={t("action.ask")}
-              className={iconButton}
-            >
-              <PenLine className="size-[1.15rem]" />
-            </Link>
+            {/* No ask button here. Composing has one home — the add disc on a
+                large screen, the tab bar's centre on a small one — and a second
+                door in the header made three controls in a row that all asked
+                the reader to create something. What the bar keeps is the bell
+                and the account menu: the things a reader checks, not the thing
+                they do. */}
 
             {/* Controlled here only so the two menus cannot be open at once:
                 opening the bell closes the account menu, and opening the account

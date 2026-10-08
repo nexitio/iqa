@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { ContentReference, ReferenceSuggestion } from "@/lib/types";
+import { toContentReference, type ReferenceHit } from "@/lib/reference-index";
 import { getSuggestionsForKeywords } from "@/lib/data/questions";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
@@ -23,6 +24,7 @@ import { cn, readingMinutes, relativeTime, toParagraphs } from "@/lib/utils";
 import {
   AttachedReferenceList,
   ReferenceSuggester,
+  RichTextEditor,
   SmartReferenceCounter,
 } from "@/components/console";
 import {
@@ -72,13 +74,16 @@ function toReference(suggestion: ReferenceSuggestion): ContentReference {
 export function Composer({
   scholarName,
   departmentNames,
+  defaultKind = "article",
 }: {
   scholarName: string;
   departmentNames: string[];
+  /** The draft type the compose menu asked for, if it asked for one. */
+  defaultKind?: DraftKind;
 }) {
   const { t, locale } = useI18n();
 
-  const [kind, setKind] = useState<DraftKind>("article");
+  const [kind, setKind] = useState<DraftKind>(defaultKind);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [questionText, setQuestionText] = useState("");
@@ -114,13 +119,24 @@ export function Composer({
   );
   const minutes = readingMinutes(body);
 
-  function handleInsert(suggestion: ReferenceSuggestion) {
+  function attach(reference: ContentReference) {
     setAttached((prev) =>
-      prev.some((reference) => reference.id === suggestion.id)
-        ? prev
-        : [...prev, toReference(suggestion)],
+      prev.some((existing) => existing.id === reference.id) ? prev : [...prev, reference],
     );
-    setNotice({ tone: "success", text: `“${suggestion.refBn}” খসড়ায় যুক্ত করা হয়েছে।` });
+    setNotice({ tone: "success", text: `“${reference.refBn}” খসড়ায় যুক্ত করা হয়েছে।` });
+  }
+
+  function handleInsert(suggestion: ReferenceSuggestion) {
+    attach(toReference(suggestion));
+  }
+
+  /**
+   * The editor inserted a citation where the scholar's cursor was; the panel
+   * keeps the full verse beside the draft so it can be verified and removed
+   * independently of the sentence it was written into.
+   */
+  function handleReference(hit: ReferenceHit) {
+    attach(toContentReference(hit));
   }
 
   const canSubmit = title.trim().length > 3 && body.trim().length > 20;
@@ -282,7 +298,6 @@ export function Composer({
                     {preview ? "সম্পাদনায় ফিরুন" : t("console.preview")}
                   </button>
                 }
-                hint={preview ? undefined : t("console.bodyPlaceholder")}
               >
                 {preview ? (
                   <div className="rounded-xl border border-border bg-surface-2 p-5">
@@ -311,15 +326,15 @@ export function Composer({
                     ) : null}
                   </div>
                 ) : (
-                  <Textarea
+                  <RichTextEditor
                     id="draft-body"
                     value={body}
-                    onChange={(event) => {
-                      setBody(event.target.value);
+                    onChange={(next) => {
+                      setBody(next);
                       setDirty(true);
                     }}
+                    onReference={handleReference}
                     placeholder={t("console.bodyPlaceholder")}
-                    className="min-h-80"
                   />
                 )}
               </Field>

@@ -257,12 +257,24 @@ export function ScholarCard({
 
       <ScholarStatBar scholar={scholar} className="mt-3.5" compactMode />
 
-      <div className="mt-3.5 flex items-center gap-2">
-        <Button href={href} size="sm" variant="outline" full>
+      {/* Two halves, not two full-width buttons. `Button` is `shrink-0` and
+          `full` means `w-full`, so a pair of them in one flex row demanded 200%
+          of the card: the follow button was pushed past the card's right edge
+          and dragged the card's other content out with it. Each button takes a
+          share of the row instead, and below ~16rem of card the row wraps to
+          stacked buttons rather than letting either label clip. */}
+      <div className="mt-3.5 flex flex-wrap items-center gap-2">
+        <Button
+          href={href}
+          size="sm"
+          variant="outline"
+          full={!showFollow}
+          className={showFollow ? "min-w-0 grow basis-[7.5rem]" : undefined}
+        >
           {t("action.viewAll")}
         </Button>
         {showFollow ? (
-          <Button size="sm" variant="soft" full>
+          <Button size="sm" variant="soft" className="min-w-0 grow basis-[7.5rem]">
             {t("action.follow")}
           </Button>
         ) : null}

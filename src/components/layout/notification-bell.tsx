@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { Bell } from "lucide-react";
@@ -30,7 +31,32 @@ import { NotificationMenu } from "./notification-menu";
  * `open` is optional on purpose. A host that has to coordinate this panel with
  * another one controls it; a host that does not leaves it alone. Everything else
  * — the badge, dismissal, the reset on navigation — is the same either way.
+ *
+ * Below `sm` the trigger is not a panel at all but a link straight to
+ * /notifications. A dropdown over a phone has to float above the reader's own
+ * thread of work, and it can only show a few rows before it becomes a scroller
+ * inside a scroller — while the page that exists for exactly this content sits
+ * one tap away, already grouped by day and already able to mark things read. The
+ * two triggers are one control rendered twice, and CSS decides which one a given
+ * screen gets: no width is read in JS, so the server and the client always agree.
  */
+
+/**
+ * The unread count, as it appears on a trigger.
+ *
+ * Both triggers share it because both have to say the same number: a reader who
+ * taps the bell on a phone and later taps it on a laptop is looking at one
+ * mailbox, not two.
+ */
+function UnreadBadge({ unread }: { unread: number }) {
+  if (unread === 0) return null;
+  return (
+    <span className="absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-danger text-[0.5625rem] font-bold text-white ring-2 ring-surface">
+      {unread}
+    </span>
+  );
+}
+
 export function NotificationBell({
   open,
   onOpenChange,
@@ -85,6 +111,19 @@ export function NotificationBell({
 
   return (
     <div className={cn("relative", className)} ref={rootRef}>
+      <Link
+        href="/notifications#list"
+        aria-label={t("nav.notifications")}
+        title={t("nav.notifications")}
+        className={cn(
+          "relative grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground sm:hidden",
+          triggerClassName,
+        )}
+      >
+        <Bell className="size-[1.15rem]" />
+        <UnreadBadge unread={unread} />
+      </Link>
+
       <button
         type="button"
         onClick={() => setOpen(!isOpen)}
@@ -93,17 +132,13 @@ export function NotificationBell({
         aria-label={t("nav.notifications")}
         title={t("nav.notifications")}
         className={cn(
-          "relative grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground",
+          "relative hidden size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground sm:grid",
           isOpen && "bg-surface-3 text-foreground",
           triggerClassName,
         )}
       >
         <Bell className="size-[1.15rem]" />
-        {unread > 0 ? (
-          <span className="absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-danger text-[0.5625rem] font-bold text-white ring-2 ring-surface">
-            {unread}
-          </span>
-        ) : null}
+        <UnreadBadge unread={unread} />
       </button>
 
       {isOpen ? (

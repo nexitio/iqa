@@ -119,7 +119,12 @@ export function TabLinks({
   return (
     <div
       className={cn(
-        "no-scrollbar flex items-center gap-1 overflow-x-auto",
+        // `max-w-full` is load-bearing on the pill variant: a `w-fit` strip is
+        // never narrower than its own min-content, and every pill inside is
+        // `shrink-0 whitespace-nowrap`. With three tabs on a 390px screen that
+        // min-content was 21px wider than the page, so the strip — not the page —
+        // has to be the thing that scrolls.
+        "no-scrollbar flex max-w-full items-center gap-1 overflow-x-auto",
         variant === "underline"
           ? "border-b border-border"
           : "w-fit rounded-full border border-border bg-surface-2 p-1",

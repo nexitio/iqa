@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import Link from "next/link";
-import { PenLine } from "lucide-react";
 import { SideNav } from "./side-nav";
 import { Topbar } from "./topbar";
 import { BottomNav } from "./bottom-nav";
+import { ComposeFab } from "./compose-menu";
 import { SearchCommand } from "./search-command";
 
 /**
@@ -13,7 +12,7 @@ import { SearchCommand } from "./search-command";
  *
  * Desktop is a three-column frame — navigation, content, optional rail — that
  * uses the full window rather than leaving dead gutters. Mobile collapses to a
- * tab bar with a raised ask action.
+ * tab bar whose centre opens the same compose menu the desktop disc does.
  *
  * Note the sidebar deliberately has no `max-height`/`overflow` wrapper: an inner
  * scroll container produced a second, permanently visible scrollbar beside the
@@ -77,6 +76,11 @@ export function AppShell({
       {/* The bottom gap lives on `main`, not on this row: a sticky child is
           bounded by its container's *content* box, so bottom padding here would
           push the pinned columns up by that much at the end of the page. */}
+      {/* The gutter below `sm` is deliberately kept at 1rem rather than removed:
+          it is what makes a page look like a page on a phone. The home feed is
+          the one exception, and it takes the width back for itself — the feed
+          column bleeds into this padding rather than the shell giving it up for
+          every route. */}
       <div className="relative mx-auto flex w-full max-w-[1440px] flex-1 gap-6 px-4 pt-6 sm:px-6 lg:gap-8 lg:px-8 lg:pt-7">
         <aside className="hidden w-[15.5rem] shrink-0 lg:block">
           {/* A pinned column taller than the viewport strands its own bottom:
@@ -105,15 +109,10 @@ export function AppShell({
           of being pushed up by a block that sits below their container. */}
       <BottomNav />
 
-      {/* Floating action button — ask a question */}
-      <Link
-        href="/questions/ask"
-        aria-label="প্রশ্ন করুন"
-        className="group fixed bottom-24 right-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-primary to-primary/80 px-4 py-3 text-[0.8125rem] font-semibold text-primary-foreground shadow-lg ring-1 ring-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:ring-primary/40 active:translate-y-0 active:shadow-md sm:bottom-8 sm:right-6 lg:right-8"
-      >
-        <PenLine className="size-4 transition-transform duration-200 group-hover:rotate-[-8deg]" aria-hidden />
-        <span className="hidden sm:inline">প্রশ্ন করুন</span>
-      </Link>
+      {/* One add button per input mode: this disc on a large screen, the tab
+          bar's centre below `lg`. The old pill sat over the content on every
+          width and covered the corner of the page it floated above. */}
+      <ComposeFab />
 
       {searchOpen ? <SearchCommand onClose={() => setSearchOpen(false)} /> : null}
     </div>

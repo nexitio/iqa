@@ -16,7 +16,9 @@
  */
 
 import type { Dua, DuaCategory } from "../types";
-import { getTodayIndex } from "./daily";
+// Explicit `.ts`, like prayer-day.ts: this module is also loaded by the plain-Node
+// verify script, which resolves specifiers rather than bundling them.
+import { getTodayIndex } from "./daily.ts";
 
 /** Occasion groups, ordered as a day is lived: night, prayer, food, then the rest. */
 export const DUA_CATEGORIES: DuaCategory[] = [

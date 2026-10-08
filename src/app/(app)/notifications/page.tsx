@@ -65,7 +65,11 @@ export default function NotificationsPage() {
       </PageHeader>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="min-w-0">
+        {/* `#list` is where the header's bell lands on a phone. The reader tapped
+            the bell to see their notifications, not the page's summary of them,
+            so the anchor skips the header and the stat tiles; the scroll margin
+            keeps the first row clear of the sticky header. */}
+        <div id="list" className="min-w-0 scroll-mt-[var(--pin-top)]">
           <NotificationsList notifications={NOTIFICATIONS} />
         </div>
 

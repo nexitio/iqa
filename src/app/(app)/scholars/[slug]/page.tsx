@@ -8,6 +8,7 @@ import {
   Clock,
   FileText,
   GraduationCap,
+  ScrollText,
   Languages,
   MapPin,
   MessageCircleQuestion,
@@ -17,6 +18,7 @@ import {
   Users,
 } from "@/components/icons";
 import { SCHOLARS, getScholarBySlug } from "@/lib/data/scholars";
+import { getScholarBiography } from "@/lib/data/scholar-bios";
 import { getDepartment } from "@/lib/data/departments";
 import { findDistrict, formatNumber, gregorianDateBn } from "@/lib/bn";
 import {
@@ -41,7 +43,7 @@ import {
 } from "@/components/people";
 import { T, Pick } from "@/components/i18n-text";
 import { FollowButton } from "../follow-button";
-import { BioProse, ProfileSections } from "./profile-sections";
+import { BioProse, ProfileSections, ScholarBiographySection } from "./profile-sections";
 
 const FIQH_LABELS: Record<string, string> = {
   hanafi: "হানাফী মাযহাব",
@@ -84,6 +86,7 @@ export default async function ScholarProfilePage({
   if (!scholar) notFound();
 
   const tab: Tab = TABS.includes(tabParam as Tab) ? (tabParam as Tab) : "articles";
+  const biography = getScholarBiography(scholar.id);
   const district = findDistrict(scholar.district);
   const departments = scholar.departmentIds
     .map((id) => getDepartment(id))
@@ -170,7 +173,7 @@ export default async function ScholarProfilePage({
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         {/* ---------------- main column ---------------- */}
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Card>
             <CardHeader
               title="পরিচিতি"
@@ -216,6 +219,11 @@ export default async function ScholarProfilePage({
             </div>
           </Card>
 
+          {/* The full biography, when the archive holds one. It follows the short
+              bio rather than replacing it: the card above is the summary a reader
+              skims, this is the record they come back to. */}
+          {biography ? <ScholarBiographySection biography={biography} /> : null}
+
           {/* Credentials */}
           <Card>
             <CredentialList credentials={scholar.credentials} />
@@ -242,7 +250,12 @@ export default async function ScholarProfilePage({
         </div>
 
         {/* ---------------- rail ---------------- */}
-        <aside className="space-y-4">
+        {/* `min-w-0` on purpose: a grid item is `min-width: auto` by default, so
+            the rail's longest unbreakable line (the availability badge inside a
+            compact scholar card) sized the track itself — 410px on a 390px
+            screen, which pushed the whole page sideways rather than ever
+            wrapping. */}
+        <aside className="min-w-0 space-y-4">
           <Card variant="parchment">
             <CardHeader
               title={<T k="label.responseTime" />}
@@ -271,6 +284,22 @@ export default async function ScholarProfilePage({
               <FactList
                 columns={1}
                 items={[
+                  ...(biography
+                    ? [
+                        {
+                          label: <T k="label.biography" />,
+                          value: (
+                            <Link
+                              href="#biography"
+                              className="text-primary transition-colors hover:text-primary-hover"
+                            >
+                              পূর্ণ জীবনী পড়ুন
+                            </Link>
+                          ),
+                          icon: ScrollText,
+                        },
+                      ]
+                    : []),
                   {
                     label: <T k="label.madrasah" />,
                     value: <Pick value={scholar.madrasah} />,

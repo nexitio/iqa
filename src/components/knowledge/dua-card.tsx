@@ -39,8 +39,8 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Home,
 };
 
-export function duaCategoryIcon(name: string): LucideIcon {
-  return CATEGORY_ICONS[name] ?? HandHeart;
+export function duaCategoryIcon(name?: string): LucideIcon {
+  return (name ? CATEGORY_ICONS[name] : undefined) ?? HandHeart;
 }
 
 /**
@@ -70,7 +70,7 @@ export function DuaCard({
   const { t, pick, isBn } = useI18n();
   const [copied, setCopied] = useState(false);
   const [saved, setSaved] = useState(false);
-  const Icon = category ? duaCategoryIcon(category.icon) : HandHeart;
+  const Icon = CATEGORY_ICONS[category?.icon ?? ""] ?? HandHeart;
 
   /** What lands on the clipboard is what gets sent to someone else. */
   const copy = async () => {

@@ -10,7 +10,6 @@ import {
   Link2,
   MessageCircle,
   Quote,
-  Sparkles,
 } from "lucide-react";
 import { Avatar, Badge, VerifiedMark } from "@/components/ui";
 import { useI18n } from "@/lib/i18n";
@@ -23,12 +22,15 @@ import type { ResolvedPost } from "./resolve";
  *
  * Deliberately modelled on the familiar social post — because the product's
  * premise is a *knowledge feed* people return to — while keeping scholarship
- * signals (verified mark, department, evidence count, and an explicit "why you
- * are seeing this" line) in the most prominent positions.
+ * signals (verified mark, department, evidence count) in the most prominent
+ * positions.
  *
- * Density is deliberate too: one meta row carries author, age, evidence count
- * and the reason the post is here, because a feed that makes the reader scroll
- * three screens to reach the second post is not a feed.
+ * Density is deliberate too: the header is two lines — who and what kind on the
+ * first, the author's department, the age and the evidence count on the second —
+ * because a feed that makes the reader scroll three screens to reach the second
+ * post is not a feed. The view count closes that second line in a column of its
+ * own, so it can be scanned down the feed instead of being found wherever each
+ * row's text happened to end.
  *
  * It is a *row*, not a card: no corner radius, no shadow, and no edge of its own.
  * A feed is read in order, and the boundaries the stream draws — a rule down each
@@ -168,47 +170,60 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
         )}
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex min-w-0 items-center gap-1.5">
             <span className="truncate text-[0.875rem] font-semibold text-foreground">
               {post.author
                 ? `${pick({ bn: post.author.honorificBn ?? "", en: post.author.honorificEn ?? "" })} ${post.author.nameBn}`.trim()
                 : "ইলম"}
             </span>
             {post.author?.verified ? <VerifiedMark label="যাচাইকৃত" /> : null}
-            <Badge tone={post.badge.tone} size="xs" className="ml-0.5">
+            <Badge tone={post.badge.tone} size="xs">
               {badge}
             </Badge>
           </div>
-          <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.75rem] text-subtle-foreground">
-            {post.author?.metaBn ? (
-              <>
-                <span>{post.author.metaBn}</span>
-                <span aria-hidden>·</span>
-              </>
-            ) : null}
-            <span>{relativeTime(post.createdAt, locale)}</span>
-            {post.referenceCount ? (
-              <>
-                <span aria-hidden>·</span>
-                <span className="font-medium text-primary">
-                  {fmt(post.referenceCount)} রেফারেন্স
-                </span>
-              </>
-            ) : null}
-            {/* `min-w-0` on both the item and its label: this is the longest line
-                in the row, and a flex item's automatic minimum size would let it
-                push past the card on a narrow screen instead of ellipsising. */}
-            <span className="inline-flex min-w-0 items-center gap-1">
-              <Sparkles className="size-3 shrink-0 text-primary" aria-hidden />
-              <span className="min-w-0 truncate">কারণ: {post.reasonBn}</span>
-            </span>
+
+          {/* The meta row is two parts, not one wrapped line: what the item is
+              (author's department, age, evidence count) on the left, and the one
+              figure a reader scans down the feed on the right.
+
+              `ml-auto` used to do that inside a single wrapping row, which only
+              pinned the eye when the left side happened to fit on one line — and
+              it did not for the kinds that carry a department and a reference
+              count, so the count drifted onto a second line and out of its column
+              while ayah and hadith rows had no count at all. The count now lives
+              in its own non-wrapping slot, so its right edge is the content
+              column's right edge in every row that has one. */}
+          <div className="mt-0.5 flex items-start gap-2 text-[0.75rem] leading-4 text-subtle-foreground">
+            <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1 gap-y-0.5">
+              {post.author?.metaBn ? (
+                <>
+                  <span className="truncate">{post.author.metaBn}</span>
+                  <span aria-hidden>·</span>
+                </>
+              ) : null}
+              <span className="whitespace-nowrap">{relativeTime(post.createdAt, locale)}</span>
+              {post.referenceCount ? (
+                <>
+                  <span aria-hidden>·</span>
+                  <span className="whitespace-nowrap font-medium text-primary">
+                    {fmt(post.referenceCount)} রেফারেন্স
+                  </span>
+                </>
+              ) : null}
+              {/* The recommendation's reason used to sit here, spelled out as
+                  "কারণ: …". It was the longest line in the row and it answered a
+                  question the reader had not asked — the feed is already the
+                  answer to "what should I read". The reason still travels with
+                  the item in the data, so a "why this" affordance can bring it
+                  back on demand without a schema change. */}
+            </p>
             {post.stats.views > 0 ? (
-              <span className="ml-auto inline-flex shrink-0 items-center gap-1">
+              <span className="inline-flex shrink-0 items-center gap-1 tabular">
                 <Eye className="size-3" aria-hidden />
                 {fmt(post.stats.views)}
               </span>
             ) : null}
-          </p>
+          </div>
         </div>
       </div>
 

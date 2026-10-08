@@ -14,8 +14,17 @@ export const metadata: Metadata = {
 /**
  * The writing surface. All the interactive state lives in `Composer`; this page
  * only supplies the scholar's identity and departments.
+ *
+ * `?kind=article|fatwa|answer` picks the draft type the composer opens on, so a
+ * compose-menu entry can land the scholar on the right form rather than on a
+ * three-way choice they already made one tap earlier.
  */
-export default function ScholarWritePage() {
+export default async function ScholarWritePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ kind?: string }>;
+}) {
+  const { kind } = await searchParams;
   const scholar = SCHOLAR_BY_ID[SCHOLAR_CONSOLE_ID];
 
   const departmentNames = (scholar?.departmentIds ?? [])
@@ -35,7 +44,11 @@ export default function ScholarWritePage() {
         patterned
       />
 
-      <Composer scholarName={scholarName} departmentNames={departmentNames} />
+      <Composer
+        scholarName={scholarName}
+        departmentNames={departmentNames}
+        defaultKind={kind === "fatwa" ? "fatwa" : kind === "answer" ? "answer" : "article"}
+      />
     </div>
   );
 }

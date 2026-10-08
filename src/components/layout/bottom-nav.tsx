@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Plus } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { BOTTOM_NAV } from "./nav-config";
+import { ComposeNavButton } from "./compose-menu";
 
 /**
  * Mobile tab bar. Five slots with the centre reserved for the primary action,
  * which is the habit the product most wants to encourage.
+ *
+ * The centre slot is the small-screen half of the one add affordance: it opens
+ * the compose menu, and which actions that menu offers follows the signed-in
+ * account's role.
  */
 export function BottomNav() {
   const pathname = usePathname();
@@ -43,17 +47,12 @@ export function BottomNav() {
     >
       <div className="mx-auto flex max-w-md items-stretch">
         {left.map(renderItem)}
-        <div className="relative flex w-16 shrink-0 justify-center">
-          {/* No caption: a raised action disc sits over the caption row, so the
-              text was unreadable behind it. The label stays for screen readers. */}
-          <Link
-            href="/questions/ask"
-            aria-label={t("action.ask")}
-            className="absolute -top-5 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-overlay ring-4 ring-background transition-transform active:scale-95"
-          >
-            <Plus className="size-6" strokeWidth={2.4} />
-          </Link>
-        </div>
+        {/* No caption: a raised action disc sits over the caption row, so the
+            text was unreadable behind it. The label stays for screen readers.
+            It opens the compose menu rather than jumping to the ask form — the
+            centre of the bar is where a reader starts anything, not just a
+            question. */}
+        <ComposeNavButton />
         {right.map(renderItem)}
       </div>
     </nav>

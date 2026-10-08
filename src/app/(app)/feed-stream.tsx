@@ -279,10 +279,24 @@ export function FeedStream({
         each row supplies its own breathing room as padding inside itself and
         indents its content into a column beside the avatar. The rule above the
         first row separates the feed from its heading.
+
+        The column is the one thing on the phone that takes the page's gutter
+        back: the feed is what a reader scrolls here, so it gets the full width.
+        Everything else on the page — the heading, today's strip, the buttons
+        below — keeps its inset, and from `sm` up the column sits inside the page
+        again.
+
+        The side rules go with the gutter. A hairline belongs to a column that
+        starts somewhere, and at the full width of the screen the column *is* the
+        screen: a frame drawn there would be a line against the display edge,
+        saying nothing about where the list begins or ends. The rule above the
+        first row and the rules between rows still do their work — a phone shows
+        an edge-to-edge feed of ruled rows, which is the shape a feed wants.
+        From `sm` up the frame returns with the gutter.
       */}
       <div
         ref={stream}
-        className="scroll-mt-[var(--pin-top)] divide-y divide-border border-x border-t border-border"
+        className="scroll-mt-[var(--pin-top)] -mx-4 divide-y divide-border border-x-0 border-t border-border sm:mx-0 sm:border-x"
       >
         {arrived.map((post) => (
           <div key={post.id} className="animate-fade-up">

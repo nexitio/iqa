@@ -282,9 +282,11 @@ export function Select(props: SelectProps) {
         onKeyDown={onKeyDown}
         className={cn(
           "inline-flex h-11 w-full items-center gap-2 rounded-xl border border-border bg-surface px-3.5 text-left text-[0.875rem] text-foreground transition-colors",
-          "focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/12",
+          // Same focus treatment as a text field — the border, no halo — so the
+          // two controls in a form never look like they come from two kits.
+          "focus:border-primary focus:outline-none",
           "disabled:cursor-not-allowed disabled:bg-surface-3 disabled:opacity-70",
-          open && "border-primary ring-4 ring-primary/12",
+          open && "border-primary",
           props.className,
         )}
       >

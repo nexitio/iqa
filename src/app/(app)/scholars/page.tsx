@@ -122,9 +122,14 @@ export default function ScholarsPage() {
 
       <ScholarDirectory />
 
+      {/* Both columns take `min-w-0`. A grid item defaults to `min-width: auto`,
+          which is its min-content width — and the rail's longest unbreakable line
+          (a scholar row's availability badge) is wider than a phone column, so the
+          track sized itself to 370px inside a 347px page and the whole page
+          scrolled sideways. The columns are what must give way, not the page. */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         {/* Fastest responders */}
-        <section>
+        <section className="min-w-0">
           <SectionHeader
             title="দ্রুত উত্তরদাতা আলেম"
             description="যাঁদের কাছে প্রশ্ন এলে সবচেয়ে দ্রুত উত্তর পাওয়ার সম্ভাবনা"
@@ -145,7 +150,7 @@ export default function ScholarsPage() {
         </section>
 
         {/* Rail */}
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           {suggestions.length > 0 ? (
             <Card>
               <CardHeader

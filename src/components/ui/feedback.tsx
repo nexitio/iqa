@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { AlertTriangle, Info, Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -184,7 +185,85 @@ export function MetaRow({ children, className }: { children: ReactNode; classNam
  * and quotes are signalled by light conventions (`### `, `- `, `> `, or a short
  * unpunctuated line). This keeps authored content simple while still producing
  * a properly structured article page.
+ *
+ * Emphasis is the same idea one level down: `**bold**`, `*italic*`, `[label](/href)
+ * and `` `code` `` are parsed inside every block, so the writing surface can offer
+ * a real toolbar without the draft ever stopping being text. Consecutive `> `
+ * lines merge into one quotation, which is what makes a cited ayah — citation,
+ * Arabic, translation — read as a single passage rather than three panels.
  */
+
+/** Inline grammar, one pass. Group order matches the alternatives. */
+const INLINE = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`/g;
+
+function renderInline(text: string, key: string): ReactNode {
+  const nodes: ReactNode[] = [];
+  let cursor = 0;
+  let index = 0;
+  INLINE.lastIndex = 0;
+  for (let match = INLINE.exec(text); match; match = INLINE.exec(text)) {
+    if (match.index > cursor) nodes.push(text.slice(cursor, match.index));
+    const at = `${key}-${index++}`;
+    if (match[1] !== undefined) {
+      // Internal routes are links, the way every other internal link is.
+      nodes.push(
+        match[2].startsWith("/") ? (
+          <Link key={at} href={match[2]}>
+            {match[1]}
+          </Link>
+        ) : (
+          <a key={at} href={match[2]} rel="noreferrer" target="_blank">
+            {match[1]}
+          </a>
+        ),
+      );
+    } else if (match[3] !== undefined) {
+      nodes.push(<strong key={at}>{match[3]}</strong>);
+    } else if (match[4] !== undefined) {
+      nodes.push(<em key={at}>{match[4]}</em>);
+    } else if (match[5] !== undefined) {
+      nodes.push(<code key={at}>{match[5]}</code>);
+    }
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < text.length) nodes.push(text.slice(cursor));
+  return nodes.length === 1 ? nodes[0] : nodes;
+}
+
+/**
+ * Arabic scripture rather than Bangla prose.
+ *
+ * A quoted ayah arrives as the Arabic line, which has to be set in the Quranic
+ * face, right to left — the same rule the feed applies to its scripture panels.
+ * The test is script, not content: a line with Arabic letters and no Bangla is
+ * scripture, whatever section it appears in.
+ */
+function isScripture(text: string) {
+  return /[\u0600-\u06FF]/.test(text) && !/[\u0980-\u09FF]/.test(text);
+}
+
+/**
+ * The lines a block is made of.
+ *
+ * `toParagraphs` splits on blank lines, so a block can still carry single
+ * newlines inside it — and that is exactly how the composer writes a quotation:
+ * the citation, the Arabic and the translation as three `> ` lines with no blank
+ * line between them. A block that is *entirely* quotations or *entirely* bullets
+ * is therefore several lines, and only such a uniform block is split; prose with
+ * a soft line break is left whole, the way every other caller expects.
+ */
+function blockLines(text: string): string[] {
+  if (!text.includes("\n")) return [text];
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const uniform =
+    lines.length > 1 &&
+    (lines.every((line) => /^>\s?/.test(line)) || lines.every((line) => /^[-•*]\s+/.test(line)));
+  return uniform ? lines : [text];
+}
+
 export function Prose({
   paragraphs,
   className,
@@ -194,47 +273,88 @@ export function Prose({
 }) {
   const blocks: ReactNode[] = [];
   let listBuffer: string[] = [];
+  let quoteBuffer: string[] = [];
 
   const flushList = (key: string) => {
     if (listBuffer.length === 0) return;
     blocks.push(
       <ul key={`ul-${key}`}>
         {listBuffer.map((item, i) => (
-          <li key={i}>{item}</li>
+          <li key={i}>{renderInline(item, `li${key}-${i}`)}</li>
         ))}
       </ul>,
     );
     listBuffer = [];
   };
 
+  // Consecutive `> ` lines are one quotation: a citation, the Arabic and its
+  // translation belong in a single panel, not three stacked ones.
+  const flushQuote = (key: string) => {
+    if (quoteBuffer.length === 0) return;
+    blocks.push(
+      <blockquote key={`bq-${key}`}>
+        {quoteBuffer.map((line, i) => (
+          <span
+            key={i}
+            lang={isScripture(line) ? "ar" : undefined}
+            className={cn("block", isScripture(line) && "arabic")}
+          >
+            {renderInline(line, `bq${key}-${i}`)}
+          </span>
+        ))}
+      </blockquote>,
+    );
+    quoteBuffer = [];
+  };
+
   paragraphs.forEach((raw, index) => {
     const text = raw.trim();
     if (!text) return;
 
-    const isBullet = /^[-•*]\s+/.test(text);
-    if (isBullet) {
-      listBuffer.push(text.replace(/^[-•*]\s+/, ""));
-      return;
-    }
-    flushList(String(index));
+    blockLines(text).forEach((line, part) => {
+      const key = `${index}.${part}`;
 
-    if (/^#{2,4}\s/.test(text)) {
-      blocks.push(<h2 key={index}>{text.replace(/^#{2,4}\s+/, "")}</h2>);
-      return;
-    }
-    if (/^>\s?/.test(text)) {
-      blocks.push(<blockquote key={index}>{text.replace(/^>\s?/, "")}</blockquote>);
-      return;
-    }
-    // A short line with no terminal punctuation reads as a sub-heading.
-    const looksLikeHeading = text.length <= 68 && !/[।.?!:]$/.test(text) && !text.includes("|");
-    if (looksLikeHeading) {
-      blocks.push(<h2 key={index}>{text}</h2>);
-      return;
-    }
-    blocks.push(<p key={index}>{text}</p>);
+      const isBullet = /^[-•*]\s+/.test(line);
+      if (isBullet) {
+        flushQuote(key);
+        listBuffer.push(line.replace(/^[-•*]\s+/, ""));
+        return;
+      }
+
+      if (/^>\s?/.test(line)) {
+        flushList(key);
+        quoteBuffer.push(line.replace(/^>\s?/, ""));
+        return;
+      }
+
+      flushList(key);
+      flushQuote(key);
+
+      if (/^#{2,4}\s/.test(line)) {
+        blocks.push(<h2 key={key}>{renderInline(line.replace(/^#{2,4}\s+/, ""), `h${key}`)}</h2>);
+        return;
+      }
+      // A short line with no terminal punctuation reads as a sub-heading.
+      const looksLikeHeading = line.length <= 68 && !/[।.?!:]$/.test(line) && !line.includes("|");
+      if (looksLikeHeading) {
+        blocks.push(<h2 key={key}>{renderInline(line, `h${key}`)}</h2>);
+        return;
+      }
+      // Scripture standing on its own line is set the way a reader expects to
+      // find an ayah, without the writer having to mark it up as a quotation.
+      if (isScripture(line)) {
+        blocks.push(
+          <p key={key} lang="ar" className="arabic">
+            {renderInline(line, `ar${key}`)}
+          </p>,
+        );
+        return;
+      }
+      blocks.push(<p key={key}>{renderInline(line, `p${key}`)}</p>);
+    });
   });
   flushList("end");
+  flushQuote("end");
 
   return <div className={cn("prose-ilm", className)}>{blocks}</div>;
 }

@@ -81,6 +81,106 @@ export interface Scholar {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Biography                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A scholar's life, told in full.
+ *
+ * `Scholar` holds what the app *routes* on — departments, availability, the
+ * statistics behind a profile card. This holds what a reader comes to a profile
+ * page for: where the person was formed, who taught them, what they were
+ * authorised to teach, what they have written, and who they taught in turn. The
+ * two are separate because a card must stay cheap to render while a biography is
+ * long-form prose that only one page ever asks for.
+ *
+ * Education is deliberately *not* repeated here: `Scholar.credentials` already
+ * records it, and a biography that restated it would be a second source of truth
+ * for the same degrees.
+ */
+export interface ScholarBiography {
+  scholarId: string;
+  /** Birth: the year, the village or town, the family — one sentence. */
+  born: Localized;
+  /** The household and the upbringing, one paragraph. */
+  family: Localized;
+  /**
+   * The life story, paragraphs separated by a blank line.
+   *
+   * Every paragraph ends in a full stop: the prose renderer treats a short line
+   * without terminal punctuation as a heading, which is right for a manuscript
+   * and wrong for a biography.
+   */
+  narrative: Localized;
+  /** What they are doing now — the biography's present tense. */
+  now: Localized;
+  /** Who they sat with, and what they took from each. */
+  teachers: BioTeacher[];
+  /** Formal authorisations (ইজাযা): what they may teach, and from whom. */
+  ijazah: BioIjazah[];
+  /** Positions held: teaching, ifta, boards, khidmah. */
+  service: BioService[];
+  /** Books, editions, translations and research. */
+  works: BioWork[];
+  /** Students who carry the teaching on. */
+  students: BioStudent[];
+  /** Honours and recognition — sparingly, and only where it is a fact. */
+  awards: BioAward[];
+  /** Where this biography comes from. Trust is the point of the section. */
+  sources: Localized[];
+  /** When the biography was last checked against those sources. */
+  updatedAt: string;
+}
+
+export interface BioTeacher {
+  id: string;
+  name: Localized;
+  /** What they studied with them, and where. */
+  note: Localized;
+}
+
+export interface BioIjazah {
+  id: string;
+  /** The authorisation, e.g. "সহীহ বুখারীর সনদ". */
+  title: Localized;
+  /** Who granted it, and when. */
+  grantedBy: Localized;
+}
+
+export interface BioService {
+  id: string;
+  title: Localized;
+  place: Localized;
+  /** e.g. "২০০৮–২০১৬". */
+  period: Localized;
+  note?: Localized;
+}
+
+export interface BioWork {
+  id: string;
+  title: Localized;
+  /** e.g. "২০১৯". */
+  year: Localized;
+  /** What kind of work it is — a book, a translation, a research paper. */
+  kind: Localized;
+  /** One line on what is in it. */
+  note: Localized;
+}
+
+export interface BioStudent {
+  id: string;
+  name: Localized;
+  note: Localized;
+}
+
+export interface BioAward {
+  id: string;
+  title: Localized;
+  year: Localized;
+  note?: Localized;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Taxonomy                                                                   */
 /* -------------------------------------------------------------------------- */
 
