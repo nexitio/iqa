@@ -3,7 +3,7 @@ import { Sparkles } from "@/components/icons";
 import { Num, T } from "@/components/i18n-text";
 import { PrayerTimesWidget } from "@/components/personal";
 import { AskCtaCard } from "@/components/knowledge";
-import { KnowledgeStories, resolveFeedItems } from "@/components/social";
+import { DailyStories, resolveFeedItems } from "@/components/social";
 import { FeedStream } from "./feed-stream";
 import { FEED } from "@/lib/data/feed";
 
@@ -25,7 +25,7 @@ export default function HomePage() {
     <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_21rem]">
       {/* ---------------------------------------------------------- feed */}
       <div className="min-w-0 space-y-4">
-        <KnowledgeStories composer />
+        <DailyStories />
 
         <section aria-label="আপনার ফিড" className="space-y-3">
           <div className="flex items-center justify-between gap-3">

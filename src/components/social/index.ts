@@ -8,3 +8,4 @@
 export * from "./resolve";
 export * from "./post-card";
 export * from "./stories";
+export * from "./daily-stories";

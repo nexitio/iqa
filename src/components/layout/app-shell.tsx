@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { PenLine } from "lucide-react";
 import { SideNav } from "./side-nav";
 import { Topbar } from "./topbar";
 import { BottomNav } from "./bottom-nav";
@@ -102,6 +104,17 @@ export function AppShell({
           skipping it also means the pinned columns end with the content instead
           of being pushed up by a block that sits below their container. */}
       <BottomNav />
+
+      {/* Floating action button — ask a question */}
+      <Link
+        href="/questions/ask"
+        aria-label="প্রশ্ন করুন"
+        className="group fixed bottom-24 right-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-primary to-primary/80 px-4 py-3 text-[0.8125rem] font-semibold text-primary-foreground shadow-lg ring-1 ring-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:ring-primary/40 active:translate-y-0 active:shadow-md sm:bottom-8 sm:right-6 lg:right-8"
+      >
+        <PenLine className="size-4 transition-transform duration-200 group-hover:rotate-[-8deg]" aria-hidden />
+        <span className="hidden sm:inline">প্রশ্ন করুন</span>
+      </Link>
+
       {searchOpen ? <SearchCommand onClose={() => setSearchOpen(false)} /> : null}
     </div>
   );

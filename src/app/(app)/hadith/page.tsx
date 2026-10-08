@@ -1,28 +1,24 @@
-import type { Metadata } from "next";
+import { CollectionCard, HadithCard } from "@/components/hadith";
+import { T } from "@/components/i18n-text";
 import {
   BadgeCheck,
   BookMarked,
-  Headphones,
   Layers,
   Library,
   ScrollText,
   Sparkles,
-  Star,
+  Star
 } from "@/components/icons";
-import { CollectionCard, HadithCard } from "@/components/hadith";
-import { T } from "@/components/i18n-text";
 import {
   Button,
-  Callout,
   Card,
   CardBody,
   CardHeader,
   ChipList,
   ContentPending,
-  FactList,
   PageHeader,
   SectionHeader,
-  StatTile,
+  StatTile
 } from "@/components/ui";
 import { formatNumber } from "@/lib/bn";
 import {
@@ -31,6 +27,7 @@ import {
   HADITH_OF_THE_DAY,
   HADITHS,
 } from "@/lib/data/hadith";
+import type { Metadata } from "next";
 import { HadithSearch } from "./hadith-search";
 
 export const metadata: Metadata = {
@@ -100,7 +97,7 @@ export default function HadithIndexPage() {
         </div>
       </PageHeader>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="min-w-0 space-y-8">
           {/* Today's hadith */}
           <section>
@@ -159,8 +156,8 @@ export default function HadithIndexPage() {
         </div>
 
         {/* Rail */}
-        <aside className="space-y-4">
-          <Card variant="flat">
+        <aside className="space-y-4 sticky top-25">
+          <Card variant="default">
             <CardHeader
               title="সংকলনের আকার"
               subtitle="আসল সংকলনে মোট হাদীসের সংখ্যা"
@@ -188,25 +185,6 @@ export default function HadithIndexPage() {
               </p>
             </CardBody>
           </Card>
-
-          <Card variant="flat">
-            <CardHeader title="এই সংকলনে কী আছে" icon={ScrollText} />
-            <CardBody>
-              <FactList
-                columns={1}
-                items={[
-                  { label: "আরবি মূল পাঠ", value: "উথমানী লিপিতে সংরক্ষিত" },
-                  { label: "বাংলা অনুবাদ", value: "সহজ ও প্রাঞ্জল ভাষায়" },
-                  { label: "বর্ণনাকারী", value: "প্রত্যেক হাদীসে উল্লেখিত" },
-                  { label: "মান নির্ণয়", value: "সহীহ · হাসান · মুত্তাফাকুন আলাইহি" },
-                ]}
-              />
-            </CardBody>
-          </Card>
-
-          <Callout tone="info" icon={Headphones} title="অডিও শীঘ্রই আসছে">
-            আরবি তিলাওয়াতসহ অডিও সংস্করণ প্রস্তুত করা হচ্ছে — ইনশাআল্লাহ শীঘ্রই যুক্ত করা হবে।
-          </Callout>
 
           <Card variant="flat">
             <CardHeader title="সম্পর্কিত পড়া" icon={Sparkles} />

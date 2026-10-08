@@ -1,8 +1,5 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, BookOpen, Compass, Info, Sparkles } from "@/components/icons";
 import { Pick, T } from "@/components/i18n-text";
+import { ArrowLeft, ArrowRight, BookOpen, Compass, Info, Sparkles } from "@/components/icons";
 import { ContinueLearningCard } from "@/components/personal";
 import { SurahListRow } from "@/components/quran";
 import {
@@ -15,8 +12,11 @@ import {
   SectionHeader,
 } from "@/components/ui";
 import { formatNumber, toBnDigits } from "@/lib/bn";
-import { POPULAR_SURAHS, QURAN_SURAHS, getAyahsForSurah, getSurah } from "@/lib/data/quran";
 import { READING_PROGRESS } from "@/lib/data/personal";
+import { POPULAR_SURAHS, QURAN_SURAHS, getAyahsForSurah, getSurah } from "@/lib/data/quran";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { AyahReader } from "./ayah-reader";
 
 interface RouteParams {
@@ -35,9 +35,8 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
 
   return {
     title: `সূরা ${surah.name.bn} — ${surah.meaning.bn}`,
-    description: `${surah.name.bn} (${surah.name.en}) — ${surah.ayahCount} আয়াত, ${
-      surah.revelation === "meccan" ? "মাক্কী" : "মাদানী"
-    } সূরা। আরবি, বাংলা উচ্চারণ ও অনুবাদসহ পড়ুন।`,
+    description: `${surah.name.bn} (${surah.name.en}) — ${surah.ayahCount} আয়াত, ${surah.revelation === "meccan" ? "মাক্কী" : "মাদানী"
+      } সূরা। আরবি, বাংলা উচ্চারণ ও অনুবাদসহ পড়ুন।`,
   };
 }
 
@@ -144,7 +143,7 @@ export default async function SurahPage({ params, searchParams }: RouteParams) {
         ) : null}
       </header>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="min-w-0 space-y-4">
           {isEmpty ? (
             <EmptyState
@@ -228,7 +227,7 @@ export default async function SurahPage({ params, searchParams }: RouteParams) {
           </nav>
         </div>
 
-        <aside className="space-y-5">
+        <aside className="space-y-5 sticky top-25">
           {progress ? (
             <section>
               <SectionHeader size="sm" title={<T k="label.continueLearning" />} />

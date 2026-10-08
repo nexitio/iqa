@@ -1,31 +1,26 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { BookRow } from "@/components/hadith";
+import { Pick, T } from "@/components/i18n-text";
 import {
   ArrowLeft,
   ArrowRight,
   BadgeCheck,
   BookMarked,
-  Headphones,
   Layers,
+  Library,
   ScrollText,
   Sparkles,
-  UserRound,
-  Library,
+  UserRound
 } from "@/components/icons";
-import { BookRow } from "@/components/hadith";
-import { T, Pick } from "@/components/i18n-text";
 import {
   Badge,
   Button,
-  Callout,
   Card,
   CardBody,
   CardHeader,
   ContentPending,
   FactList,
   PageHeader,
-  SectionHeader,
+  SectionHeader
 } from "@/components/ui";
 import { formatNumber } from "@/lib/bn";
 import {
@@ -34,6 +29,9 @@ import {
   getCollection,
   getHadithsForCollection,
 } from "@/lib/data/hadith";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { CollectionBrowser } from "./collection-browser";
 
 export function generateStaticParams() {
@@ -128,7 +126,7 @@ export default async function CollectionPage({
         </div>
       </PageHeader>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="min-w-0 space-y-6">
           {incomplete ? (
             <ContentPending
@@ -194,8 +192,8 @@ export default async function CollectionPage({
           </nav>
         </div>
 
-        <aside className="space-y-4">
-          <Card variant="flat">
+        <aside className="space-y-4 sticky top-25">
+          <Card variant="default">
             <CardHeader
               title={<Pick value={collection.name} />}
               subtitle={collection.nameArabic}
@@ -226,7 +224,7 @@ export default async function CollectionPage({
             </CardBody>
           </Card>
 
-          <Card variant="flat">
+          <Card variant="default">
             <CardHeader title="অন্য সংকলন" icon={Library} />
             <CardBody>
               <ul className="space-y-0.5">
@@ -248,10 +246,6 @@ export default async function CollectionPage({
               </ul>
             </CardBody>
           </Card>
-
-          <Callout tone="info" icon={Headphones} title="অডিও তিলাওয়াত">
-            প্রতিটি হাদীসের আরবি পাঠের অডিও সংযোজন প্রক্রিয়াধীন — ইনশাআল্লাহ শীঘ্রই।
-          </Callout>
         </aside>
       </div>
     </div>
