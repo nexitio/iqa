@@ -21,7 +21,7 @@
 import { randomBytes } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import type { AppContext, AppBindings } from "../context.ts";
+import type { AppBindings } from "../context.ts";
 import { issueSession } from "../auth/login.ts";
 import { assertPasswordPolicy } from "../auth/credentials.ts";
 import { avatarColorFor, defaultDistrictId } from "../users/defaults.ts";
@@ -43,7 +43,7 @@ import { userFollowing } from "../db/relations.ts";
 import * as schema from "../db/schema/index.ts";
 import { readJsonBody } from "../http/body.ts";
 import { badRequest, forbidden, HttpError, unauthorized } from "../http/errors.ts";
-import { rateLimit, rateLimitReset } from "../http/rate-limit.ts";
+import { callerKey, rateLimit, rateLimitReset } from "../http/rate-limit.ts";
 import { toUser } from "../present/dto.ts";
 
 export const authRoutes = new Hono<AppBindings>();
@@ -73,11 +73,6 @@ function tooManyRequests(retryAfterSeconds: number): HttpError {
     429,
     `Too many attempts. Try again in ${retryAfterSeconds} second(s).`,
   );
-}
-
-/** Credential endpoints are reached through the browser, so the origin is the key we have. */
-function callerKey(c: AppContext): string {
-  return c.req.header("x-forwarded-for")?.split(",")[0]?.trim() || c.req.header("origin") || "local";
 }
 
 /** Every answer from here is specific to one caller. */

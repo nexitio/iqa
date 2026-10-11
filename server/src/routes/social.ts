@@ -17,7 +17,7 @@ import { credentialHash, requireAccountPassword } from "../auth/credentials.ts";
 import { requireIdentity, type AppBindings, type AppContext } from "../context.ts";
 import { env } from "../env.ts";
 import { readJsonBody } from "../http/body.ts";
-import { badRequest } from "../http/errors.ts";
+import { badRequest, HttpError } from "../http/errors.ts";
 import { authorizationUrl, exchangeCode, fetchProfile } from "../social/oauth.ts";
 import {
   enabledProviders,
@@ -52,6 +52,32 @@ async function optionalBody<T>(c: AppContext): Promise<Partial<T>> {
 }
 
 /**
+ * A client that asked for JSON, or a browser navigation.
+ *
+ * The callback is reached both ways — a browser navigating back from a provider,
+ * and a client driving the flow — and the two need different answers to the same
+ * failure.
+ */
+function wantsJson(c: AppContext): boolean {
+  return Boolean(c.req.header("accept")?.includes("application/json"));
+}
+
+/**
+ * A failed sign-in goes back to the page that can explain it.
+ *
+ * A JSON body would leave a browser looking at `{"error":…}` on the API's own
+ * origin with no way back — and the most ordinary failure of all is a visitor who
+ * pressed Cancel at the provider. Only the **status** travels: the page owns its
+ * wording, so neither a provider's error text nor a crafted link can put words on
+ * our sign-in page.
+ */
+function signInFailed(c: AppContext, status: number): Response {
+  const url = new URL("/login", env.webOrigin);
+  url.searchParams.set("socialError", String(status));
+  return c.redirect(url.toString(), 302);
+}
+
+/**
  * Where the browser goes when the ceremony ends.
  *
  * A client that asked for JSON gets the result; a browser is redirected to the
@@ -63,7 +89,7 @@ function finish(
   data: Record<string, unknown>,
   returnTo: string | null,
 ): Response {
-  if (c.req.header("accept")?.includes("application/json")) {
+  if (wantsJson(c)) {
     return c.json({ data });
   }
   return c.redirect(`${env.webOrigin}${returnTo ?? "/"}`, 302);
@@ -112,8 +138,26 @@ socialRoutes.get("/auth/social/:slug/link", async (c) => {
 });
 
 socialRoutes.get("/auth/social/:slug/callback", async (c) => {
+  try {
+    return await completeSignIn(c, c.req.param("slug"));
+  } catch (error) {
+    // Everything below fails the same way for a person: back to the sign-in page,
+    // where the reason is written in their language. A client still gets the JSON
+    // it asked for, and an unexpected error is still a 500.
+    if (error instanceof HttpError && !wantsJson(c)) return signInFailed(c, error.status);
+    throw error;
+  }
+});
+
+/**
+ * The callback's own work, so one wrapper can turn any of its refusals into a redirect.
+ *
+ * The slug arrives as an argument rather than being read from the path here: the
+ * route's own pattern is what types it, and that typing lives at the call site.
+ */
+async function completeSignIn(c: AppContext, slug: string): Promise<Response> {
   const db = c.get("db");
-  const provider = await requireEnabledProvider(db, c.req.param("slug"));
+  const provider = await requireEnabledProvider(db, slug);
   const config = toConfig(provider);
 
   // Declining at the provider is a normal outcome, not an error to log as one.
@@ -162,7 +206,7 @@ socialRoutes.get("/auth/social/:slug/callback", async (c) => {
     { user, created: resolved.created, linked: resolved.linked },
     attempt.returnTo,
   );
-});
+}
 
 /** The connected accounts on this account. */
 socialRoutes.get("/me/identities", async (c) => {

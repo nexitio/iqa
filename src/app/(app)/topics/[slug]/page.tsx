@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
@@ -11,11 +12,20 @@ import {
   ScrollText,
   Sparkles,
 } from "@/components/icons";
-import { DEPARTMENTS, TOPICS, getTopic } from "@/lib/data/departments";
-import { ARTICLES, FATWAS, getArticlesByDepartment } from "@/lib/data/content";
-import { QUESTIONS } from "@/lib/data/questions";
-import { DISCUSSIONS } from "@/lib/data/community";
-import { HADITHS } from "@/lib/data/hadith";
+import type { Department, Scholar } from "@/lib/types";
+import {
+  fetchArticles,
+  fetchDepartments,
+  fetchDiscussions,
+  fetchFatwas,
+  fetchHadiths,
+  fetchQuestions,
+  fetchScholars,
+  fetchTopic,
+  fetchTopics,
+  indexBy,
+  MAX_LIMIT,
+} from "@/lib/content-api";
 import { formatNumber } from "@/lib/bn";
 import {
   Badge,
@@ -25,6 +35,7 @@ import {
   Chip,
   ContentPending,
   EmptyState,
+  ErrorState,
   PageHeader,
   SectionHeader,
 } from "@/components/ui";
@@ -38,9 +49,32 @@ import { HadithCard } from "@/components/hadith";
 import { departmentIcon } from "@/components/people";
 import { T, Pick } from "@/components/i18n-text";
 
-export function generateStaticParams() {
-  return TOPICS.map((topic) => ({ slug: topic.slug }));
-}
+/**
+ * One topic, read from the API.
+ *
+ * A topic is a query, not a page of prose: the vocabulary, the departments behind
+ * it, and then the content that answers to either. The API does that resolution
+ * itself — `?topic=<slug>&includeRelated=true` matches what the topic tags *and*
+ * what its departments carry, which is the two-tier match this page has always
+ * wanted — so the page no longer guesses which key a row tagged itself with.
+ *
+ * A slug the API does not know is a 404 and gets `notFound()`, because it will
+ * never exist; anything else — the service down, a query that timed out — gets an
+ * error state with a way to try again, because the topic does exist.
+ */
+
+/**
+ * One read per request, shared by the metadata and the page.
+ *
+ * Same reason as the article route: both passes need the topic, a bare fetch in
+ * each is two requests, and on the missing-slug path the second one would flush a
+ * boundary the first has already decided about. `cache` collapses the two.
+ */
+const readTopic = cache(async (slug: string) => {
+  const result = await fetchTopic(slug);
+  if (!result.ok && result.status === 404) notFound();
+  return result;
+});
 
 export async function generateMetadata({
   params,
@@ -48,9 +82,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const topic = getTopic(slug);
-  if (!topic) return { title: "বিষয়" };
-  return { title: topic.name.bn, description: topic.description.bn };
+  const result = await readTopic(slug);
+  if (!result.ok) return { title: "বিষয়" };
+
+  return {
+    title: result.data.topic.name.bn,
+    description: result.data.topic.description.bn,
+  };
 }
 
 export default async function TopicPage({
@@ -59,53 +97,102 @@ export default async function TopicPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const topic = getTopic(slug);
-  if (!topic) notFound();
+  const result = await readTopic(slug);
 
-  const departments = topic.departmentSlugs
-    .map((id) => DEPARTMENTS.find((d) => d.slug === id || d.id === id))
-    .filter((d): d is NonNullable<typeof d> => Boolean(d));
+  if (!result.ok) {
+    return (
+      <ErrorState
+        title="বিষয়টি আনা যায়নি"
+        description="কনটেন্ট সার্ভিসে পৌঁছানো যায়নি, তাই বিষয়টি এখন দেখানো যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।"
+        action={
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button href={`/topics/${encodeURIComponent(slug)}`} size="sm">
+              আবার চেষ্টা করুন
+            </Button>
+            <Button href="/topics" variant="outline" size="sm">
+              সব বিষয় দেখুন
+            </Button>
+          </div>
+        }
+      />
+    );
+  }
+
+  const { topic, departmentSlugs } = result.data;
+  const primarySlug = departmentSlugs[0];
 
   /**
-   * Topic matching is deliberately two-tier.
+   * Every section of this page, in one round of reads.
    *
-   * Authored content tags itself with a mix of topic slugs and department
-   * slugs, so a strict slug match would hide genuinely relevant material. We
-   * take exact topic matches first and only fall back to department overlap to
-   * keep the page useful rather than empty.
+   * The rails are the same content read sideways — one query per section, all in
+   * parallel — and a section that comes back empty is simply not drawn, which is
+   * why a failed side read costs a rail rather than the page.
    */
-  const matchesTopic = (topicIds: string[], departmentIds: string[]) =>
-    topicIds.includes(topic.slug) ||
-    departmentIds.some((d) => topic.departmentSlugs.includes(d));
+  const [
+    departmentsResult,
+    questionsResult,
+    articlesResult,
+    fatwasResult,
+    discussionsResult,
+    hadithsResult,
+    scholarsResult,
+    topicsResult,
+  ] = await Promise.all([
+    fetchDepartments(),
+    fetchQuestions({ topic: topic.slug, includeRelated: true, limit: 6 }),
+    fetchArticles({ topic: topic.slug, includeRelated: true, limit: 6 }),
+    // Fatwas filter by department, not by topic, so the archive is read whole and
+    // narrowed here against the departments this topic covers.
+    fetchFatwas({ limit: MAX_LIMIT }),
+    fetchDiscussions({ topic: topic.slug, includeRelated: true, limit: 4 }),
+    // A hadith is tagged with a department, so the topic's first department is the
+    // vocabulary its filter speaks.
+    primarySlug
+      ? fetchHadiths({ topic: primarySlug, limit: 3 })
+      : Promise.resolve(null),
+    fetchScholars(),
+    fetchTopics(),
+  ]);
 
-  const articles = ARTICLES.filter((a) => matchesTopic(a.topicIds, a.departmentIds));
-  const fatwas = FATWAS.filter((f) => matchesTopic([], f.departmentIds));
-  const questions = QUESTIONS.filter((q) => matchesTopic(q.topicIds, q.departmentIds));
-  const discussions = DISCUSSIONS.filter((d) => matchesTopic(d.topicIds, d.departmentIds));
-  const hadiths = HADITHS.filter((h) => matchesTopic(h.topicIds, [])).slice(0, 3);
+  const departments = departmentsResult.ok ? departmentsResult.data : [];
+  const scholars = indexBy(scholarsResult.ok ? scholarsResult.data.items : [], "id");
+  const questions = questionsResult.ok ? questionsResult.data.items : [];
+  const discussions = discussionsResult.ok ? discussionsResult.data.items : [];
+  const hadiths = hadithsResult?.ok ? hadithsResult.data.items : [];
+  const fatwas = (fatwasResult.ok ? fatwasResult.data.items : []).filter((fatwa) =>
+    fatwa.departmentIds.some((id) => departmentSlugs.includes(id)),
+  );
 
-  // Fall back to the primary department's own articles when nothing matched.
+  const taggedArticles = articlesResult.ok ? articlesResult.data.items : [];
+  // Nothing carries the topic's own tags, so the departments behind it are the
+  // fallback tier — and the note below the list says exactly that.
   const fallbackArticles =
-    articles.length === 0 && departments[0]
-      ? getArticlesByDepartment(departments[0].slug)
-      : [];
-  const shownArticles = articles.length > 0 ? articles : fallbackArticles;
+    taggedArticles.length === 0 && primarySlug
+      ? await fetchArticles({ department: primarySlug, limit: 6 })
+      : null;
+  const articles =
+    taggedArticles.length > 0
+      ? taggedArticles
+      : fallbackArticles?.ok
+        ? fallbackArticles.data.items
+        : [];
 
-  const related = TOPICS.filter(
-    (other) =>
-      other.slug !== topic.slug &&
-      other.departmentSlugs.some((d) => topic.departmentSlugs.includes(d)),
-  ).slice(0, 10);
+  const topicDepartments = departments.filter((department) =>
+    departmentSlugs.includes(department.slug),
+  );
+  const primaryTone = topicDepartments[0]?.tone ?? "primary";
+
+  const related = (topicsResult.ok ? topicsResult.data : [])
+    .filter(
+      (other) =>
+        other.slug !== topic.slug &&
+        other.departmentSlugs.some((deptSlug) => departmentSlugs.includes(deptSlug)),
+    )
+    .slice(0, 10);
 
   const empty =
-    shownArticles.length +
-      fatwas.length +
-      questions.length +
-      discussions.length +
-      hadiths.length ===
+    articles.length + fatwas.length + questions.length + discussions.length + hadiths.length ===
     0;
-
-  const primaryTone = departments[0]?.tone ?? "primary";
 
   return (
     <div className="space-y-6">
@@ -141,7 +228,7 @@ export default async function TopicPage({
           <Badge tone="neutral" size="sm">
             {formatNumber(topic.contentCount, "bn")} টি কনটেন্ট
           </Badge>
-          {departments.map((department) => (
+          {topicDepartments.map((department) => (
             <Chip
               key={department.id}
               href={`/departments/${department.slug}`}
@@ -189,12 +276,12 @@ export default async function TopicPage({
           ) : null}
 
           {/* -------- articles -------- */}
-          {shownArticles.length > 0 ? (
+          {articles.length > 0 ? (
             <section>
               <SectionHeader
                 title={<T k="label.articles" />}
                 description={
-                  articles.length === 0
+                  taggedArticles.length === 0
                     ? "সম্পর্কিত বিভাগের প্রবন্ধ"
                     : "বিস্তারিত আলোচনা ও দলিল"
                 }
@@ -203,8 +290,14 @@ export default async function TopicPage({
                 href="/articles"
               />
               <div className="space-y-3">
-                {shownArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} layout="list" />
+                {articles.map((article) => (
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    author={scholars.get(article.authorId)}
+                    department={departmentOf(departments, article.departmentIds)}
+                    layout="list"
+                  />
                 ))}
               </div>
             </section>
@@ -222,7 +315,14 @@ export default async function TopicPage({
               />
               <div className="space-y-3">
                 {fatwas.map((fatwa) => (
-                  <FatwaCard key={fatwa.id} fatwa={fatwa} layout="list" />
+                  <FatwaCard
+                    key={fatwa.id}
+                    fatwa={fatwa}
+                    mufti={scholars.get(fatwa.muftiId)}
+                    coSigners={coSignersOf(fatwa.coSignerIds, scholars)}
+                    department={departmentOf(departments, fatwa.departmentIds)}
+                    layout="list"
+                  />
                 ))}
               </div>
             </section>
@@ -264,7 +364,7 @@ export default async function TopicPage({
             </section>
           ) : null}
 
-          {articles.length === 0 && shownArticles.length > 0 ? (
+          {taggedArticles.length === 0 && articles.length > 0 ? (
             <ContentPending message="এই নির্দিষ্ট বিষয়ে সরাসরি কোনো প্রবন্ধ এখনো যুক্ত হয়নি — উপরের তালিকায় সংশ্লিষ্ট বিভাগের প্রবন্ধ দেখানো হয়েছে।" />
           ) : null}
         </div>
@@ -324,4 +424,19 @@ export default async function TopicPage({
       </div>
     </div>
   );
+}
+
+/** The first department of a piece, from the fetched set rather than a lookup table. */
+function departmentOf(
+  departments: Department[],
+  slugs: string[],
+): Department | undefined {
+  return departments.find((department) => slugs.includes(department.slug));
+}
+
+/** The co-signing muftis, resolved from the scholars the page already fetched. */
+function coSignersOf(ids: string[], byId: Map<string, Scholar>): Scholar[] {
+  return ids
+    .map((id) => byId.get(id))
+    .filter((scholar): scholar is Scholar => Boolean(scholar));
 }

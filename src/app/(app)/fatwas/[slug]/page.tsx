@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { cache } from "react";
 import {
   BookMarked,
   BookOpen,
@@ -15,10 +16,16 @@ import {
   Sparkles,
   Users,
 } from "@/components/icons";
-import { FATWAS, getFatwa, getRelatedFatwas } from "@/lib/data/content";
-import { getDepartment } from "@/lib/data/departments";
-import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
-import { findDistrict, toBnDigits } from "@/lib/bn";
+import type { Department, Scholar } from "@/lib/types";
+import {
+  fetchDepartments,
+  fetchDistricts,
+  fetchFatwa,
+  fetchFatwas,
+  fetchScholars,
+  indexBy,
+} from "@/lib/content-api";
+import { toBnDigits } from "@/lib/bn";
 import { T, Pick } from "@/components/i18n-text";
 import {
   Avatar,
@@ -31,6 +38,7 @@ import {
   CardHeader,
   Chip,
   ContentPending,
+  ErrorState,
   FactList,
   PageHeader,
   Prose,
@@ -38,13 +46,40 @@ import {
   VerifiedMark,
 } from "@/components/ui";
 import { AskCtaCard, FatwaCard, ReferenceList } from "@/components/knowledge";
-import { citedReferences } from "../../_content/citations";
 import { extractHeadings } from "../../_content/outline";
 import { SaveShareBar, TableOfContents } from "../../_content/reader-tools";
 
-export function generateStaticParams() {
-  return FATWAS.map((fatwa) => ({ slug: fatwa.slug }));
-}
+/**
+ * One ruling.
+ *
+ * The fatwa, its evidence, the mufti who signed it, the muftis who co-signed it,
+ * the department it belongs to and the related rulings all come from the API. The
+ * page no longer reaches into the bundled dataset for any of it — including the
+ * districts, which used to be resolved from a local list through `findDistrict`.
+ *
+ * Two failure modes are different and are treated differently: a slug the API does
+ * not have is a genuine 404 and becomes `notFound()`, while an API that cannot be
+ * reached shows an error state with a way back, so a transient outage does not
+ * look like a missing ruling.
+ */
+
+/**
+ * One read per request, shared by the metadata and the page.
+ *
+ * The metadata pass and the page pass each need the same ruling, and one read is all
+ * either should cost — a bare fetch in each is two requests to the API for one page,
+ * and two 404s in flight at once leave the metadata pass rendering while the page
+ * calls `notFound()`, which a boundary that has already flushed cannot survive.
+ *
+ * The missing ruling is decided here, in that one read, so both passes agree: a slug
+ * the API does not know will never exist, and the answer is the not-found boundary
+ * rather than an error state.
+ */
+const readFatwa = cache(async (slug: string) => {
+  const result = await fetchFatwa(slug);
+  if (!result.ok && result.status === 404) notFound();
+  return result;
+});
 
 export async function generateMetadata({
   params,
@@ -52,8 +87,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const fatwa = getFatwa(slug);
-  if (!fatwa) return { title: "ফতোয়া পাওয়া যায়নি" };
+  const result = await readFatwa(slug);
+  if (!result.ok) return { title: "ফতোয়া পাওয়া যায়নি" };
+
+  const { fatwa } = result.data;
   return {
     title: fatwa.rulingBn.slice(0, 70),
     description: fatwa.questionBn.slice(0, 160),
@@ -66,22 +103,73 @@ export default async function FatwaDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const fatwa = getFatwa(slug);
-  if (!fatwa) notFound();
+  const result = await readFatwa(slug);
 
-  const mufti = SCHOLAR_BY_ID[fatwa.muftiId];
+  if (!result.ok) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          breadcrumbs={[
+            { label: "হোম", href: "/" },
+            { label: "ফতোয়া", href: "/fatwas" },
+          ]}
+          eyebrow="ফতোয়া"
+          title={<T k="fatwa.title" />}
+          icon={Scale}
+        />
+        <ErrorState
+          title="ফতোয়াটি আনা যায়নি"
+          description="কনটেন্ট সার্ভিসে পৌঁছানো যায়নি, তাই এই রায়টি এখন দেখানো যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।"
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button href={`/fatwas/${slug}`} size="sm">
+                আবার চেষ্টা করুন
+              </Button>
+              <Button href="/fatwas" variant="outline" size="sm">
+                সব ফতোয়া দেখুন
+              </Button>
+            </div>
+          }
+        />
+      </div>
+    );
+  }
+
+  const { fatwa, references } = result.data;
+  const firstDepartment = fatwa.departmentIds[0];
+
+  const [departmentRead, scholarRead, districtRead, relatedRead] = await Promise.all([
+    fetchDepartments(),
+    fetchScholars(),
+    fetchDistricts(),
+    // Same department when there is one; the newest rulings otherwise, which are
+    // dropped below rather than shown under a heading that would not be true.
+    fetchFatwas(firstDepartment ? { department: firstDepartment, limit: 4 } : { limit: 4 }),
+  ]);
+
+  const departmentRows = departmentRead.ok ? departmentRead.data : [];
+  const departmentBySlug = indexBy(departmentRows, "slug");
+  const scholarById = indexBy(scholarRead.ok ? scholarRead.data.items : [], "id");
+  const districtById = indexBy(districtRead.ok ? districtRead.data : [], "id");
+
+  const mufti = scholarById.get(fatwa.muftiId);
   const coSigners = fatwa.coSignerIds
-    .map((id) => SCHOLAR_BY_ID[id])
-    .filter((scholar): scholar is NonNullable<typeof scholar> => Boolean(scholar));
-  const district = findDistrict(fatwa.questionerDistrict);
-  const departments = fatwa.departmentIds
-    .map((id) => getDepartment(id))
-    .filter((department): department is NonNullable<typeof department> => Boolean(department));
+    .map((id) => scholarById.get(id))
+    .filter((scholar): scholar is Scholar => Boolean(scholar));
 
-  // The fatwa stores only a count; the evidence is quoted inline in the body.
-  const references = citedReferences(fatwa.bodyBn, fatwa.referenceCount);
+  const departments = fatwa.departmentIds
+    .map((id) => departmentBySlug.get(id))
+    .filter((department): department is Department => Boolean(department));
+
+  // The district the question came from, and the mufti's own — both looked up in
+  // the fetched set. An id the API does not describe is shown as it arrived.
+  const questionerDistrict = districtById.get(fatwa.questionerDistrict);
+  const muftiDistrict = mufti ? districtById.get(mufti.district) : undefined;
+
   const headings = extractHeadings(fatwa.bodyBn);
-  const related = getRelatedFatwas(fatwa, 3);
+  const related = firstDepartment && relatedRead.ok
+    ? relatedRead.data.items.filter((other) => other.id !== fatwa.id).slice(0, 3)
+    : [];
   const isPublished = fatwa.status === "published";
 
   return (
@@ -162,7 +250,7 @@ export default async function FatwaDetailPage({
             </p>
             <div className="mt-3.5 flex flex-wrap items-center gap-2">
               <Chip size="sm" icon={MapPin} tone="neutral">
-                <Pick value={district.name} /> জেলা
+                {questionerDistrict ? <Pick value={questionerDistrict.name} /> : fatwa.questionerDistrict} জেলা
               </Chip>
               {departments.map((department) => (
                 <Chip
@@ -201,10 +289,7 @@ export default async function FatwaDetailPage({
           </article>
 
           {references.length > 0 ? (
-            <ReferenceList
-              references={references}
-              title="এই রায়ের দলিল ও রেফারেন্স"
-            />
+            <ReferenceList references={references} title="এই রায়ের দলিল ও রেফারেন্স" />
           ) : fatwa.referenceCount > 0 ? (
             <ContentPending message="এই রায়ের আয়াত ও হাদীসগুলো মূল লেখার ভেতরেই উদ্ধৃত করা হয়েছে। আলাদা রেফারেন্স তালিকা শীঘ্রই যুক্ত করা হবে।" />
           ) : null}
@@ -232,7 +317,9 @@ export default async function FatwaDetailPage({
                       </span>
                       <span className="mt-2 flex flex-wrap items-center gap-2">
                         <Badge tone="primary" size="xs">
-                          <Pick value={getDepartment(mufti.primaryDepartmentId)?.shortName} />
+                          <Pick
+                            value={departmentBySlug.get(mufti.primaryDepartmentId)?.shortName}
+                          />
                         </Badge>
                         <Badge tone="neutral" size="xs">
                           <Pick value={mufti.madrasah} />
@@ -282,7 +369,11 @@ export default async function FatwaDetailPage({
                       },
                       {
                         label: "অবস্থান",
-                        value: <Pick value={findDistrict(mufti.district).name} />,
+                        value: muftiDistrict ? (
+                          <Pick value={muftiDistrict.name} />
+                        ) : (
+                          mufti.district
+                        ),
                         icon: MapPin,
                       },
                     ]}
@@ -335,7 +426,17 @@ export default async function FatwaDetailPage({
               />
               <div className="grid gap-4 lg:grid-cols-2">
                 {related.map((other) => (
-                  <FatwaCard key={other.id} fatwa={other} />
+                  <FatwaCard
+                    key={other.id}
+                    fatwa={other}
+                    mufti={scholarById.get(other.muftiId)}
+                    coSigners={other.coSignerIds
+                      .map((id) => scholarById.get(id))
+                      .filter((scholar): scholar is Scholar => Boolean(scholar))}
+                    department={other.departmentIds
+                      .map((id) => departmentBySlug.get(id))
+                      .find((department): department is Department => Boolean(department))}
+                  />
                 ))}
               </div>
             </section>
@@ -368,7 +469,11 @@ export default async function FatwaDetailPage({
                   },
                   {
                     label: "প্রশ্নকারীর জেলা",
-                    value: <Pick value={district.name} />,
+                    value: questionerDistrict ? (
+                      <Pick value={questionerDistrict.name} />
+                    ) : (
+                      fatwa.questionerDistrict
+                    ),
                     icon: MapPin,
                   },
                   {

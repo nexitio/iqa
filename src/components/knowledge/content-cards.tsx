@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { BookmarkCheck, CalendarDays, Clock, Eye, Pin, Quote, Scale } from "lucide-react";
-import type { Article, Fatwa } from "@/lib/types";
+import type { Article, Department, Fatwa, Scholar } from "@/lib/types";
 import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
 import { getDepartment } from "@/lib/data/departments";
 import { useI18n } from "@/lib/i18n";
@@ -27,22 +27,31 @@ import { ReferenceCount as RefCount } from "./reference-chip";
 /**
  * Scholar byline reused by article, fatwa and answer cards so authorship always
  * reads the same way: portrait, honourific, verified mark, department.
+ *
+ * `scholar` and `department` are how a page that already fetched them — from the
+ * API rather than the mock dataset — says so; without them this falls back to the
+ * bundled dataset, which keeps every other caller unchanged while the pages move
+ * over one at a time.
  */
 export function AuthorByline({
   scholarId,
+  scholar: provided,
+  department: providedDepartment,
   timestamp,
   className,
   showDepartment = true,
   size = "sm",
 }: {
   scholarId: string;
+  scholar?: Scholar;
+  department?: Department;
   timestamp?: string;
   className?: string;
   showDepartment?: boolean;
   size?: "sm" | "md";
 }) {
   const { pick, locale, t, isBn } = useI18n();
-  const scholar = SCHOLAR_BY_ID[scholarId];
+  const scholar = provided ?? SCHOLAR_BY_ID[scholarId];
   if (!scholar) {
     return (
       <span className={cn("text-[0.75rem] text-muted-foreground", className)}>
@@ -51,7 +60,7 @@ export function AuthorByline({
     );
   }
 
-  const department = getDepartment(scholar.primaryDepartmentId);
+  const department = providedDepartment ?? getDepartment(scholar.primaryDepartmentId);
 
   return (
     <div className={cn("flex min-w-0 items-center gap-2.5", className)}>
@@ -118,15 +127,23 @@ function ArticleCover({ tone, label, className }: { tone: Tone; label?: string; 
 
 export function ArticleCard({
   article,
+  author,
+  department: providedDepartment,
   layout = "grid",
 }: {
   article: Article;
+  /** The author, when the page fetched it instead of the bundled dataset. */
+  author?: Scholar;
+  department?: Department;
   layout?: "grid" | "list" | "feature";
 }) {
   const { pick, locale, t, isBn } = useI18n();
   const tone = asTone(article.coverTone);
-  const department = getDepartment(article.departmentIds[0]);
+  const department = providedDepartment ?? getDepartment(article.departmentIds[0]);
   const href = `/articles/${article.slug}`;
+  const byline = (
+    <AuthorByline scholarId={article.authorId} scholar={author} department={department} />
+  );
 
   const meta = (
     <ContentMetaBar
@@ -171,7 +188,7 @@ export function ArticleCard({
             </p>
             <div className="mt-2.5 flex flex-wrap items-center justify-between gap-3">
               {meta}
-              <AuthorByline scholarId={article.authorId} />
+              {byline}
             </div>
           </div>
         </Link>
@@ -201,7 +218,12 @@ export function ArticleCard({
               {pick(article.excerpt)}
             </p>
             <div className="mt-auto pt-5">
-              <AuthorByline scholarId={article.authorId} size="md" />
+              <AuthorByline
+                scholarId={article.authorId}
+                scholar={author}
+                department={department}
+                size="md"
+              />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
                 {meta}
                 <RefCount count={article.referenceCount} />
@@ -248,7 +270,7 @@ export function ArticleCard({
           {pick(article.excerpt)}
         </p>
         <div className="mt-auto pt-4">
-          <AuthorByline scholarId={article.authorId} />
+          {byline}
           <div className="mt-3 border-t border-border pt-3">{meta}</div>
         </div>
       </div>
@@ -289,15 +311,22 @@ export function ArticleRow({ article }: { article: Article }) {
  */
 export function FatwaCard({
   fatwa,
+  mufti,
+  coSigners: providedCoSigners,
+  department: providedDepartment,
   layout = "grid",
 }: {
   fatwa: Fatwa;
+  /** The mufti who signed it, when the page fetched them from the API. */
+  mufti?: Scholar;
+  /** The co-signing muftis, likewise. */
+  coSigners?: Scholar[];
+  department?: Department;
   layout?: "grid" | "list";
 }) {
   const { pick, locale, t, isBn } = useI18n();
-  const department = getDepartment(fatwa.departmentIds[0]);
-  const coSigners = fatwa.coSignerIds
-    .map((id) => SCHOLAR_BY_ID[id])
+  const department = providedDepartment ?? getDepartment(fatwa.departmentIds[0]);
+  const coSigners = (providedCoSigners ?? fatwa.coSignerIds.map((id) => SCHOLAR_BY_ID[id]))
     .filter(Boolean)
     .map((s) => ({ name: pick(s.name), color: s.avatarColor }));
   const href = `/fatwas/${fatwa.slug}`;
@@ -332,7 +361,7 @@ export function FatwaCard({
 
   const byline = (
     <div className="flex flex-wrap items-center justify-between gap-3">
-      <AuthorByline scholarId={fatwa.muftiId} timestamp={fatwa.publishedAt} />
+      <AuthorByline scholarId={fatwa.muftiId} scholar={mufti} timestamp={fatwa.publishedAt} />
       {coSigners.length > 0 ? (
         <span className="flex items-center gap-2">
           <AvatarStack people={coSigners} size="xs" max={3} />
@@ -408,9 +437,9 @@ export function FatwaCard({
 }
 
 /** Dense fatwa row for the archive sidebar. */
-export function FatwaRow({ fatwa }: { fatwa: Fatwa }) {
+export function FatwaRow({ fatwa, mufti: provided }: { fatwa: Fatwa; mufti?: Scholar }) {
   const { pick, locale } = useI18n();
-  const mufti = SCHOLAR_BY_ID[fatwa.muftiId];
+  const mufti = provided ?? SCHOLAR_BY_ID[fatwa.muftiId];
   return (
     <Link
       href={`/fatwas/${fatwa.slug}`}

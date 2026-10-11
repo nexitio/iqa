@@ -33,6 +33,13 @@ qaRoutes.get("/questions", async (c) => {
   const urgency = enumParam(url, "urgency", ["normal", "urgent"] as const);
   if (urgency) conditions.push(eq(schema.questions.urgency, urgency));
 
+  // Which questions asked for a formal ruling, so an index can count them without
+  // pulling the whole archive back to tally it itself.
+  const fatwaRequested = booleanParam(url, "fatwaRequested");
+  if (fatwaRequested !== undefined) {
+    conditions.push(eq(schema.questions.fatwaRequested, fatwaRequested));
+  }
+
   // Anonymous and private questions are not public reading; without an identity
   // only public ones are listed.
   const identity = c.get("identity");

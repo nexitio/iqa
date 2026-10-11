@@ -16,7 +16,7 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-import type { Answer, Question } from "@/lib/types";
+import type { Answer, Question, Scholar } from "@/lib/types";
 import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
 import { getDepartment } from "@/lib/data/departments";
 import { getUser } from "@/lib/data/personal";
@@ -272,6 +272,7 @@ export function AnswerCard({
   question,
   accepted,
   scholarId,
+  scholar: providedScholar,
   className,
 }: {
   answer: Answer;
@@ -281,10 +282,15 @@ export function AnswerCard({
   accepted?: boolean;
   /** Overrides the answer's own scholarId (rarely needed). */
   scholarId?: string;
+  /**
+   * The scholar who wrote it, when the page fetched them instead of reading the
+   * bundled dataset — the same override `ArticleCard` and `FatwaCard` take.
+   */
+  scholar?: Scholar;
   className?: string;
 }) {
   const { pick, locale, t, isBn } = useI18n();
-  const scholar = SCHOLAR_BY_ID[scholarId ?? answer.scholarId];
+  const scholar = providedScholar ?? SCHOLAR_BY_ID[scholarId ?? answer.scholarId];
   const isAccepted = accepted ?? answer.accepted;
   const credential = scholar?.credentials[0];
 

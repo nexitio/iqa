@@ -89,9 +89,16 @@ export const mfaChallenges = pgTable(
   "mfa_challenges",
   {
     id: text("id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    /**
+     * The account this verification belongs to.
+     *
+     * Nullable for exactly one case: the credential-first passkey sign-in that
+     * conditional UI starts before anything has been typed, where there is no
+     * account to name yet. It gains an owner at verification, when the assertion
+     * names a credential and that row says whose it is. Every other challenge is
+     * still written with an account.
+     */
+    userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
     purpose: mfaChallengePurposeEnum("purpose").notNull(),
     kind: mfaFactorKindEnum("kind").notNull(),
     /** Set once the factor exists; null while a new address is being enrolled. */

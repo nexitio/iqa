@@ -91,13 +91,22 @@ export async function verifyRegistration(
   response: RegistrationResponseJSON,
   expectedChallenge: string,
 ): Promise<VerifiedCredential | null> {
-  const result = await verifyRegistrationResponse({
-    response,
-    expectedChallenge,
-    expectedOrigin: env.rp.origins,
-    expectedRPID: env.rp.id,
-    requireUserVerification: false,
-  });
+  let result: Awaited<ReturnType<typeof verifyRegistrationResponse>>;
+  try {
+    result = await verifyRegistrationResponse({
+      response,
+      expectedChallenge,
+      expectedOrigin: env.rp.origins,
+      expectedRPID: env.rp.id,
+      requireUserVerification: false,
+    });
+  } catch {
+    // A malformed response — an unparsable attestation, a signature that is not
+    // ASN.1 — makes the library throw rather than answer "not verified". Both are
+    // the same thing to the caller, and neither is a server fault: this is input
+    // from a browser, and a hand-built request should be refused, not a 500.
+    return null;
+  }
 
   if (!result.verified || !result.registrationInfo) return null;
 
@@ -143,19 +152,26 @@ export async function verifyAuthentication(input: {
   expectedChallenge: string;
   credential: StoredCredential;
 }): Promise<AssertionResult | null> {
-  const result = await verifyAuthenticationResponse({
-    response: input.response,
-    expectedChallenge: input.expectedChallenge,
-    expectedOrigin: env.rp.origins,
-    expectedRPID: env.rp.id,
-    credential: {
-      id: input.credential.credentialId,
-      publicKey: toBytes(input.credential.publicKey),
-      counter: input.credential.counter,
-      transports: transportsOf(input.credential.transports),
-    },
-    requireUserVerification: false,
-  });
+  let result: Awaited<ReturnType<typeof verifyAuthenticationResponse>>;
+  try {
+    result = await verifyAuthenticationResponse({
+      response: input.response,
+      expectedChallenge: input.expectedChallenge,
+      expectedOrigin: env.rp.origins,
+      expectedRPID: env.rp.id,
+      credential: {
+        id: input.credential.credentialId,
+        publicKey: toBytes(input.credential.publicKey),
+        counter: input.credential.counter,
+        transports: transportsOf(input.credential.transports),
+      },
+      requireUserVerification: false,
+    });
+  } catch {
+    // See the note on `verifyRegistration`: a signature the library cannot even
+    // parse is a failed sign-in, not an internal error.
+    return null;
+  }
 
   if (!result.verified) return null;
 

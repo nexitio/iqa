@@ -9,6 +9,7 @@ import {
   Flag,
   HandHeart,
   Home,
+  KeyRound,
   LayoutDashboard,
   Library,
   MessageCircleQuestion,
@@ -111,6 +112,7 @@ export const ADMIN_NAV: NavLink[] = [
   { href: "/admin/questions", label: { bn: "প্রশ্ন মনিটরিং", en: "Question Monitor" }, icon: MessageCircleQuestion, badge: 27 },
   { href: "/admin/reports", label: { bn: "রিপোর্ট", en: "Reports" }, icon: Flag, badge: 6 },
   { href: "/admin/users", label: { bn: "ব্যবহারকারী", en: "Users" }, icon: ShieldCheck },
+  { href: "/admin/social", label: { bn: "সোশ্যাল সাইন-ইন", en: "Social Sign-in" }, icon: KeyRound },
 ];
 
 /** Utility links shown in the account menu and footer. */

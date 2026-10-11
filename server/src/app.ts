@@ -25,6 +25,7 @@ import { contentRoutes } from "./routes/content.ts";
 import { healthRoutes } from "./routes/health.ts";
 import { libraryRoutes } from "./routes/library.ts";
 import { mfaRoutes } from "./routes/mfa.ts";
+import { passkeyRoutes } from "./routes/passkey.ts";
 import { peopleRoutes } from "./routes/people.ts";
 import { personalRoutes } from "./routes/personal.ts";
 import { qaRoutes } from "./routes/qa.ts";
@@ -109,6 +110,7 @@ export function createApp(options: AppOptions) {
 
   app.route("/api/v1", authRoutes);
   app.route("/api/v1", mfaRoutes);
+  app.route("/api/v1", passkeyRoutes);
   app.route("/api/v1", accountRoutes);
   app.route("/api/v1", socialRoutes);
   app.route("/api/v1", adminSocialRoutes);
@@ -138,6 +140,8 @@ export function createApp(options: AppOptions) {
         "POST /api/v1/auth/mfa/passkey/options",
         "POST /api/v1/auth/mfa/passkey/verify",
         "POST /api/v1/auth/mfa/recovery",
+        "POST /api/v1/auth/passkey/options",
+        "POST /api/v1/auth/passkey/verify",
         "GET /api/v1/me/mfa",
         "POST /api/v1/me/mfa/email/start",
         "POST /api/v1/me/mfa/sms/start",

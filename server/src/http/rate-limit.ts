@@ -10,6 +10,8 @@
  * needs to change.
  */
 
+import type { Context } from "hono";
+
 interface Window {
   count: number;
   resetAt: number;
@@ -62,4 +64,18 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
 /** Clears a key after a successful sign-in, so a valid login resets the budget. */
 export function rateLimitReset(key: string): void {
   windows.delete(key);
+}
+
+/**
+ * The key a credential endpoint is budgeted against before it knows who is asking.
+ *
+ * A forwarded address is preferred when a proxy sets one, because a single origin
+ * can front many people; the `Origin` header is the fallback a browser always
+ * sends on a write, and it is what the dev server's calls carry. Shared here so the
+ * password routes and the passkey routes cannot key the same person differently.
+ */
+export function callerKey(c: Context): string {
+  return (
+    c.req.header("x-forwarded-for")?.split(",")[0]?.trim() || c.req.header("origin") || "local"
+  );
 }

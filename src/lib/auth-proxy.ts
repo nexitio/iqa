@@ -33,6 +33,12 @@ export interface ProxyOptions {
    * with nothing to inspect can leave it out and let this read the stream.
    */
   body?: string;
+  /**
+   * The method to use upstream. Defaults to `POST`, which is what every sign-in
+   * and sign-up call is; account-management routes read (`GET`) and unlink
+   * (`DELETE`) and say so here rather than each duplicating the fetch.
+   */
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 }
 
 /**
@@ -82,13 +88,23 @@ function withoutExpiry(cookie: string): string {
 }
 
 /**
- * Forwards one credential call to the API and relays its answer.
+ * Forwards one credential or account call to the API and relays its answer.
  *
  * The `Set-Cookie` header is copied **verbatim** rather than rebuilt here: which
  * cookie is set, with which flags and for how long, is the API's decision, and a
  * second copy of that policy in the app is a second thing to get wrong. Copying
  * it onto this origin's response is what re-scopes it to the app — and with
  * `forgetOnClose` the only thing edited is its lifetime.
+ *
+ * The caller's cookie is relayed on every method, so an authenticated `GET` (the
+ * second-factor list) and an authenticated `DELETE` (removing a factor) reach the
+ * API with the session that authorised them, exactly as a `POST` does.
+ *
+ * A redirect is relayed too. Some of these calls answer with a `Location` rather
+ * than a body — the hand-off to a provider for a link is one — and a proxy that
+ * dropped the header would turn a working 302 into an empty one. Relaying it
+ * keeps the caller on our origin while the API decides where the browser goes
+ * next, which is the same division of labour as every other rule here.
  */
 export async function proxyAuth(
   request: Request,
@@ -106,7 +122,7 @@ export async function proxyAuth(
   let upstream: Response;
   try {
     upstream = await fetch(serverApiUrl(path), {
-      method: "POST",
+      method: options.method ?? "POST",
       headers: {
         "content-type": request.headers.get("content-type") ?? "application/json",
         accept: "application/json",
@@ -123,6 +139,12 @@ export async function proxyAuth(
       },
       body: body.length > 0 ? body : undefined,
       cache: "no-store",
+      // **Not followed.** An upstream redirect is the whole answer for the routes
+      // that hand the browser to a provider: following it here would run the
+      // hand-off on the server, throw away the `Location` the browser needs, and —
+      // because the response that comes back is a third party's — relay *their*
+      // `Set-Cookie` onto our origin. A redirect is relayed, never walked.
+      redirect: "manual",
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
   } catch (error) {
@@ -139,6 +161,10 @@ export async function proxyAuth(
     // Never cached anywhere: these answers are per-caller and about credentials.
     "cache-control": "private, no-store",
   });
+
+  // Only on a redirect, so a 200 cannot smuggle a navigation into an answer.
+  const location = upstream.status >= 300 && upstream.status < 400 ? upstream.headers.get("location") : null;
+  if (location) headers.set("location", location);
 
   for (const cookie of setCookieHeaders(upstream.headers)) {
     headers.append("set-cookie", options.forgetOnClose ? withoutExpiry(cookie) : cookie);

@@ -2,9 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { SCHOLARS } from "@/lib/data/scholars";
-import { DEPARTMENTS, getDepartment } from "@/lib/data/departments";
-import { findDistrict, formatNumber } from "@/lib/bn";
+import type { Department, District, Scholar } from "@/lib/types";
+import { formatNumber } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import {
@@ -23,12 +22,25 @@ type SortKey = "contribution" | "followers" | "response";
 /**
  * The scholar directory.
  *
- * Filtering happens client-side over the local dataset, but the *shape* of the
- * controls mirrors how the backend will need to be queried (department as a
- * multi-select, district as a single choice, sort as an enum), so swapping in
- * a fetch later does not change the interface.
+ * The scholars, the departments and the districts all arrive as props, read from
+ * the API by the page above — this used to filter the bundled dataset, which meant
+ * the directory and the profiles it links to could disagree about who exists.
+ *
+ * Filtering still happens client-side, and the *shape* of the controls is
+ * unchanged: department as a multi-select, district as a single choice, sort as an
+ * enum. What is left to the client is the part the API has no opinion about —
+ * fuzzy text over the fetched page, and four orderings of the same list — so each
+ * keystroke stays instant instead of waiting on a request.
  */
-export function ScholarDirectory() {
+export function ScholarDirectory({
+  scholars,
+  departments,
+  districts,
+}: {
+  scholars: Scholar[];
+  departments: Department[];
+  districts: District[];
+}) {
   const { t, pick, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [departmentIds, setDepartmentIds] = useState<string[]>([]);
@@ -36,15 +48,24 @@ export function ScholarDirectory() {
   const [sort, setSort] = useState<SortKey>("contribution");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
 
-  const districts = useMemo(
-    () => [...new Set(SCHOLARS.map((s) => s.district))].sort(),
-    [],
+  /** A department by id or slug — the two keys a row may be tagged with. */
+  const departmentOf = useMemo(
+    () => (key: string) =>
+      departments.find((department) => department.id === key || department.slug === key),
+    [departments],
   );
+
+  // Only the districts scholars actually live in, in the API's own order, so the
+  // rail cannot offer a filter that can only ever empty the list.
+  const activeDistricts = useMemo(() => {
+    const used = new Set(scholars.map((scholar) => scholar.district));
+    return districts.filter((item) => used.has(item.id));
+  }, [scholars, districts]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
 
-    const filtered = SCHOLARS.filter((scholar) => {
+    const filtered = scholars.filter((scholar) => {
       if (verifiedOnly && !scholar.verified) return false;
       if (district && scholar.district !== district) return false;
 
@@ -66,7 +87,7 @@ export function ScholarDirectory() {
         scholar.shortBio.en,
         ...scholar.specialization.flatMap((s) => [s.bn, s.en]),
         ...scholar.departmentIds.flatMap((id) => {
-          const d = getDepartment(id);
+          const d = departmentOf(id);
           return d ? [d.name.bn, d.name.en, d.shortName.bn, d.shortName.en] : [];
         }),
       ]
@@ -82,7 +103,7 @@ export function ScholarDirectory() {
         s.stats.answers + s.stats.articles * 3 + s.stats.fatwas * 2;
       return contribution(b) - contribution(a);
     });
-  }, [query, departmentIds, district, sort, verifiedOnly]);
+  }, [scholars, query, departmentIds, district, sort, verifiedOnly, departmentOf]);
 
   const activeFilters =
     departmentIds.length + (district ? 1 : 0) + (query ? 1 : 0) + (verifiedOnly ? 1 : 0);
@@ -137,7 +158,7 @@ export function ScholarDirectory() {
           >
             {t("label.departments")}
           </Chip>
-          {DEPARTMENTS.map((department) => (
+          {departments.map((department) => (
             <Chip
               key={department.id}
               tone={department.tone}
@@ -157,22 +178,21 @@ export function ScholarDirectory() {
           ))}
         </ChipList>
 
-        <ChipList label={t("label.district")}>
-          {districts.map((id) => {
-            const d = findDistrict(id);
-            return (
+        {activeDistricts.length > 0 ? (
+          <ChipList label={t("label.district")}>
+            {activeDistricts.map((item) => (
               <Chip
-                key={id}
+                key={item.id}
                 size="sm"
                 variant="outline"
-                active={district === id}
-                onClick={() => setDistrict((prev) => (prev === id ? null : id))}
+                active={district === item.id}
+                onClick={() => setDistrict((prev) => (prev === item.id ? null : item.id))}
               >
-                {d.name[locale]}
+                {pick(item.name)}
               </Chip>
-            );
-          })}
-        </ChipList>
+            ))}
+          </ChipList>
+        ) : null}
 
         <div className="flex flex-wrap items-center gap-3">
           <label className="inline-flex cursor-pointer items-center gap-2 text-[0.8125rem] text-muted-foreground">
@@ -205,11 +225,17 @@ export function ScholarDirectory() {
       {results.length === 0 ? (
         <EmptyState
           title={t("state.noResults")}
-          description="অন্য বিভাগ বা জেলা বেছে নিয়ে আবার চেষ্টা করুন।"
+          description={
+            scholars.length === 0
+              ? "এখনো কোনো আলেমের প্রোফাইল যুক্ত হয়নি।"
+              : "অন্য বিভাগ বা জেলা বেছে নিয়ে আবার চেষ্টা করুন।"
+          }
           action={
-            <Button variant="outline" onClick={clearAll}>
-              {t("action.clear")}
-            </Button>
+            scholars.length === 0 ? undefined : (
+              <Button variant="outline" onClick={clearAll}>
+                {t("action.clear")}
+              </Button>
+            )
           }
         />
       ) : (

@@ -40,6 +40,19 @@ export function socialStartUrl(slug: string, returnTo = "/"): string {
 }
 
 /**
+ * Where a signed-in reader goes to attach a provider to the account they are in.
+ *
+ * Relative, and on our own origin, unlike `socialStartUrl`: linking needs the
+ * session, and the session cookie belongs to this origin. So the browser starts
+ * here and this app makes the hop, which also keeps the provider-facing URL out of
+ * any page a reader could have been sent to.
+ */
+export function socialLinkUrl(slug: string, returnTo = "/settings"): string {
+  const search = new URLSearchParams({ returnTo });
+  return `/api/account/social/${encodeURIComponent(slug)}/link?${search.toString()}`;
+}
+
+/**
  * The providers a visitor may actually sign in with.
  *
  * Deliberately forgiving: an API that is down, slow or answering nonsense yields

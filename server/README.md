@@ -92,6 +92,7 @@ All routes are under `/api/v1`. Small fixed collections come back as
 | --- | --- |
 | Auth | `POST /auth/register`, `/auth/login`, `/auth/logout`, `GET /auth/session` |
 | Second factor (sign-in) | `POST /auth/mfa/challenge`, `/auth/mfa/verify`, `/auth/mfa/passkey/options`, `/auth/mfa/passkey/verify`, `/auth/mfa/recovery` |
+| Passkey sign-in | `POST /auth/passkey/options`, `/auth/passkey/verify` |
 | Second factor (account) | `GET /me/mfa`, `POST /me/mfa/{email,sms,passkey}/{start,confirm}`, `DELETE /me/mfa/:id`, `POST /me/mfa/recovery-codes` |
 | Account security | `POST /me/password`, `GET /me/sessions`, `DELETE /me/sessions/:id`, `DELETE /me/sessions` |
 | Social sign-in | `GET /auth/social/providers`, `/auth/social/:slug/start`, `/auth/social/:slug/callback`, `/auth/social/:slug/link` |
@@ -364,6 +365,28 @@ curl -s -X POST localhost:8787/api/v1/me/mfa/email/confirm \
   -H "cookie: $SESSION" -H 'content-type: application/json' \
   -d '{"challengeId":"…","code":"123456"}'
 ```
+
+### Signing in with a passkey alone
+
+`POST /auth/passkey/options` is the one credential route that asks for nothing:
+no cookie, no pending token, no email. It exists so a returning reader can be
+signed in from the browser's own autofill — conditional UI — where nothing has
+been typed yet. The challenge it returns belongs to no account, and the empty
+allow list is what lets the browser offer whichever passkey it holds for this
+site; the account is settled only at `POST /auth/passkey/verify`, when the
+assertion names a credential. That route issues the same session every other way
+in issues.
+
+```bash
+# what the sign-in page's autofill asks for, and what it answers with
+curl -s -X POST localhost:8787/api/v1/auth/passkey/options
+curl -s -X POST localhost:8787/api/v1/auth/passkey/verify \
+  -H 'content-type: application/json' -d '{"challengeId":"…","response":{…}}'
+```
+
+An unattributed challenge is single-use and only verifies against a private key
+the caller would have to hold, so it can authorise nothing but the account its own
+assertion proves.
 
 ### Delivery
 

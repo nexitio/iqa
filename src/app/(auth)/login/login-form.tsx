@@ -2,18 +2,23 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { AlertTriangle, ArrowRight, Lock, Mail, ShieldCheck } from "@/components/icons";
+import { useCallback, useEffect, useState } from "react";
+import { AlertTriangle, ArrowRight, Fingerprint, Lock, Mail, ShieldCheck } from "@/components/icons";
 import { Button, Callout, Field, Input } from "@/components/ui";
 import {
   SOCIAL_UNAVAILABLE_NOTE,
   SocialButtons,
 } from "@/components/auth/social-buttons";
+import type { AuthenticationResponseJSON } from "@simplewebauthn/browser";
 import type { SocialProvider } from "@/lib/api";
 import {
   sendSecondFactorCode,
   signIn,
   redeemRecoveryCode,
+  startAutofillPasskeySignIn,
+  startPasskeySignIn,
+  verifyAutofillPasskeySignIn,
+  verifyPasskeySignIn,
   verifySecondFactorCode,
   type Challenge,
   type PendingSecondFactor,
@@ -23,9 +28,11 @@ import {
  * Signing in.
  *
  * Three steps in one component, because they are one sign-in: the password, then
- * — only when the account has a second factor enrolled — a code, and a recovery
- * code as the way out when the device that receives codes is gone. Which of them
- * a visitor sees is decided by the API's answers, not by this form.
+ * — only when the account has a second factor enrolled — a passkey assertion, a
+ * code, or a recovery code as the way out when the device that holds the factor
+ * is gone. Which of them a visitor is *offered* is decided by the API's answer;
+ * which one they take is theirs, because an account with both a passkey and a
+ * code channel can use either — they prove the same thing.
  *
  * Errors are shown in Bangla with the API's own sentence under them. The lead
  * line is what the status means to a person; the API's message is the specific
@@ -34,6 +41,16 @@ import {
  */
 
 type Step = "credentials" | "code" | "recovery";
+
+/**
+ * How long a fallback challenge is left in place before it is replaced.
+ *
+ * An unattributed challenge outlives the visitor's patience by a good margin, but
+ * a tab can be left open overnight, and replacing the challenge before it lapses
+ * means the entry they finally choose is still answerable — the new ceremony
+ * supersedes the old one.
+ */
+const AUTOFILL_REFRESH_MS = 10 * 60 * 1000;
 
 function leadFor(status: number): string {
   if (status === 401) return "ইমেইল বা পাসওয়ার্ড সঠিক নয়।";
@@ -46,6 +63,46 @@ function leadFor(status: number): string {
 }
 
 /**
+ * What a return from a provider without a session means.
+ *
+ * The API sends only the status — so this is where the words live, and they are
+ * ours: a provider's own error text, or anything else a crafted link might carry,
+ * never reaches the page.
+ */
+function socialFailure(status: string): { lead: string; detail: string } {
+  if (status === "409") {
+    return {
+      lead: "এই ইমেইলের একটি অ্যাকাউন্ট আগেই আছে",
+      detail:
+        "প্রোভাইডার নিশ্চিত করেনি যে ঠিকানাটি আপনার, তাই সরাসরি যুক্ত করা হয়নি। পাসওয়ার্ড দিয়ে প্রবেশ করে অ্যাকাউন্ট সেটিংস থেকে প্রোভাইডারটি যুক্ত করুন।",
+    };
+  }
+  if (status === "502") {
+    return {
+      lead: "প্রোভাইডারের সাথে কথা বলা যায়নি",
+      detail: "প্রোভাইডার সাইন-ইন প্রত্যাখ্যান করেছে বা এই মুহূর্তে অনুপলব্ধ। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+    };
+  }
+  if (status === "403") {
+    return {
+      lead: "এই অ্যাকাউন্টটি স্থগিত করা হয়েছে।",
+      detail: "অ্যাডমিনের সাথে যোগাযোগ করুন।",
+    };
+  }
+  if (status === "404") {
+    return {
+      lead: "প্রোভাইডারটি এখন চালু নেই",
+      detail: "কনফিগারেশন বদলে গেছে বা প্রোভাইডারটি বন্ধ করা হয়েছে। অন্য কোনো উপায়ে প্রবেশ করুন।",
+    };
+  }
+  return {
+    lead: "সোশ্যাল সাইন-ইন সম্পন্ন হয়নি",
+    detail:
+      "প্রোভাইডারে অনুমোদন বাতিল হয়েছে বা সময় শেষ হয়ে গেছে। আবার চেষ্টা করুন, অথবা ইমেইল ও পাসওয়ার্ড দিয়ে প্রবেশ করুন।",
+  };
+}
+
+/**
  * `providers` is the enabled social set, resolved on the server. It is shown only
  * on the first step: someone halfway through a second factor has already chosen
  * how they are signing in, and offering them another way in underneath is noise.
@@ -53,10 +110,13 @@ function leadFor(status: number): string {
 export function LoginForm({
   providers,
   next = "/",
+  socialError,
 }: {
   providers: SocialProvider[];
   /** Where to land afterwards, already validated by the page that rendered this. */
   next?: string;
+  /** The status a social sign-in failed with, if this page is where it came back. */
+  socialError?: string;
 }) {
   const router = useRouter();
 
@@ -73,18 +133,112 @@ export function LoginForm({
 
   const [secondFactor, setSecondFactor] = useState<PendingSecondFactor | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
+  /** True once this browser's autofill is actually being offered a passkey. */
+  const [autofillReady, setAutofillReady] = useState(false);
 
   /** A signed-in visitor is handed to the app; the layout re-reads the session. */
-  function finish() {
+  const finish = useCallback(() => {
     router.replace(next);
     router.refresh();
-  }
+  }, [router, next]);
 
-  function fail(status: number, message: string) {
+  const fail = useCallback((status: number, message: string) => {
     setLead(leadFor(status));
     setDetail(message);
     setPending(false);
-  }
+  }, []);
+
+  /**
+   * Conditional UI: the passkey, offered in the browser's own autofill.
+   *
+   * A returning visitor with an enrolled passkey types nothing — not an address,
+   * not a password. The browser lists their passkey under the email field and
+   * choosing it signs them in. What makes that possible is that this ceremony is
+   * *credential-first*: the options are asked for with an empty allow list, so no
+   * account is named up front, and the account is settled only when the chosen
+   * assertion comes back and names a credential.
+   *
+   * Everything about it is best-effort. A browser without conditional UI, an
+   * account with no passkey, a request that fails: none of it raises anything,
+   * because none of it takes away the way in that is already on screen. Only an
+   * assertion the API actually refuses is reported — where a wrong password would
+   * be, but with its own lead line, because nothing was typed here.
+   */
+  useEffect(() => {
+    if (step !== "credentials") return;
+
+    let cancelled = false;
+    /** Bumped on every arm, so a superseded ceremony's rejection is ignored. */
+    let generation = 0;
+
+    async function arm() {
+      const mine = ++generation;
+
+      const options = await startAutofillPasskeySignIn();
+      if (cancelled || mine !== generation || !options.ok) return;
+
+      let assertion: AuthenticationResponseJSON;
+      let refresh: ReturnType<typeof setTimeout> | undefined;
+      try {
+        // Loaded here rather than at the top of the file for the same reason the
+        // second-factor step loads it: it is a browser-only module, and a static
+        // import would pull it into the server render of this page.
+        const { browserSupportsWebAuthnAutofill, startAuthentication } = await import(
+          "@simplewebauthn/browser"
+        );
+        if (!(await browserSupportsWebAuthnAutofill())) return;
+        if (cancelled || mine !== generation) return;
+
+        setAutofillReady(true);
+        // Keeps the challenge behind the autofill entry fresh. Re-arming aborts
+        // this ceremony, whose rejection is ignored because `generation` moved on.
+        refresh = setTimeout(() => {
+          if (!cancelled) void arm();
+        }, AUTOFILL_REFRESH_MS);
+
+        assertion = await startAuthentication({
+          optionsJSON: options.data.options,
+          useBrowserAutofill: true,
+        });
+      } catch {
+        if (refresh) clearTimeout(refresh);
+        // A menu the visitor dismissed, a passkey they deleted elsewhere, a
+        // ceremony we just replaced: all ordinary outcomes, none of them worth a
+        // message.
+        if (cancelled || mine !== generation) return;
+        setAutofillReady(false);
+        return;
+      }
+
+      if (refresh) clearTimeout(refresh);
+      if (cancelled || mine !== generation) return;
+
+      setPending(true);
+      const verified = await verifyAutofillPasskeySignIn({
+        challengeId: options.data.challengeId,
+        response: assertion,
+      });
+
+      if (!verified.ok) {
+        // Deliberately not `fail`: that lead line is chosen by status, and "the
+        // email or password is wrong" is not what happened here — nothing was
+        // typed at all. The API's own sentence is the specific reason.
+        setLead("পাসকি দিয়ে প্রবেশ করা যায়নি");
+        setDetail(verified.message);
+        setPending(false);
+        return;
+      }
+
+      finish();
+    }
+
+    void arm();
+
+    return () => {
+      cancelled = true;
+      generation += 1;
+    };
+  }, [step, fail, finish]);
 
   async function onSubmitCredentials(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -163,6 +317,61 @@ export function LoginForm({
     finish();
   }
 
+  /**
+   * The other half of the second step: prove the passkey instead of a code.
+   *
+   * The ceremony has two halves. The server generates the challenge and owns the
+   * credential (`/auth/mfa/passkey/options`); the browser signs it, and only then
+   * does the signature come back to be verified. Nothing here decides whether the
+   * assertion is good — that is the server's answer to `verify`, and it issues the
+   * session when it says yes.
+   */
+  async function signInWithPasskey() {
+    if (!secondFactor) return;
+    setPending(true);
+    setLead(null);
+    setDetail(null);
+
+    const options = await startPasskeySignIn({ pendingToken: secondFactor.pendingToken });
+    if (!options.ok) {
+      fail(options.status, options.message);
+      return;
+    }
+
+    let assertion: AuthenticationResponseJSON;
+    try {
+      // Loaded here rather than at the top of the file: it is a browser-only
+      // module, most visitors never reach this step, and a static import would
+      // pull it into the server render of a page they do reach.
+      const { startAuthentication } = await import("@simplewebauthn/browser");
+      assertion = await startAuthentication({ optionsJSON: options.data.options });
+    } catch (error) {
+      // A cancelled prompt or a device that does not hold this passkey lands here,
+      // and both are ordinary outcomes rather than server failures.
+      setLead("পাসকি যাচাই করা যায়নি");
+      setDetail(
+        error instanceof Error && error.message
+          ? error.message
+          : "এই ব্রাউজার বা ডিভাইস এই পাসকিটি চিনতে পারেনি। কোড বা রিকভারি কোড দিয়ে প্রবেশ করুন।",
+      );
+      setPending(false);
+      return;
+    }
+
+    const verified = await verifyPasskeySignIn({
+      pendingToken: secondFactor.pendingToken,
+      challengeId: options.data.challengeId,
+      response: assertion,
+    });
+
+    if (!verified.ok) {
+      fail(verified.status, verified.message);
+      return;
+    }
+
+    finish();
+  }
+
   async function onSubmitRecovery(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!secondFactor) return;
@@ -192,8 +401,13 @@ export function LoginForm({
   /* ---------------------------------------------------------------- step 2 */
 
   if (step === "code" && secondFactor) {
-    const codeFactors = secondFactor.factors.filter((item) => item.kind === "email" || item.kind === "sms");
+    const codeFactors = secondFactor.factors.filter(
+      (item) => item.kind === "email" || item.kind === "sms",
+    );
     const hasPasskey = secondFactor.factors.some((item) => item.kind === "passkey");
+    // An account whose only factor is a passkey has no code to fall back on, so
+    // the copy has to name the one thing that will actually work here.
+    const onlyPasskey = hasPasskey && codeFactors.length === 0;
 
     return (
       <div className="space-y-5">
@@ -204,18 +418,34 @@ export function LoginForm({
           <div>
             <h1 className="font-display text-xl font-bold text-foreground">দুই ধাপের যাচাই</h1>
             <p className="mt-1 text-[0.8125rem] leading-relaxed text-muted-foreground">
-              পাসওয়ার্ড ঠিক আছে। অ্যাকাউন্টে দ্বিতীয় ধাপ চালু আছে, তাই একটি কোড দিয়ে শেষ করুন।
+              {onlyPasskey
+                ? "পাসওয়ার্ড ঠিক আছে। অ্যাকাউন্টটি একটি পাসকি দিয়ে সুরক্ষিত — ডিভাইসেই যাচাই করে শেষ করুন।"
+                : "পাসওয়ার্ড ঠিক আছে। অ্যাকাউন্টে দ্বিতীয় ধাপ চালু আছে, তাই আরেকটি যাচাই দিয়ে শেষ করুন।"}
             </p>
           </div>
         </div>
 
         {error}
 
-        {hasPasskey && codeFactors.length === 0 ? (
-          <Callout tone="warning" icon={AlertTriangle} title="পাসকি দিয়ে প্রবেশ এখনো অ্যাপে আসেনি">
-            এই অ্যাকাউন্টটি পাসকি দিয়ে সুরক্ষিত, আর এই অ্যাপ থেকে পাসকি যাচাই এখনো যুক্ত হয়নি। নিচের “রিকভারি কোড”
-            দিয়ে প্রবেশ করুন।
-          </Callout>
+        {hasPasskey ? (
+          <Button
+            size="lg"
+            full
+            icon={Fingerprint}
+            type="button"
+            loading={pending}
+            onClick={signInWithPasskey}
+          >
+            পাসকি দিয়ে প্রবেশ করুন
+          </Button>
+        ) : null}
+
+        {hasPasskey && (challenge || codeFactors.length > 0) ? (
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" aria-hidden />
+            <span className="text-[0.75rem] font-medium text-subtle-foreground">অথবা কোড দিয়ে</span>
+            <span className="h-px flex-1 bg-border" aria-hidden />
+          </div>
         ) : null}
 
         {challenge ? (
@@ -287,7 +517,7 @@ export function LoginForm({
               </button>
             </div>
           </form>
-        ) : (
+        ) : codeFactors.length > 0 ? (
           <div className="space-y-3">
             {codeFactors.map((factor) => (
               <Button
@@ -302,15 +532,27 @@ export function LoginForm({
                 {factor.destination ? ` (${factor.destination})` : ""}
               </Button>
             ))}
-            <button
-              type="button"
-              className="text-[0.8125rem] text-muted-foreground hover:text-foreground"
-              onClick={() => setStep("recovery")}
-            >
-              রিকভারি কোড দিয়ে প্রবেশ
-            </button>
           </div>
-        )}
+        ) : null}
+
+        {/*
+          Always reachable rather than tucked inside the code form: an account
+          with only a passkey has no code branch at all, and a recovery code is
+          precisely the way in when the device holding the passkey is gone.
+        */}
+        {!challenge ? (
+          <button
+            type="button"
+            className="w-full text-center text-[0.8125rem] text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              setStep("recovery");
+              setLead(null);
+              setDetail(null);
+            }}
+          >
+            রিকভারি কোড দিয়ে প্রবেশ
+          </button>
+        ) : null}
       </div>
     );
   }
@@ -350,7 +592,9 @@ export function LoginForm({
             type="button"
             className="w-full text-center text-[0.8125rem] text-muted-foreground hover:text-foreground"
             onClick={() => {
-              setStep(secondFactor && firstCodeChannel(secondFactor) ? "code" : "credentials");
+              // Back to the second-factor step, which now offers whatever the
+              // account actually has — a passkey, a code channel, or both.
+              setStep(secondFactor ? "code" : "credentials");
               setLead(null);
               setDetail(null);
             }}
@@ -371,20 +615,51 @@ export function LoginForm({
         আপনার অ্যাকাউন্টে প্রবেশ করুন — প্রশ্ন, সংরক্ষিত জ্ঞান ও শেখার যাত্রা যেখানে ছেড়েছিলেন সেখান থেকেই।
       </p>
 
+      {/*
+        A social sign-in that came back without a session. Placed above the form
+        rather than inside it, because it explains the page itself: the visitor
+        arrived here from a provider, not from anything they typed.
+      */}
+      {socialError ? (
+        <Callout
+          tone="danger"
+          icon={AlertTriangle}
+          title={socialFailure(socialError).lead}
+          className="mt-6"
+        >
+          {socialFailure(socialError).detail}
+        </Callout>
+      ) : null}
+
       <form className="mt-7 space-y-4" onSubmit={onSubmitCredentials}>
         {error}
 
-        <Field label="ইমেইল" htmlFor="email" required>
+        <Field
+          label="ইমেইল"
+          htmlFor="email"
+          required
+          hint={
+            autofillReady
+              ? "পাসকি থাকলে এই ঘরেই ব্রাউজারের পরামর্শ থেকে সরাসরি প্রবেশ করা যায়।"
+              : undefined
+          }
+        >
           <div className="relative">
             <Mail
               className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-subtle-foreground"
               aria-hidden
             />
+            {/*
+              `webauthn` last is what marks this field as the one conditional UI
+              attaches to: the browser offers the passkey in the same autofill menu
+              as the saved addresses, and the WebAuthn library finds the field by it.
+              `username` in front keeps password managers filling it as before.
+            */}
             <Input
               id="email"
               name="email"
               type="email"
-              autoComplete="email"
+              autoComplete="username webauthn"
               placeholder="apnar.email@example.com"
               className="pl-10"
               value={email}

@@ -22,11 +22,26 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string | string[] }>;
+  searchParams: Promise<{ next?: string | string[]; socialError?: string | string[] }>;
 }) {
+  const params = await searchParams;
+
   // A console that refused you sends you here with where you were going, so a
   // successful sign-in resumes it instead of dropping you on the home page.
-  const next = safeNext((await searchParams).next);
+  const next = safeNext(params.next);
+
+  /**
+   * A social sign-in that came back without a session — a cancelled consent, a
+   * refused one, an address already in use.
+   *
+   * The API sends only the status, and only a plausible status is shown: the page
+   * supplies its own wording for each case, so nothing that arrived in a URL is
+   * ever rendered here.
+   */
+  const rawSocialError = Array.isArray(params.socialError)
+    ? params.socialError[0]
+    : params.socialError;
+  const socialError = rawSocialError && /^\d{3}$/.test(rawSocialError) ? rawSocialError : undefined;
 
   const user = await getSessionUser();
   if (user) redirect(next);
@@ -35,7 +50,7 @@ export default async function LoginPage({
 
   return (
     <div>
-      <LoginForm providers={providers} next={next} />
+      <LoginForm providers={providers} next={next} socialError={socialError} />
 
       <p className="mt-6 border-t border-border pt-5 text-center text-[0.6875rem] leading-relaxed text-subtle-foreground">
         সোশ্যাল লগইনে আমরা কেবল আপনার নাম, ইমেইল ও প্রোফাইল ছবি গ্রহণ করি — কোনো পোস্ট বা বন্ধু তালিকার অনুমতি নয়।

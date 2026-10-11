@@ -12,9 +12,14 @@ import {
   ShieldCheck,
   Users,
 } from "@/components/icons";
-import { FATWAS, PINNED_FATWAS } from "@/lib/data/content";
-import { DEPARTMENTS, getDepartment } from "@/lib/data/departments";
-import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
+import type { Department, Scholar } from "@/lib/types";
+import {
+  fetchDepartments,
+  fetchFatwas,
+  fetchScholars,
+  indexBy,
+  MAX_LIMIT,
+} from "@/lib/content-api";
 import { T, Pick } from "@/components/i18n-text";
 import {
   Avatar,
@@ -26,6 +31,7 @@ import {
   Chip,
   ChipList,
   EmptyState,
+  ErrorState,
   PageHeader,
   SearchInput,
   SectionHeader,
@@ -39,6 +45,22 @@ export const metadata: Metadata = {
   description:
     "বাংলাদেশের যোগ্য মুফতিদের যাচাইকৃত ফিকহি রায় — কুরআন ও হাদীসের দলিলসহ, সুদ, যৌতুক, উত্তরাধিকার, যাকাত ও দৈনন্দিন জীবনের বিষয়ে।",
 };
+
+/**
+ * The fatwa archive.
+ *
+ * The rulings, the pinned selection, the department chips and the muftis behind
+ * the rail all come from the API now, and the filters are the API's own: `?q=`
+ * searches the question, the ruling and the body in one pass, and `?fiqh=` and
+ * `?department=` are resolved by the server against the same tables the rest of
+ * the app reads. A read that fails shows an error state; a read that finds nothing
+ * shows the empty state and says which of the two happened.
+ *
+ * The tiles describe the **archive**, not the current filter, which is what they
+ * meant before and what their labels say. So the archive is fetched separately
+ * from the list — and on an unfiltered view the two reads are the same URL, which
+ * Next's fetch memoisation collapses into one request.
+ */
 
 /** The path from a reader's question to a published ruling. */
 const PROCESS = [
@@ -55,33 +77,59 @@ export default async function FatwasPage({
 }) {
   const { q, fiqh, dept } = await searchParams;
   const query = (q ?? "").trim();
-  const needle = query.toLowerCase();
+  const fiqhParam = fiqh === "hanafi" || fiqh === "comparative" ? fiqh : undefined;
+  const hasFilter = Boolean(fiqhParam || dept || query);
 
-  const published = FATWAS.filter((fatwa) => fatwa.status === "published");
+  const [archive, listed, pinnedResult, departments, scholars] = await Promise.all([
+    // The archive, for the tiles and the rails.
+    fetchFatwas({ limit: MAX_LIMIT }),
+    // What the reader actually asked for.
+    fetchFatwas({ q: query || undefined, fiqh: fiqhParam, department: dept, limit: MAX_LIMIT }),
+    fetchFatwas({ pinned: true, limit: MAX_LIMIT }),
+    fetchDepartments(),
+    fetchScholars(),
+  ]);
 
-  const filtered = published.filter((fatwa) => {
-    if (fiqh && fatwa.fiqh !== fiqh) return false;
-    if (dept && !fatwa.departmentIds.includes(dept)) return false;
-    if (needle) {
-      const haystack = `${fatwa.questionBn} ${fatwa.rulingBn} ${fatwa.bodyBn.join(" ")}`.toLowerCase();
-      if (!haystack.includes(needle)) return false;
-    }
-    return true;
-  });
+  const header = <Head />;
 
-  const sorted = [...filtered].sort(
-    (a, b) => Number(b.pinned) - Number(a.pinned) || b.viewCount - a.viewCount,
-  );
+  if (!listed.ok) {
+    return (
+      <div className="space-y-6">
+        {header}
+        <ErrorState
+          title="ফতোয়াগুলো আনা যায়নি"
+          description="কনটেন্ট সার্ভিসে পৌঁছানো যায়নি। একটু পরে আবার চেষ্টা করুন — সমস্যা থেকে গেলে প্রশাসনকে জানান।"
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button href={hrefFor({ q: query, fiqh, dept })} size="sm">
+                আবার চেষ্টা করুন
+              </Button>
+              <Button href="/" variant="outline" size="sm">
+                হোমে ফিরে যান
+              </Button>
+            </div>
+          }
+        />
+      </div>
+    );
+  }
 
-  const hasFilter = Boolean(fiqh || dept || needle);
+  // A failed side read costs a rail, not the page.
+  const allFatwas = archive.ok ? archive.data.items : listed.data.items;
+  const allTotal = archive.ok ? archive.data.total : listed.data.total;
+  const departmentList = departments.ok ? departments.data : [];
+  const scholarsById = indexBy(scholars.ok ? scholars.data.items : [], "id");
+  const pinned = pinnedResult.ok ? pinnedResult.data.items : [];
 
-  // Only offer departments and muftis that actually have rulings.
-  const activeDepartments = DEPARTMENTS.filter((department) =>
-    published.some((fatwa) => fatwa.departmentIds.includes(department.slug)),
+  const sorted = listed.data.items;
+
+  // Only offer departments that actually have rulings.
+  const activeDepartments = departmentList.filter((department) =>
+    allFatwas.some((fatwa) => fatwa.departmentIds.includes(department.slug)),
   );
 
   const muftiStats = Object.entries(
-    published.reduce<Record<string, number>>((acc, fatwa) => {
+    allFatwas.reduce<Record<string, number>>((acc, fatwa) => {
       acc[fatwa.muftiId] = (acc[fatwa.muftiId] ?? 0) + 1;
       return acc;
     }, {}),
@@ -89,44 +137,23 @@ export default async function FatwasPage({
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
-  const totalViews = published.reduce((sum, fatwa) => sum + fatwa.viewCount, 0);
-  const totalReferences = published.reduce((sum, fatwa) => sum + fatwa.referenceCount, 0);
+  const totalViews = allFatwas.reduce((sum, fatwa) => sum + fatwa.viewCount, 0);
+  const totalReferences = allFatwas.reduce((sum, fatwa) => sum + fatwa.referenceCount, 0);
+  // Distinct signatories, not the size of the top-five rail above.
+  const muftiCount = new Set(allFatwas.map((fatwa) => fatwa.muftiId)).size;
 
   /** Preserves the other filters when one of them changes. */
-  const href = (next: { q?: string; fiqh?: string; dept?: string }) => {
-    const search = new URLSearchParams();
-    const merged = { q: query, fiqh, dept, ...next };
-    if (merged.q) search.set("q", merged.q);
-    if (merged.fiqh) search.set("fiqh", merged.fiqh);
-    if (merged.dept) search.set("dept", merged.dept);
-    const qs = search.toString();
-    return qs ? `/fatwas?${qs}` : "/fatwas";
-  };
+  const href = (next: { q?: string; fiqh?: string; dept?: string }) =>
+    hrefFor({ q: query, fiqh, dept, ...next });
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        eyebrow="ফিকহ"
-        title={<T k="fatwa.title" />}
-        description={<T k="fatwa.subtitle" />}
-        icon={Scale}
-        patterned
-        actions={
-          <>
-            <Button href="/articles" variant="outline" size="sm">
-              <T k="nav.articles" />
-            </Button>
-            <Button href="/questions/ask" size="sm" icon={PenLine}>
-              <T k="action.askScholar" />
-            </Button>
-          </>
-        }
-      />
+      {header}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label="প্রকাশিত ফতোয়া"
-          value={toBnDigits(published.length)}
+          value={toBnDigits(allTotal)}
           icon={Scale}
           tone="primary"
         />
@@ -144,7 +171,7 @@ export default async function FatwasPage({
         />
         <StatTile
           label="সক্রিয় মুফতি"
-          value={toBnDigits(muftiStats.length)}
+          value={toBnDigits(muftiCount)}
           icon={ShieldCheck}
           tone="scholar"
         />
@@ -152,10 +179,10 @@ export default async function FatwasPage({
 
       {/* Search and filters.
           The form is a plain GET so a search result is a shareable URL and the
-          page works before the backend exists. */}
+          page works without JS. */}
       <Card>
         <form action="/fatwas" method="get" className="flex flex-col gap-4">
-          {fiqh ? <input type="hidden" name="fiqh" value={fiqh} /> : null}
+          {fiqhParam ? <input type="hidden" name="fiqh" value={fiqhParam} /> : null}
           {dept ? <input type="hidden" name="dept" value={dept} /> : null}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <SearchInput
@@ -177,13 +204,17 @@ export default async function FatwasPage({
                 <T k="label.fiqh" />
               </p>
               <ChipList>
-                <Chip href={href({ fiqh: undefined })} active={!fiqh}>
+                <Chip href={href({ fiqh: undefined })} active={!fiqhParam}>
                   সব রায়
                 </Chip>
-                <Chip href={href({ fiqh: "hanafi" })} active={fiqh === "hanafi"} tone="primary">
+                <Chip href={href({ fiqh: "hanafi" })} active={fiqhParam === "hanafi"} tone="primary">
                   <T k="fatwa.hanafi" />
                 </Chip>
-                <Chip href={href({ fiqh: "comparative" })} active={fiqh === "comparative"} tone="info">
+                <Chip
+                  href={href({ fiqh: "comparative" })}
+                  active={fiqhParam === "comparative"}
+                  tone="info"
+                >
                   <T k="fatwa.comparative" />
                 </Chip>
               </ChipList>
@@ -213,7 +244,7 @@ export default async function FatwasPage({
           {hasFilter ? (
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
               <p className="text-[0.75rem] tabular text-muted-foreground">
-                {toBnDigits(sorted.length)} টি রায় পাওয়া গেছে
+                {toBnDigits(listed.data.total)} টি রায় পাওয়া গেছে
                 {query ? <span> · “{query}”</span> : null}
               </p>
               <Link
@@ -228,7 +259,7 @@ export default async function FatwasPage({
       </Card>
 
       {/* Pinned rulings are the archive's front door. */}
-      {!hasFilter && PINNED_FATWAS.length > 0 ? (
+      {!hasFilter && pinned.length > 0 ? (
         <section aria-label="গুরুত্বপূর্ণ ফতোয়া">
           <SectionHeader
             title="সর্বাধিক জিজ্ঞাসিত রায়"
@@ -237,8 +268,14 @@ export default async function FatwasPage({
             tone="accent"
           />
           <div className="grid gap-4 lg:grid-cols-2">
-            {PINNED_FATWAS.map((fatwa) => (
-              <FatwaCard key={fatwa.id} fatwa={fatwa} />
+            {pinned.map((fatwa) => (
+              <FatwaCard
+                key={fatwa.id}
+                fatwa={fatwa}
+                mufti={scholarsById.get(fatwa.muftiId)}
+                coSigners={coSignersOf(fatwa.coSignerIds, scholarsById)}
+                department={departmentOf(activeDepartments, fatwa.departmentIds)}
+              />
             ))}
           </div>
         </section>
@@ -251,14 +288,18 @@ export default async function FatwasPage({
           icon={Scale}
           action={
             <Badge tone="neutral" size="xs" className="tabular">
-              {toBnDigits(sorted.length)}
+              {toBnDigits(listed.data.total)}
             </Badge>
           }
         />
         {sorted.length === 0 ? (
           <EmptyState
-            title="কোনো ফতোয়া পাওয়া যায়নি"
-            description="এই শব্দ বা ফিল্টারে কোনো রায় মেলেনি। অন্য শব্দ দিয়ে খুঁজুন, অথবা সরাসরি আলেমকে প্রশ্ন করুন।"
+            title={hasFilter ? "কোনো ফতোয়া পাওয়া যায়নি" : "এখনো কোনো ফতোয়া প্রকাশিত হয়নি"}
+            description={
+              hasFilter
+                ? "এই শব্দ বা ফিল্টারে কোনো রায় মেলেনি। অন্য শব্দ দিয়ে খুঁজুন, অথবা সরাসরি আলেমকে প্রশ্ন করুন।"
+                : "মুফতিদের যাচাইকৃত রায় প্রকাশিত হলে সেগুলো এখানে দেখা যাবে।"
+            }
             icon={Scale}
             action={
               <div className="flex flex-wrap items-center justify-center gap-2">
@@ -274,7 +315,14 @@ export default async function FatwasPage({
         ) : (
           <div className="space-y-3">
             {sorted.map((fatwa) => (
-              <FatwaCard key={fatwa.id} fatwa={fatwa} layout="list" />
+              <FatwaCard
+                key={fatwa.id}
+                fatwa={fatwa}
+                mufti={scholarsById.get(fatwa.muftiId)}
+                coSigners={coSignersOf(fatwa.coSignerIds, scholarsById)}
+                department={departmentOf(activeDepartments, fatwa.departmentIds)}
+                layout="list"
+              />
             ))}
           </div>
         )}
@@ -319,7 +367,7 @@ export default async function FatwasPage({
           />
           <ul className="space-y-2">
             {muftiStats.map(([scholarId, count]) => {
-              const mufti = SCHOLAR_BY_ID[scholarId];
+              const mufti = scholarsById.get(scholarId);
               if (!mufti) return null;
               return (
                 <li key={scholarId}>
@@ -338,7 +386,7 @@ export default async function FatwasPage({
                         <Pick value={mufti.honorific} /> <Pick value={mufti.name} />
                       </span>
                       <span className="mt-0.5 block truncate text-[0.6875rem] text-subtle-foreground">
-                        <Pick value={getDepartment(mufti.primaryDepartmentId)?.name} />
+                        <Pick value={departmentName(activeDepartments, mufti.primaryDepartmentId)} />
                       </span>
                     </span>
                     <Badge tone="primary" size="xs" className="tabular">
@@ -353,4 +401,51 @@ export default async function FatwasPage({
       </div>
     </div>
   );
+}
+
+/** The page's own head, so the failure branch can still show it. */
+function Head() {
+  return (
+    <PageHeader
+      eyebrow="ফিকহ"
+      title={<T k="fatwa.title" />}
+      description={<T k="fatwa.subtitle" />}
+      icon={Scale}
+      patterned
+      actions={
+        <>
+          <Button href="/articles" variant="outline" size="sm">
+            <T k="nav.articles" />
+          </Button>
+          <Button href="/questions/ask" size="sm" icon={PenLine}>
+            <T k="action.askScholar" />
+          </Button>
+        </>
+      }
+    />
+  );
+}
+
+/** The link for a set of filters, preserving whichever ones were not changed. */
+function hrefFor(params: { q?: string; fiqh?: string; dept?: string }) {
+  const search = new URLSearchParams();
+  if (params.q) search.set("q", params.q);
+  if (params.fiqh) search.set("fiqh", params.fiqh);
+  if (params.dept) search.set("dept", params.dept);
+  const query = search.toString();
+  return query ? `/fatwas?${query}` : "/fatwas";
+}
+
+/** The first department of a fatwa, from the fetched set rather than a lookup table. */
+function departmentOf(departments: Department[], slugs: string[]): Department | undefined {
+  return departments.find((department) => slugs.includes(department.slug));
+}
+
+function departmentName(departments: Department[], slug: string) {
+  return departments.find((department) => department.slug === slug)?.name;
+}
+
+/** The co-signing muftis, resolved from the scholars the page already fetched. */
+function coSignersOf(ids: string[], byId: Map<string, Scholar>): Scholar[] {
+  return ids.map((id) => byId.get(id)).filter((scholar): scholar is Scholar => Boolean(scholar));
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Settings as SettingsIcon } from "@/components/icons";
+import { Settings as SettingsIcon, ShieldCheck } from "@/components/icons";
 import { CURRENT_USER } from "@/lib/data/personal";
+import { MfaPanel } from "@/components/auth/mfa-panel";
 import { T } from "@/components/i18n-text";
 import { Badge, Callout, PageHeader, SectionHeader } from "@/components/ui";
 import { SettingsPanels } from "./settings-panels";
@@ -33,7 +34,18 @@ export default function SettingsPage() {
       </PageHeader>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="min-w-0">
+        <div className="min-w-0 space-y-6">
+          {/*
+           * Account security is the one block on this page that is *not* stored
+           * in the browser: the API owns the factors, so the panel reads and
+           * writes them. It sits first because it is the only setting here whose
+           * loss would lock someone out of the account itself.
+           */}
+          <div className="space-y-3">
+            <SectionHeader title="অ্যাকাউন্ট নিরাপত্তা" icon={ShieldCheck} size="sm" />
+            <MfaPanel />
+          </div>
+
           <SettingsPanels />
         </div>
 

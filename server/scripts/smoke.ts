@@ -349,6 +349,25 @@ check(
   "GET /questions/:slug?unknown is 404",
   (await call("/api/v1/questions/not-a-question")).status === 404,
 );
+// The Q&A index counts the questions that asked for a formal ruling, so the
+// filter has to mean what it says: every row it returns carries the flag, and the
+// two values between them account for the whole public archive.
+const askedForFatwa = rows(await call("/api/v1/questions?fatwaRequested=true&limit=100"));
+const notAskedForFatwa = rows(await call("/api/v1/questions?fatwaRequested=false&limit=100"));
+check(
+  "GET /questions?fatwaRequested=true returns only questions asking for a ruling",
+  askedForFatwa.length > 0 && askedForFatwa.every((row) => row.fatwaRequested === true),
+  askedForFatwa.length,
+);
+check(
+  "the fatwaRequested filters partition the archive",
+  askedForFatwa.length + notAskedForFatwa.length === expected.publicQuestions,
+  askedForFatwa.length + notAskedForFatwa.length,
+);
+check(
+  "GET /questions?fatwaRequested=nonsense is a 400",
+  (await call("/api/v1/questions?fatwaRequested=nonsense")).status === 400,
+);
 
 const discussions = await call("/api/v1/discussions");
 const discussionList = rows(discussions);
@@ -1133,6 +1152,126 @@ check(
     smokeEmail,
 );
 
+section("credential-first passkeys");
+
+/*
+ * What conditional UI asks for: no cookie, no pending token, no account named.
+ * The account is settled only when the assertion names a credential.
+ */
+const autofillOptions = await call("/api/v1/auth/passkey/options", { method: "POST" });
+const autofill = shape<{
+  challengeId: string;
+  options: { challenge: string; allowCredentials: unknown[] };
+}>(autofillOptions);
+check(
+  "POST /auth/passkey/options asks for an empty allow list",
+  autofillOptions.status === 200 &&
+    typeof autofill.options.challenge === "string" &&
+    autofill.options.allowCredentials?.length === 0,
+  autofillOptions.body,
+);
+check(
+  "an anonymous assertion signed by a different key is refused",
+  (
+    await call("/api/v1/auth/passkey/verify", {
+      method: "POST",
+      body: {
+        challengeId: autofill.challengeId,
+        response: otherKey.assertion(autofill.options.challenge, 0),
+      },
+    })
+  ).status === 401,
+);
+
+// A fresh challenge again: the refused attempt consumed the first one.
+const autofillAgain = await call("/api/v1/auth/passkey/options", { method: "POST" });
+const realAutofill = shape<{ challengeId: string; options: { challenge: string } }>(autofillAgain);
+const autofillComplete = await call("/api/v1/auth/passkey/verify", {
+  method: "POST",
+  body: {
+    challengeId: realAutofill.challengeId,
+    response: authenticator.assertion(realAutofill.options.challenge, 2),
+  },
+});
+check(
+  "POST /auth/passkey/verify signs the passkey's owner in with no password",
+  autofillComplete.status === 200,
+  autofillComplete.body,
+);
+const autofillCookie = sessionCookie(autofillComplete);
+check(
+  "the credential-first assertion issues a session cookie",
+  autofillCookie.startsWith("ilm_session="),
+  autofillCookie,
+);
+check(
+  "that session reaches the account the assertion named",
+  shape<{ email: string }>(await call("/api/v1/me", { headers: { cookie: autofillCookie } })).email ===
+    smokeEmail,
+);
+check(
+  "an anonymous challenge is single use",
+  (
+    await call("/api/v1/auth/passkey/verify", {
+      method: "POST",
+      body: {
+        challengeId: realAutofill.challengeId,
+        response: authenticator.assertion(realAutofill.options.challenge, 3),
+      },
+    })
+  ).status === 401,
+);
+check(
+  "an unknown credential cannot start anything",
+  (
+    await call("/api/v1/auth/passkey/verify", {
+      method: "POST",
+      body: { challengeId: "mfc-nope", response: { id: "no-such-credential" } },
+    })
+  ).status === 401,
+);
+
+// Bytes that are not ASN.1 at all: the signature library throws on them rather
+// than answering "not verified", and a refusal is what a caller must get either
+// way — the input is a browser's, not a server fault.
+const malformed = shape<{ challengeId: string; options: { challenge: string } }>(
+  await call("/api/v1/auth/passkey/options", { method: "POST" }),
+);
+check(
+  "an unparsable signature is refused, not a 500",
+  (
+    await call("/api/v1/auth/passkey/verify", {
+      method: "POST",
+      body: {
+        challengeId: malformed.challengeId,
+        response: {
+          id: authenticator.credentialId,
+          rawId: authenticator.credentialId,
+          type: "public-key",
+          clientExtensionResults: {},
+          response: {
+            clientDataJSON: b64(
+              Buffer.from(
+                JSON.stringify({
+                  type: "webauthn.get",
+                  challenge: malformed.options.challenge,
+                  origin: "http://localhost:3000",
+                  crossOrigin: false,
+                }),
+              ),
+            ),
+            authenticatorData: b64(
+              Buffer.concat([sha256("localhost"), Buffer.from([0x01]), Buffer.alloc(4)]),
+            ),
+            signature: Buffer.alloc(64, 0x07).toString("base64url"),
+            userHandle: null,
+          },
+        },
+      },
+    })
+  ).status === 401,
+);
+
 section("recovery codes");
 
 const recoveryLogin = await signInWith(smokeEmail, throwawayPassword);
@@ -1758,12 +1897,12 @@ check(
   secondSignIn,
 );
 
-const browserFlow = await stubSignIn({ json: false, returnTo: "/settings/security" });
+const browserFlow = await stubSignIn({ json: false, returnTo: "/settings" });
 check("a browser is redirected rather than answered with JSON", browserFlow.status === 302, browserFlow.body);
 const landing = new URL(browserFlow.headers.get("location") ?? "http://127.0.0.1/");
 check(
   "and lands on the app, on the path it asked for",
-  landing.origin === "http://localhost:3000" && landing.pathname === "/settings/security",
+  landing.origin === "http://localhost:3000" && landing.pathname === "/settings",
   landing.toString(),
 );
 
@@ -1784,6 +1923,23 @@ check(
       headers: { accept: "application/json" },
     })
   ).status === 400,
+);
+
+// The same failure, as a browser sees it: no `accept: application/json`, so a
+// JSON body would leave a visitor stranded on the API's origin. Only the status
+// travels — the sign-in page owns the wording.
+const cancelledByBrowser = await call(
+  "/api/v1/auth/social/stub/callback?error=access_denied&state=whatever",
+  { redirect: "manual" },
+);
+const cancelledLanding = new URL(cancelledByBrowser.headers.get("location") ?? "http://127.0.0.1/");
+check(
+  "a browser that cancels lands back on the sign-in page with the reason",
+  cancelledByBrowser.status === 302 &&
+    cancelledLanding.origin === "http://localhost:3000" &&
+    cancelledLanding.pathname === "/login" &&
+    cancelledLanding.searchParams.get("socialError") === "400",
+  { status: cancelledByBrowser.status, location: cancelledLanding.toString() },
 );
 
 // Replaying a completed ceremony: the state is spent, so it cannot be reused.
@@ -1960,6 +2116,26 @@ check(
   "and it appears on the account",
   rows(await call("/api/v1/me/identities", { headers: { cookie: readerForSocial.cookie } })).length ===
     1,
+);
+
+//
+// The section created a provider row, so it removes it again. Leaving it behind
+// is what made a second run fail on the unique slug, and an enabled row pointing
+// at a socket that is about to close is a broken button on the sign-in page until
+// somebody notices.
+//
+check(
+  "an admin removes the provider again",
+  (
+    await call(`/api/v1/admin/social-providers/${stubProvider.id}`, {
+      method: "DELETE",
+      headers: adminHeaders,
+    })
+  ).status === 200,
+);
+check(
+  "and the sign-in page stops offering it",
+  !rows(await call("/api/v1/auth/social/providers")).some((row) => row.slug === "stub"),
 );
 
 // The stub is a listening socket, so it has to be closed or the process hangs.

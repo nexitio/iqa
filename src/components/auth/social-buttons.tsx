@@ -48,7 +48,14 @@ function FacebookMark() {
   );
 }
 
-function markFor(slug: string) {
+/**
+ * The mark for a provider slug.
+ *
+ * Exported because the admin console lists the same providers and has the same
+ * reason to show the brand: a row is recognised by its logo before its slug is
+ * read. Everything unknown gets a neutral mark rather than a guess.
+ */
+export function providerMark(slug: string) {
   if (slug === "google") return <GoogleMark />;
   if (slug === "facebook") return <FacebookMark />;
   return <LogIn className="size-4 shrink-0 text-muted-foreground" aria-hidden />;
@@ -74,7 +81,7 @@ export function SocialButtons({
           href={socialStartUrl(provider.slug, returnTo)}
           className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-border-strong bg-surface text-[0.875rem] font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-surface-2"
         >
-          {markFor(provider.slug)}
+          {providerMark(provider.slug)}
           {provider.name.bn} দিয়ে {verb}
         </a>
       ))}

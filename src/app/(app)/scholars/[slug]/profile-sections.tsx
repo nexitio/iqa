@@ -21,9 +21,7 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
-import type { Scholar, ScholarBiography } from "@/lib/types";
-import { getArticlesByAuthor, getFatwasByMufti } from "@/lib/data/content";
-import { ANSWERS, getQuestion } from "@/lib/data/questions";
+import type { Answer, Article, Fatwa, Question, Scholar, ScholarBiography } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime, toParagraphs } from "@/lib/utils";
 import { formatNumber, gregorianDateBn } from "@/lib/bn";
@@ -355,23 +353,34 @@ export function ScholarBiographySection({ biography }: { biography: ScholarBiogr
 /* -------------------------------------------------------------------------- */
 
 export function ProfileSections({
-  scholar,
   tab,
+  articles,
+  fatwas,
+  answers,
 }: {
-  scholar: Scholar;
   tab: "articles" | "fatwas" | "answers";
+  /**
+   * The scholar's work, fetched with the profile.
+   *
+   * These used to be read from the bundled dataset by scholar id, which meant the
+   * tabs could only ever show the fixture — and a piece published last week was
+   * missing from the profile of the scholar who wrote it.
+   */
+  articles: Article[];
+  fatwas: Fatwa[];
+  /** Each answer with the question it answered, so a row is followable. */
+  answers: { answer: Answer; question: Question | null }[];
 }) {
   const { t, locale } = useI18n();
   const [query, setQuery] = useState("");
 
-  const articles = useMemo(() => getArticlesByAuthor(scholar.id), [scholar.id]);
-  const fatwas = useMemo(() => getFatwasByMufti(scholar.id), [scholar.id]);
-  const answers = useMemo(
+  // Newest first, decided here rather than trusted from the endpoint's ordering.
+  const sortedAnswers = useMemo(
     () =>
-      ANSWERS.filter((a) => a.scholarId === scholar.id)
-        .map((answer) => ({ answer, question: getQuestion(answer.questionId) }))
-        .sort((a, b) => +new Date(b.answer.createdAt) - +new Date(a.answer.createdAt)),
-    [scholar.id],
+      [...answers].sort(
+        (a, b) => +new Date(b.answer.createdAt) - +new Date(a.answer.createdAt),
+      ),
+    [answers],
   );
 
   const q = query.trim().toLowerCase();
@@ -382,10 +391,10 @@ export function ProfileSections({
     ? fatwas.filter((f) => `${f.rulingBn} ${f.questionBn}`.toLowerCase().includes(q))
     : fatwas;
   const filteredAnswers = q
-    ? answers.filter((row) =>
+    ? sortedAnswers.filter((row) =>
         `${row.question?.titleBn ?? ""} ${row.answer.bodyBn}`.toLowerCase().includes(q),
       )
-    : answers;
+    : sortedAnswers;
 
   // The in-tab search only earns its space once there is a list worth scanning.
   const needsSearch =

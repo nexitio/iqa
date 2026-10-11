@@ -32,6 +32,15 @@ export type ChallengePurpose = "login" | "enroll";
 
 export const CODE_TTL_MINUTES = 10;
 export const PASSKEY_TTL_MINUTES = 5;
+/**
+ * Longer than the second-factor one, because nobody is waiting on anything yet.
+ *
+ * An unattributed challenge is single-use and only verifies against a private key
+ * the caller would have to hold, so its lifetime is not a window an attacker can
+ * widen — while the visitor it belongs to may have opened the sign-in page and
+ * walked away before choosing the passkey in autofill.
+ */
+const ANONYMOUS_PASSKEY_TTL_MINUTES = 15;
 export const PENDING_LOGIN_TTL_MINUTES = 5;
 const MAX_CODE_ATTEMPTS = 5;
 export const RECOVERY_CODE_COUNT = 10;
@@ -469,6 +478,85 @@ export async function consumePasskeyChallenge(
     .where(eq(schema.mfaChallenges.id, challenge.id));
 
   return challenge;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Credential-first passkeys                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Starts a passkey challenge that belongs to no account yet.
+ *
+ * This is the one ceremony that begins before anything is known about the caller:
+ * conditional UI offers the passkey in the browser's password autofill, on the
+ * sign-in page, where no password has been typed and so no `pendingToken` exists.
+ * The row is written with a null `user_id`, and *verification* is what gives it an
+ * owner — the credential id in the assertion names the factor, and the factor
+ * names the account.
+ *
+ * Nothing is retired here on purpose. There is no account whose earlier challenges
+ * it should supersede, and an unattributed row can only ever authorise the account
+ * that its own assertion proves, so leaving older ones to expire is safe.
+ */
+export async function startAnonymousPasskeyChallenge(
+  db: Database,
+  input: { challenge: string },
+): Promise<ChallengeRow> {
+  const [row] = await db
+    .insert(schema.mfaChallenges)
+    .values({
+      id: id("mfc"),
+      userId: null,
+      purpose: "login",
+      kind: "passkey",
+      factorId: null,
+      destination: null,
+      codeHash: null,
+      webauthnChallenge: input.challenge,
+      attempts: 0,
+      createdAt: nowIso(),
+      expiresAt: inMinutes(ANONYMOUS_PASSKEY_TTL_MINUTES),
+      consumedAt: null,
+    })
+    .returning();
+  return row!;
+}
+
+/**
+ * Reads and consumes an unattributed passkey challenge.
+ *
+ * `user_id IS NULL` is part of the lookup rather than a nicety: it keeps this from
+ * ever consuming a challenge that belongs to an account's own second-factor step,
+ * where the promise that the account already proved its password must hold.
+ */
+export async function consumeAnonymousPasskeyChallenge(
+  db: Database,
+  challengeId: string,
+): Promise<ChallengeRow> {
+  const [row] = await db
+    .select()
+    .from(schema.mfaChallenges)
+    .where(
+      and(
+        eq(schema.mfaChallenges.id, challengeId),
+        isNull(schema.mfaChallenges.userId),
+        eq(schema.mfaChallenges.kind, "passkey"),
+        isNull(schema.mfaChallenges.consumedAt),
+        gt(schema.mfaChallenges.expiresAt, nowIso()),
+      ),
+    )
+    .limit(1);
+
+  if (!row || !row.webauthnChallenge) {
+    throw unauthorized("That sign-in attempt has expired. Start again.");
+  }
+
+  await db
+    .update(schema.mfaChallenges)
+    .set({ consumedAt: nowIso() })
+    .where(eq(schema.mfaChallenges.id, row.id));
+
+  return row;
 }
 
 /* -------------------------------------------------------------------------- */

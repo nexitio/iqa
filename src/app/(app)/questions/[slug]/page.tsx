@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import {
   AlertTriangle,
   BookOpenCheck,
@@ -14,10 +15,19 @@ import {
   UserRound,
   Users,
 } from "@/components/icons";
+import type { Scholar } from "@/lib/types";
+import {
+  fetchDepartments,
+  fetchFatwas,
+  fetchPublicUser,
+  fetchQuestion,
+  fetchQuestions,
+  fetchScholars,
+  indexBy,
+} from "@/lib/content-api";
 import { T } from "@/components/i18n-text";
 import { AnswerCard, AskCtaCard, FatwaRow, QuestionRow } from "@/components/knowledge";
 import { ScholarMiniCard } from "@/components/people";
-import { RoutingReasons } from "@/components/console";
 import {
   Badge,
   Breadcrumbs,
@@ -27,26 +37,49 @@ import {
   CardHeader,
   Chip,
   EmptyState,
+  ErrorState,
   Prose,
   SectionHeader,
   StatusBadge,
 } from "@/components/ui";
-import { FATWAS } from "@/lib/data/content";
-import { getDepartment } from "@/lib/data/departments";
-import { getUser } from "@/lib/data/personal";
-import {
-  getAnswersForQuestion,
-  getQuestion,
-  getRoutingCandidates,
-  QUESTIONS,
-} from "@/lib/data/questions";
-import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
 import { findDistrict, formatNumber } from "@/lib/bn";
 import { relativeTime, toParagraphs } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return QUESTIONS.map((question) => ({ slug: question.slug }));
-}
+/**
+ * One question, read from the API.
+ *
+ * The question, its answers, the asker's name, the departments it was filed under
+ * and every rail beside it come from the API, so an answer a scholar gives today is
+ * on this page today. The bundled dataset used to answer all of it, which meant a
+ * question nobody had seeded could not be reached at all.
+ *
+ * Two things are deliberate:
+ *
+ *  - **A slug the API does not know is a 404.** It will never exist, so the answer
+ *    is the not-found boundary rather than an error state. Anything else — the
+ *    service down, a read that timed out — gets an error state with a way to try
+ *    again, because the question does exist and saying otherwise would be a lie.
+ *  - **The routing candidate card lost its scores.** The API records which
+ *    departments a question was filed under, not the priority ranking that used to
+ *    be computed from it, so the card now shows the scholars who actually carry
+ *    those departments instead of a scored queue that no longer exists. A number
+ *    invented client-side to fill that space would be worse than the honest list.
+ */
+
+/**
+ * One read per request, shared by the metadata and the page.
+ *
+ * Both need the same question and Next renders them as separate passes, so a bare
+ * fetch in each is two requests for one page. On the missing-slug path that is
+ * worse than wasteful: two 404s arriving together leave the metadata pass in flight
+ * when the page throws `notFound()`, and a boundary that has already flushed cannot
+ * be replaced — the reader gets the 404 UI and a stream that never closes.
+ */
+const readQuestion = cache(async (slug: string) => {
+  const result = await fetchQuestion(slug);
+  if (!result.ok && result.status === 404) notFound();
+  return result;
+});
 
 export async function generateMetadata({
   params,
@@ -54,11 +87,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const question = getQuestion(slug);
-  if (!question) return { title: "প্রশ্ন পাওয়া যায়নি" };
+  const result = await readQuestion(slug);
+  if (!result.ok) return { title: "প্রশ্ন পাওয়া যায়নি" };
   return {
-    title: question.titleBn,
-    description: question.bodyBn.slice(0, 180),
+    title: result.data.question.titleBn,
+    description: result.data.question.bodyBn.slice(0, 180),
   };
 }
 
@@ -69,54 +102,81 @@ const STATUS_LABEL: Record<string, string> = {
   closed: "সম্পন্ন",
 };
 
-/**
- * Question detail.
- *
- * Beyond the answer itself the page has to answer a second question — "who has
- * this, and are they qualified?" — so the routing rationale is shown to the
- * asker rather than being hidden behind the curtain.
- */
 export default async function QuestionDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const question = getQuestion(slug);
-  if (!question) notFound();
+  const result = await readQuestion(slug);
 
-  const answers = getAnswersForQuestion(question.id);
+  if (!result.ok) {
+    return (
+      <ErrorState
+        title="প্রশ্নটি আনা যায়নি"
+        description="কনটেন্ট সার্ভিসে পৌঁছানো যায়নি, তাই প্রশ্নটি এখন দেখানো যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।"
+        action={
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button href={`/questions/${encodeURIComponent(slug)}`} size="sm">
+              আবার চেষ্টা করুন
+            </Button>
+            <Button href="/questions" variant="outline" size="sm">
+              সব প্রশ্ন দেখুন
+            </Button>
+          </div>
+        }
+      />
+    );
+  }
+
+  const { question, answers } = result.data;
   const accepted = answers.find((answer) => answer.accepted) ?? null;
   const others = answers.filter((answer) => answer.id !== accepted?.id);
-  const candidates = getRoutingCandidates(question.id);
+  const escalated = answers.find((answer) => answer.becameFatwaSlug);
   const district = findDistrict(question.askerDistrict);
-  const asker = question.visibility === "public" ? getUser(question.askerId) : undefined;
 
-  const departments = question.departmentIds
-    .map((id) => getDepartment(id))
-    .filter((d): d is NonNullable<typeof d> => Boolean(d));
+  // The rails are the same archive read sideways — one query each, in parallel —
+  // and a rail that comes back empty is simply not drawn: a heading with nothing
+  // under it is worse than the section being absent.
+  const firstDepartment = question.departmentIds[0];
+  const [departmentsResult, scholarsResult, askerResult, routedResult, relatedQuestionsResult, relatedFatwasResult] =
+    await Promise.all([
+      fetchDepartments(),
+      fetchScholars(),
+      // Only a public question names the person who asked it; the API's public
+      // profile is where that name comes from, and a failed lookup costs the name,
+      // not the page.
+      question.visibility === "public" ? fetchPublicUser(question.askerId) : Promise.resolve(null),
+      firstDepartment ? fetchScholars({ department: firstDepartment, limit: 4 }) : Promise.resolve(null),
+      firstDepartment ? fetchQuestions({ department: firstDepartment, limit: 6 }) : Promise.resolve(null),
+      firstDepartment ? fetchFatwas({ department: firstDepartment, limit: 3 }) : Promise.resolve(null),
+    ]);
 
-  // Scholars either already involved or queued for this question.
+  const departments = (departmentsResult.ok ? departmentsResult.data : []).filter(
+    (department) =>
+      question.departmentIds.includes(department.slug) || question.departmentIds.includes(department.id),
+  );
+  const scholarsById = indexBy(scholarsResult.ok ? scholarsResult.data.items : [], "id");
+  const asker = askerResult?.ok ? askerResult.data.user : undefined;
+  const routed = routedResult?.ok ? routedResult.data.items : [];
+  const relatedQuestions = (relatedQuestionsResult?.ok ? relatedQuestionsResult.data.items : [])
+    .filter((other) => other.id !== question.id)
+    .slice(0, 5);
+  const relatedFatwas = relatedFatwasResult?.ok ? relatedFatwasResult.data.items : [];
+
+  // Scholars either already involved or carrying the question's departments.
   const involvedScholarIds = [
-    ...new Set([...answers.map((a) => a.scholarId), ...candidates.map((c) => c.scholarId)]),
+    ...new Set([...answers.map((answer) => answer.scholarId), ...routed.map((scholar) => scholar.id)]),
   ];
   const involvedScholars = involvedScholarIds
-    .map((id) => SCHOLAR_BY_ID[id])
-    .filter((s): s is NonNullable<typeof s> => Boolean(s));
+    .map((id) => scholarsById.get(id))
+    .filter((scholar): scholar is Scholar => Boolean(scholar));
 
-  const relatedQuestions = QUESTIONS.filter(
-    (other) =>
-      other.id !== question.id &&
-      other.departmentIds.some((id) => question.departmentIds.includes(id)),
-  ).slice(0, 5);
-
-  const relatedFatwas = FATWAS.filter(
-    (fatwa) =>
-      fatwa.status === "published" &&
-      fatwa.departmentIds.some((id) => question.departmentIds.includes(id)),
-  ).slice(0, 3);
-
-  const escalated = answers.find((answer) => answer.becameFatwaSlug);
+  // The crumb wants a short name for this question. Ids are opaque (`q-1a2b3c`), so
+  // a number is only there when the id happens to carry one; otherwise the id
+  // itself is the honest label — it is what the API answers for this question.
+  const reference = question.id.replace(/^q-?/, "");
+  const questionRef = /^\d+$/.test(reference) ? formatNumber(Number(reference), "bn") : question.id;
 
   return (
     <div className="space-y-6">
@@ -124,7 +184,7 @@ export default async function QuestionDetailPage({
         items={[
           { label: "হোম", href: "/" },
           { label: "প্রশ্নোত্তর", href: "/questions" },
-          { label: `প্রশ্ন #${formatNumber(Number(question.id.replace(/\D/g, "")) || 1, "bn")}` },
+          { label: `প্রশ্ন #${questionRef}` },
         ]}
       />
 
@@ -236,52 +296,39 @@ export default async function QuestionDetailPage({
                     </Button>
                   }
                 />
-                {candidates.length > 0 ? (
+                {routed.length > 0 ? (
                   <Card>
                     <CardHeader
                       icon={Sparkles}
                       title="কোন আলেমদের কাছে পাঠানো হয়েছে"
-                      subtitle="অগ্রাধিকার ক্রম অনুযায়ী — যিনি আগে উত্তর দিতে পারেন"
+                      subtitle="প্রশ্নের বিভাগগুলো যাঁরা সামলান"
                     />
                     <ol className="mt-4 space-y-3">
-                      {candidates.map((candidate, index) => {
-                        const scholar = SCHOLAR_BY_ID[candidate.scholarId];
-                        if (!scholar) return null;
-                        return (
-                          <li key={candidate.scholarId} className="flex items-center gap-3">
-                            <span
-                              className={
-                                index === 0
-                                  ? "grid size-7 shrink-0 place-items-center rounded-lg bg-primary text-[0.75rem] font-bold tabular text-primary-foreground"
-                                  : "grid size-7 shrink-0 place-items-center rounded-lg bg-surface-3 text-[0.75rem] font-bold tabular text-muted-foreground"
-                              }
-                            >
-                              {formatNumber(index + 1, "bn")}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <ScholarMiniCard scholar={scholar} />
-                            </div>
-                          </li>
-                        );
-                      })}
+                      {routed.map((scholar) => (
+                        <li key={scholar.id} className="min-w-0">
+                          <ScholarMiniCard scholar={scholar} />
+                        </li>
+                      ))}
                     </ol>
-                    {candidates[0] ? (
-                      <RoutingReasons
-                        reasons={candidates[0].reasonsBn}
-                        score={candidates[0].score}
-                        className="mt-4"
-                      />
-                    ) : null}
                   </Card>
                 ) : null}
               </div>
             ) : (
               <div className="space-y-5">
                 {accepted ? (
-                  <AnswerCard answer={accepted} question={question} accepted />
+                  <AnswerCard
+                    answer={accepted}
+                    question={question}
+                    accepted
+                    scholar={scholarsById.get(accepted.scholarId)}
+                  />
                 ) : null}
                 {others.map((answer) => (
-                  <AnswerCard key={answer.id} answer={answer} />
+                  <AnswerCard
+                    key={answer.id}
+                    answer={answer}
+                    scholar={scholarsById.get(answer.scholarId)}
+                  />
                 ))}
               </div>
             )}
@@ -381,7 +428,7 @@ export default async function QuestionDetailPage({
               <SectionHeader size="sm" tone="accent" icon={Scale} title="সম্পর্কিত ফতোয়া" />
               <div className="space-y-3">
                 {relatedFatwas.map((fatwa) => (
-                  <FatwaRow key={fatwa.id} fatwa={fatwa} />
+                  <FatwaRow key={fatwa.id} fatwa={fatwa} mufti={scholarsById.get(fatwa.muftiId)} />
                 ))}
               </div>
             </section>

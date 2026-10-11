@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import {
   BookOpen,
   Building2,
@@ -17,10 +18,14 @@ import {
   Star,
   Users,
 } from "@/components/icons";
-import { SCHOLARS, getScholarBySlug } from "@/lib/data/scholars";
-import { getScholarBiography } from "@/lib/data/scholar-bios";
-import { getDepartment } from "@/lib/data/departments";
-import { findDistrict, formatNumber, gregorianDateBn } from "@/lib/bn";
+import type { Department } from "@/lib/types";
+import {
+  fetchDepartments,
+  fetchDistricts,
+  fetchScholar,
+  fetchScholars,
+} from "@/lib/content-api";
+import { formatNumber, gregorianDateBn } from "@/lib/bn";
 import {
   Badge,
   Button,
@@ -28,6 +33,7 @@ import {
   Card,
   CardHeader,
   Chip,
+  ErrorState,
   FactList,
   PageHeader,
   SectionHeader,
@@ -55,9 +61,41 @@ const FIQH_LABELS: Record<string, string> = {
 const TABS = ["articles", "fatwas", "answers"] as const;
 type Tab = (typeof TABS)[number];
 
-export function generateStaticParams() {
-  return SCHOLARS.map((scholar) => ({ slug: scholar.slug }));
-}
+/**
+ * One scholar, read from the API.
+ *
+ * The profile, the long-form biography, the credentials, the authored work behind
+ * the tabs and every rail beside them come from the API now — the page used to
+ * draw all of it from the bundled dataset, so a scholar who joined last week had
+ * no page at all. A slug the API does not know is a 404 and gets `notFound()`,
+ * because it will never exist; anything else — the service down, a query that
+ * timed out — gets an error state with a way to try again, because the profile
+ * does exist and saying otherwise would be a lie.
+ *
+ * `generateStaticParams` is gone with it: the API's rows are not enumerable at
+ * build time, and a profile page that pre-rendered a fixture list would have had
+ * to be rebuilt to publish a scholar.
+ */
+
+/**
+ * One read per request, shared by the metadata and the page.
+ *
+ * Both need the same profile, and Next renders them as separate passes, so a bare
+ * fetch in each is two requests to the API for one page. On the missing-slug path
+ * that is worse than wasteful: two 404s arriving together leave the metadata pass
+ * in flight when the page throws `notFound()`, and a boundary that has already
+ * flushed cannot be replaced — the reader gets the 404 UI and a stream that never
+ * closes. `cache` collapses the two reads into one.
+ */
+const readScholar = cache(async (slug: string) => {
+  const result = await fetchScholar(slug);
+  // A slug the API does not know will never exist, so the answer is the not-found
+  // boundary rather than an error state. Deciding it here, in the one read both
+  // passes await, is what keeps the metadata pass and the page from disagreeing
+  // about a profile that is simply not there.
+  if (!result.ok && result.status === 404) notFound();
+  return result;
+});
 
 export async function generateMetadata({
   params,
@@ -65,8 +103,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const scholar = getScholarBySlug(slug);
-  if (!scholar) return { title: "আলেম" };
+  const result = await readScholar(slug);
+  if (!result.ok) return { title: "আলেম" };
+
+  const { scholar } = result.data;
   return {
     title: `${scholar.honorific.bn} ${scholar.name.bn}`,
     description: scholar.shortBio.bn,
@@ -82,16 +122,59 @@ export default async function ScholarProfilePage({
 }) {
   const { slug } = await params;
   const { tab: tabParam } = await searchParams;
-  const scholar = getScholarBySlug(slug);
-  if (!scholar) notFound();
 
+  const result = await readScholar(slug);
+  if (!result.ok) {
+    return (
+      <ErrorState
+        title="প্রোফাইলটি আনা যায়নি"
+        description="কনটেন্ট সার্ভিসে পৌঁছানো যায়নি, তাই এই আলেমের প্রোফাইল এখন দেখানো যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।"
+        action={
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button href={`/scholars/${encodeURIComponent(slug)}`} size="sm">
+              আবার চেষ্টা করুন
+            </Button>
+            <Button href="/scholars" variant="outline" size="sm">
+              সব আলেম দেখুন
+            </Button>
+          </div>
+        }
+      />
+    );
+  }
+
+  const { scholar, biography, articles, fatwas, answers } = result.data;
   const tab: Tab = TABS.includes(tabParam as Tab) ? (tabParam as Tab) : "articles";
-  const biography = getScholarBiography(scholar.id);
-  const district = findDistrict(scholar.district);
-  const departments = scholar.departmentIds
-    .map((id) => getDepartment(id))
-    .filter((d): d is NonNullable<typeof d> => Boolean(d));
-  const primary = getDepartment(scholar.primaryDepartmentId);
+
+  const [departmentsResult, districtsResult, colleaguesResult, othersResult] =
+    await Promise.all([
+      fetchDepartments(),
+      fetchDistricts(),
+      // The scholar's own department, for a rail that is actually related: the
+      // scholars a reader would ask instead.
+      fetchScholars({ department: scholar.primaryDepartmentId, limit: 4 }),
+      // The fallback, so a scholar whose department read comes back empty still
+      // has a rail rather than a hole in the column.
+      fetchScholars({ limit: 5 }),
+    ]);
+
+  const departments = departmentsResult.ok ? departmentsResult.data : [];
+  const district = (districtsResult.ok ? districtsResult.data : []).find(
+    (item) => item.id === scholar.district,
+  );
+
+  const scholarDepartments = scholar.departmentIds
+    .map((id) => departmentOf(departments, id))
+    .filter((d): d is Department => Boolean(d));
+  const primary = departmentOf(departments, scholar.primaryDepartmentId);
+
+  const colleaguePool =
+    colleaguesResult.ok && colleaguesResult.data.items.length > 0
+      ? colleaguesResult.data.items
+      : othersResult.ok
+        ? othersResult.data.items
+        : [];
+  const colleagues = colleaguePool.filter((other) => other.id !== scholar.id).slice(0, 2);
 
   const tabItems = [
     {
@@ -99,21 +182,21 @@ export default async function ScholarProfilePage({
       label: "প্রবন্ধ",
       href: `/scholars/${scholar.slug}?tab=articles`,
       icon: FileText,
-      count: scholar.stats.articles,
+      count: articles.length,
     },
     {
       id: "fatwas",
       label: "ফতোয়া",
       href: `/scholars/${scholar.slug}?tab=fatwas`,
       icon: Scale,
-      count: scholar.stats.fatwas,
+      count: fatwas.length,
     },
     {
       id: "answers",
       label: "উত্তর",
       href: `/scholars/${scholar.slug}?tab=answers`,
       icon: MessageCircleQuestion,
-      count: scholar.stats.answers,
+      count: answers.length,
     },
   ];
 
@@ -161,7 +244,7 @@ export default async function ScholarProfilePage({
             <Pick value={scholar.madrasah} />
           </Badge>
           <Badge tone="neutral" size="sm" icon={MapPin}>
-            <Pick value={district.name} />
+            <Pick value={district?.name} fallback={scholar.district} />
           </Badge>
           <Badge tone="neutral" size="sm" icon={CalendarDays}>
             {gregorianDateBn(new Date(scholar.joinedAt), "bn")}
@@ -204,7 +287,7 @@ export default async function ScholarProfilePage({
                 <T k="label.departments" />
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {departments.map((department) => (
+                {scholarDepartments.map((department) => (
                   <Chip
                     key={department.id}
                     href={`/departments/${department.slug}`}
@@ -244,7 +327,12 @@ export default async function ScholarProfilePage({
             />
             <TabLinks items={tabItems} active={tab} variant="pill" />
             <div className="mt-5">
-              <ProfileSections scholar={scholar} tab={tab} />
+              <ProfileSections
+                tab={tab}
+                articles={articles}
+                fatwas={fatwas}
+                answers={answers}
+              />
             </div>
           </section>
         </div>
@@ -307,7 +395,7 @@ export default async function ScholarProfilePage({
                   },
                   {
                     label: <T k="label.district" />,
-                    value: <Pick value={district.name} />,
+                    value: <Pick value={district?.name} fallback={scholar.district} />,
                     icon: MapPin,
                   },
                   {
@@ -365,21 +453,21 @@ export default async function ScholarProfilePage({
             </Callout>
           )}
 
-          <div>
-            <SectionHeader
-              title={<T k="home.recommendedScholars" />}
-              size="sm"
-              icon={GraduationCap}
-              href="/scholars"
-            />
-            <div className="space-y-3">
-              {SCHOLARS.filter((s) => s.id !== scholar.id)
-                .slice(0, 2)
-                .map((other) => (
+          {colleagues.length > 0 ? (
+            <div>
+              <SectionHeader
+                title={<T k="home.recommendedScholars" />}
+                size="sm"
+                icon={GraduationCap}
+                href="/scholars"
+              />
+              <div className="space-y-3">
+                {colleagues.map((other) => (
                   <ScholarCard key={other.id} scholar={other} layout="compact" />
                 ))}
+              </div>
             </div>
-          </div>
+          ) : null}
 
           <Link
             href="/topics"
@@ -390,5 +478,12 @@ export default async function ScholarProfilePage({
         </aside>
       </div>
     </div>
+  );
+}
+
+/** A department by id or slug — the two keys a scholar may be tagged with. */
+function departmentOf(departments: Department[], key: string): Department | undefined {
+  return departments.find(
+    (department) => department.id === key || department.slug === key,
   );
 }
