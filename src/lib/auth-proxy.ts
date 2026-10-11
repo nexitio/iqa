@@ -113,7 +113,13 @@ export async function proxyAuth(
         // Forwarded so the API's own origin guard sees a genuine browser origin,
         // its rate limiting keys the caller the same way either route would, and
         // a new session is labelled with the device that actually signed in.
-        ...pick(request, "origin", "user-agent", "x-forwarded-for"),
+        //
+        // The cookie goes with them because a relay must not lose the caller's
+        // identity: these are the API's own cookies, relayed back to it. Without
+        // it, signing out clears the browser's copy and answers 200 while the
+        // session row it named stays alive — a token that still works for the
+        // rest of its thirty days.
+        ...pick(request, "origin", "user-agent", "x-forwarded-for", "cookie"),
       },
       body: body.length > 0 ? body : undefined,
       cache: "no-store",

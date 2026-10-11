@@ -3163,3 +3163,99 @@ Ilm API listening on http://127.0.0.1:8787 (development)
 --> GET /api/v1/auth/social/providers [32m200[0m 155ms
 <-- GET /api/v1/auth/social/providers
 --> GET /api/v1/auth/social/providers [32m200[0m 34ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 33ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 32ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 38ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 40ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 35ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 0ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 43ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 36ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 42ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 43ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 128ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 195ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 13ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 167ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 80ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 10ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 155ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 66ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 36ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 137ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 11ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 174ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 11ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 82ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 12ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 5ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 44ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 144ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 155ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 18ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 92ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 147ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 18ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 94ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 13ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 78ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 5ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 80ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 13ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 7ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 48ms
