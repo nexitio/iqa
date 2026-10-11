@@ -48,8 +48,13 @@ const PICKER_WIDTH = 22 * 16;
  * draft through the same code and can never drift apart.
  */
 export interface RichTextEditorHandle {
-  /** Write a citation where the scholar is writing, as the picker would. */
-  insert: (reference: ContentReference) => void;
+  /**
+   * Write a citation where the scholar is writing, as the picker would — with the
+   * Bangla meaning in the sentence, or, with `asQuote`, as the full quotation block
+   * the picker's Shift+Enter writes. One method for both forms, so the rail's two
+   * buttons and the picker's two gestures end in the same writer.
+   */
+  insert: (reference: ContentReference, asQuote?: boolean) => void;
 }
 
 /**
@@ -198,6 +203,27 @@ export function RichTextEditor({
     [picker],
   );
 
+  /**
+   * Remember where the caret is while the scholar is in the text.
+   *
+   * The rail's buttons take focus when clicked, and a blurred textarea reports
+   * position 0 — "the top of the draft" — so the caret has to be remembered
+   * rather than re-read from a field that is no longer in the scholar's hands.
+   * `selectionchange` on the document is the signal that fires for every way the
+   * caret moves: typing, arrow keys, Home/End and the mouse. React's `onSelect`
+   * rides the same notification and is kept as a second source, but it did not
+   * fire for arrow-key moves here — which silently sent a rail insert to the end
+   * of the draft instead of the sentence the scholar was writing.
+   */
+  useEffect(() => {
+    function rememberCaret() {
+      const el = textareaRef.current;
+      if (el && document.activeElement === el) caretRef.current = el.selectionStart;
+    }
+    document.addEventListener("selectionchange", rememberCaret);
+    return () => document.removeEventListener("selectionchange", rememberCaret);
+  }, []);
+
   // Keep the highlighted row in view while arrowing through the list.
   useEffect(() => {
     if (!picker) return;
@@ -252,11 +278,17 @@ export function RichTextEditor({
    * Write a citation into the body, replacing `from`..`to`.
    *
    * One writer for both callers: the picker replaces the `#query` it was opened
-   * with, the rail inserts at a caret. A quotation is a paragraph, so mid-sentence
-   * it opens on a line of its own — otherwise the `> ` prefix would sit behind
-   * the scholar's words and the renderer, which reads quotes by line, would not
-   * see a quote at all. The same reasoning gives an inline citation a leading
-   * space when it would otherwise glue itself to the word before it.
+   * with, the rail inserts at a caret, and both forms are the scholar's own text
+   * once written. The plain form carries the *meaning* — the Bangla translation in
+   * quotation marks with the reference beside it, clickable for the reader —
+   * because a reference on its own asks the reader to take the argument on trust;
+   * the full form adds the Arabic as a quotation block.
+   *
+   * A quotation is a paragraph, so mid-sentence it opens on a line of its own —
+   * otherwise the `> ` prefix would sit behind the scholar's words and the
+   * renderer, which reads quotes by line, would not see a quote at all. The same
+   * reasoning gives the inline form a leading space when it would otherwise glue
+   * itself to the word before it.
    */
   function writeCitation(reference: ContentReference, from: number, to: number, asQuote: boolean) {
     const el = textareaRef.current;
@@ -266,7 +298,7 @@ export function RichTextEditor({
     const atLineStart = from === 0 || /\n\s*$/.test(before);
     const replacement = asQuote
       ? `${atLineStart ? "" : "\n\n"}> ${citation}\n> ${reference.arabic}\n> ${reference.translationBn}\n\n`
-      : `${atLineStart || /\s$/.test(before) ? "" : " "}${citation} `;
+      : `${atLineStart || /\s$/.test(before) ? "" : " "}“${reference.translationBn}” (${citation}) `;
     const text = before + replacement + el.value.slice(to);
     const caret = from + replacement.length;
     caretRef.current = caret;
@@ -285,12 +317,12 @@ export function RichTextEditor({
    * the remembered one while a button holds focus, and the end of the draft
    * when they have not written in it yet.
    */
-  function insertAtCaret(reference: ContentReference) {
+  function insertAtCaret(reference: ContentReference, asQuote = false) {
     const el = textareaRef.current;
     if (!el) return;
     const inText = document.activeElement === el;
     const at = (inText ? el.selectionStart : caretRef.current) ?? el.value.length;
-    writeCitation(reference, at, at, false);
+    writeCitation(reference, at, at, asQuote);
   }
 
   useImperativeHandle(ref, () => ({ insert: insertAtCaret }));
@@ -447,6 +479,10 @@ export function RichTextEditor({
         <span className="inline-flex items-center gap-1">
           <TextQuote className="size-3" aria-hidden />
           {t("editor.hintQuote")}
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Quote className="size-3" aria-hidden />
+          {t("editor.hintMeaning")}
         </span>
       </p>
 

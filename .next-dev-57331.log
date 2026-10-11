@@ -1,0 +1,54 @@
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://localhost:57331
+- Network:       http://10.20.30.20:57331
+✓ Ready in 726ms
+✓ Running next.config.ts took 44ms
+
+○ Compiling / ...
+ GET / 200 in 3.6s (next.js: 1922ms, application-code: 1721ms)
+ GET /scholar/write 200 in 7.6s (next.js: 5.6s, application-code: 2.0s)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 7.6s (next.js: 5.5s, generate-params: 1759ms, application-code: 371ms)
+ GET / 200 in 164ms (next.js: 15ms, application-code: 149ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 228ms (next.js: 8ms, generate-params: 6ms, application-code: 214ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 215ms (next.js: 7ms, generate-params: 0.0ms, application-code: 208ms)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/hmr from "127.0.0.1".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /scholar/write 200 in 132ms (next.js: 28ms, application-code: 104ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 240ms (next.js: 17ms, generate-params: 15ms, application-code: 208ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 191ms (next.js: 8ms, generate-params: 7ms, application-code: 176ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 247ms (next.js: 13ms, generate-params: 15ms, application-code: 219ms)
+ GET /scholar/write 200 in 199ms (next.js: 14ms, application-code: 185ms)
+ GET / 200 in 238ms (next.js: 24ms, application-code: 214ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 234ms (next.js: 13ms, generate-params: 18ms, application-code: 203ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 229ms (next.js: 12ms, generate-params: 16ms, application-code: 200ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 256ms (next.js: 12ms, generate-params: 8ms, application-code: 236ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 238ms (next.js: 16ms, generate-params: 15ms, application-code: 207ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 232ms (next.js: 20ms, generate-params: 23ms, application-code: 190ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 232ms (next.js: 18ms, generate-params: 20ms, application-code: 193ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 235ms (next.js: 19ms, generate-params: 19ms, application-code: 198ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 337ms (next.js: 6ms, generate-params: 7ms, application-code: 323ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 209ms (next.js: 13ms, generate-params: 18ms, application-code: 177ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 240ms (next.js: 10ms, generate-params: 13ms, application-code: 217ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 245ms (next.js: 11ms, generate-params: 15ms, application-code: 219ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 295ms (next.js: 7ms, generate-params: 8ms, application-code: 280ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 265ms (next.js: 15ms, generate-params: 9ms, application-code: 241ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 260ms (next.js: 10ms, generate-params: 9ms, application-code: 242ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 241ms (next.js: 20ms, generate-params: 19ms, application-code: 202ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 253ms (next.js: 8ms, generate-params: 6ms, application-code: 238ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 268ms (next.js: 15ms, generate-params: 17ms, application-code: 235ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 219ms (next.js: 12ms, generate-params: 15ms, application-code: 192ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 308ms (next.js: 9ms, generate-params: 9ms, application-code: 291ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 289ms (next.js: 16ms, generate-params: 19ms, application-code: 254ms)
+ GET /hadith/bukhari/hadith-1 200 in 983ms (next.js: 38ms, generate-params: 879ms, application-code: 66ms)
+ GET / 200 in 30ms (next.js: 6ms, application-code: 24ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 162ms (next.js: 13ms, generate-params: 6ms, application-code: 143ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 145ms (next.js: 9ms, generate-params: 7ms, application-code: 129ms)

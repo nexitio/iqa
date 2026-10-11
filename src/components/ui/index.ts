@@ -11,5 +11,6 @@ export * from "./chip";
 export * from "./tabs";
 export * from "./progress";
 export * from "./feedback";
+export * from "./citation";
 export * from "./section";
 export * from "./charts";

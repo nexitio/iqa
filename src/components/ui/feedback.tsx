@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { AlertTriangle, Info, Loader2, Sparkles } from "lucide-react";
+import { resolveCitationText, splitCitations, type CitationDetail } from "@/lib/reference-index";
+import { T } from "@/components/i18n-text";
 import { cn } from "@/lib/utils";
+import { CitationChip } from "./citation";
 import { outlineTone, softTone, type Tone } from "./tone";
 
 /* --------------------------------------------------------------- skeletons */
@@ -191,18 +194,98 @@ export function MetaRow({ children, className }: { children: ReactNode; classNam
  * a real toolbar without the draft ever stopping being text. Consecutive `> `
  * lines merge into one quotation, which is what makes a cited ayah — citation,
  * Arabic, translation — read as a single passage rather than three panels.
+ *
+ * Citations are the exception to "just styling": when a span names a reference the
+ * product knows — bold or simply parenthesised in the sentence — it is rendered as
+ * the openable reference it is, so the evidence is readable where the argument is
+ * made rather than only in a list at the foot of the page.
  */
 
-/** Inline grammar, one pass. Group order matches the alternatives. */
+/*
+ * Inline grammar, one pass. Group order matches the alternatives.
+ *
+ * A citation is the one span that is not merely styled: `**সূরা আল-বাকারা, আয়াত
+ * ২৭৫**` and a bare mention like `(সূরা আত-তালাক, ২)` are both recognised as
+ * evidence, set apart in the sentence and made openable. Everything else — bold,
+ * italic, a link, code — is decoration on words. See `splitCitations` for where
+ * the recognition lives; here it only decides what to render.
+ */
 const INLINE = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`/g;
+
+/**
+ * The meaning of a citation, when the author did not give one.
+ *
+ * A reader who meets `(সূরা আত-তালাক, ২)` alone is asked to take the argument on
+ * trust, but the translation cannot simply be written into someone else's prose
+ * either — those words would read as the author's. So the meaning is supplied
+ * inline only where it is *missing*, and it is set apart as the reading aid it is:
+ * tinted, muted, and labelled. Many bodies already quote the Bangla translation
+ * before the reference — and the editor's own inserts always do — so the test is
+ * simply whether a quotation sits immediately before the citation.
+ */
+function citationGloss(detail: CitationDetail, preceding: string): string | null {
+  if (!detail.translationBn) return null;
+  // A closing quote, optionally followed by the opening parenthesis or the `**`
+  // of the citation itself: the author has already said what it means.
+  if (/[”"’»]\s*\(?\s*\**\s*$/.test(preceding)) return null;
+  return detail.translationBn;
+}
+
+/** The gloss, visibly the app's rather than the author's. */
+function glossNode(translation: string, key: string) {
+  return (
+    <span
+      key={key}
+      className="mx-0.5 rounded-md bg-surface-2 px-1.5 italic text-muted-foreground ring-1 ring-border"
+    >
+      <span className="me-1 text-[0.6875em] font-semibold uppercase tracking-wide not-italic text-subtle-foreground">
+        <T k="citation.glossLabel" />
+      </span>
+      {translation}
+    </span>
+  );
+}
+
+/**
+ * Text that may hold citations, turned into text and openable references.
+ *
+ * Returns the visible text it emitted, so the next span can tell whether a
+ * quotation precedes its citation — a citation runs across several nodes when the
+ * author wrote it in bold, so the state cannot live inside one string.
+ */
+function pushText(nodes: ReactNode[], text: string, key: string, preceding: string): string {
+  const spans = splitCitations(text);
+  if (spans.length <= 1 && !spans[0]?.detail) {
+    nodes.push(text);
+    return preceding + text;
+  }
+
+  let tail = preceding;
+  spans.forEach((span, i) => {
+    if (span.detail) {
+      const gloss = citationGloss(span.detail, tail);
+      if (gloss) nodes.push(glossNode(gloss, `${key}-g${i}`));
+      nodes.push(<CitationChip key={`${key}-c${i}`} detail={span.detail} label={span.text} />);
+      tail = span.text;
+    } else if (span.text) {
+      nodes.push(span.text);
+      tail += span.text;
+    }
+  });
+  return tail;
+}
 
 function renderInline(text: string, key: string): ReactNode {
   const nodes: ReactNode[] = [];
   let cursor = 0;
   let index = 0;
+  // The visible text so far, so a citation can see whether a quotation precedes it.
+  let tail = "";
   INLINE.lastIndex = 0;
   for (let match = INLINE.exec(text); match; match = INLINE.exec(text)) {
-    if (match.index > cursor) nodes.push(text.slice(cursor, match.index));
+    if (match.index > cursor) {
+      tail = pushText(nodes, text.slice(cursor, match.index), `${key}-t${index}`, tail);
+    }
     const at = `${key}-${index++}`;
     if (match[1] !== undefined) {
       // Internal routes are links, the way every other internal link is.
@@ -217,16 +300,28 @@ function renderInline(text: string, key: string): ReactNode {
           </a>
         ),
       );
+      tail += match[1];
     } else if (match[3] !== undefined) {
-      nodes.push(<strong key={at}>{match[3]}</strong>);
+      // A bold span that names a reference is evidence, not emphasis.
+      const detail = resolveCitationText(match[3]);
+      if (detail) {
+        const gloss = citationGloss(detail, tail);
+        if (gloss) nodes.push(glossNode(gloss, `${at}-g`));
+        nodes.push(<CitationChip key={at} detail={detail} label={match[3]} />);
+      } else {
+        nodes.push(<strong key={at}>{match[3]}</strong>);
+      }
+      tail = match[3];
     } else if (match[4] !== undefined) {
       nodes.push(<em key={at}>{match[4]}</em>);
+      tail = match[4];
     } else if (match[5] !== undefined) {
       nodes.push(<code key={at}>{match[5]}</code>);
+      tail = match[5];
     }
     cursor = match.index + match[0].length;
   }
-  if (cursor < text.length) nodes.push(text.slice(cursor));
+  if (cursor < text.length) pushText(nodes, text.slice(cursor), `${key}-end`, tail);
   return nodes.length === 1 ? nodes[0] : nodes;
 }
 

@@ -99,7 +99,7 @@ export const DICTIONARY: Dict = {
   "action.approve": { bn: "অনুমোদন", en: "Approve" },
   "action.reject": { bn: "প্রত্যাখ্যান", en: "Reject" },
   "action.suspend": { bn: "স্থগিত", en: "Suspend" },
-  "action.useReference": { bn: "লেখায় বসান", en: "Insert in draft" },
+  "action.useReference": { bn: "অর্থসহ বসান", en: "Insert with meaning" },
   "action.insert": { bn: "যোগ করুন", en: "Insert" },
   "action.signIn": { bn: "প্রবেশ করুন", en: "Sign in" },
   "action.signUp": { bn: "অ্যাকাউন্ট খুলুন", en: "Create account" },
@@ -573,7 +573,7 @@ export const DICTIONARY: Dict = {
     bn: "আপনার লেখার বিষয়বস্তু বিশ্লেষণ করে প্রস্তাব দেওয়া হয়েছে",
     en: "Suggested by analysing your draft's topic",
   },
-  "console.attachedRefs": { bn: "যুক্ত করা রেফারেন্স", en: "Attached references" },
+  "console.attachedRefs": { bn: "দলিল ও রেফারেন্স", en: "Evidence & references" },
   "console.noRefsYet": {
     bn: "এখনো কোনো রেফারেন্স যুক্ত করা হয়নি",
     en: "No references attached yet",
@@ -604,6 +604,10 @@ export const DICTIONARY: Dict = {
     bn: "Shift+Enter চাপলে আরবি ও অনুবাদসহ পূর্ণ উদ্ধৃতি বসবে",
     en: "Shift+Enter inserts the full quotation with Arabic and translation",
   },
+  "editor.hintMeaning": {
+    bn: "Enter চাপলে অনুবাদসহ দলিল বসবে — রেফারেন্সে চাপ দিলে বিস্তারিত দেখা যাবে",
+    en: "Enter inserts the reference with its Bangla meaning — tap it to read the details",
+  },
   "editor.pickerAyat": { bn: "আয়াত খুঁজুন", en: "Find an ayah" },
   "editor.pickerHadith": { bn: "হাদীস খুঁজুন", en: "Find a hadith" },
   "editor.pickerEmpty": { bn: "সব রেফারেন্স", en: "All references" },
@@ -611,10 +615,33 @@ export const DICTIONARY: Dict = {
     bn: "এই শব্দে কিছু পাওয়া যায়নি। সংগ্রহে আছে {ayat}টি আয়াত ও {ahadith}টি হাদীস — সূরার নাম, সংকলনের নাম বা নম্বর দিয়ে খুঁজুন।",
     en: "Nothing matches that. This collection holds {ayat} ayahs and {ahadith} hadith — search by surah name, collection name or number.",
   },
-  "editor.pickerKeys": { bn: "↑↓ বাছাই · Enter বসান", en: "↑↓ select · Enter insert" },
+  "editor.pickerKeys": {
+    bn: "↑↓ বাছাই · Enter অনুবাদসহ · Shift+Enter পূর্ণ উদ্ধৃতি",
+    en: "↑↓ select · Enter with meaning · Shift+Enter full quotation",
+  },
   "editor.insertQuote": { bn: "পূর্ণ উদ্ধৃতি বসান", en: "Insert full quotation" },
   "editor.kindAyah": { bn: "আয়াত", en: "Ayah" },
   "editor.kindHadith": { bn: "হাদীস", en: "Hadith" },
+
+  /* -------- citations -------- */
+  "citation.view": { bn: "দলিল ও অনুবাদ দেখুন", en: "See the evidence and translation" },
+  "citation.hint": {
+    bn: "চিহ্নিত রেফারেন্সে চাপ দিলে মূল আয়াত/হাদীস ও অনুবাদ দেখতে পাবেন",
+    en: "Tap a highlighted reference to read the source and its translation",
+  },
+  "citation.verifiedHint": {
+    bn: "সূত্র যাচাই করুন — অনুবাদ ও আরবি মূল একসাথে",
+    en: "Check the source — the Arabic and its translation together",
+  },
+  "citation.noSourcePage": {
+    bn: "এই সংকলনের নিজস্ব পৃষ্ঠা এখনো যুক্ত হয়নি — আরবি মূল ও অনুবাদ এখানেই দেওয়া আছে",
+    en: "This collection has no page in the app yet — the Arabic and its translation are given here",
+  },
+  "citation.glossLabel": { bn: "অনুবাদ", en: "Translation" },
+  "citation.transliteration": { bn: "উচ্চারণ", en: "Transliteration" },
+  "citation.tafsir": { bn: "সংক্ষিপ্ত তাফসীর", en: "Short tafsir" },
+  "citation.lesson": { bn: "শিক্ষা", en: "Lesson" },
+  "citation.gradeLabel": { bn: "হাদীসের মান", en: "Grading" },
 
   /* -------- misc -------- */
   "misc.bismillah": { bn: "বিসমিল্লাহির রাহমানির রাহীম", en: "Bismillahir Rahmanir Rahim" },

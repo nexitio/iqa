@@ -4,12 +4,14 @@ import { useMemo, useState } from "react";
 import {
   BookOpen,
   ChevronDown,
+  ChevronRight,
   Info,
   Library,
   Lightbulb,
   RefreshCw,
   ScrollText,
   Sparkles,
+  TextQuote,
   Trash2,
 } from "lucide-react";
 import type { ContentReference, ReferenceSuggestion } from "@/lib/types";
@@ -17,10 +19,19 @@ import {
   getSuggestionsForKeywords,
   REFERENCE_SUGGESTIONS,
 } from "@/lib/data/questions";
+import { citationDetailFor } from "@/lib/reference-index";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
 import { cn } from "@/lib/utils";
-import { Badge, Button, EmptyState, Progress, SectionHeader } from "@/components/ui";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  Progress,
+  ReferenceDetailDialog,
+  SectionHeader,
+  type CitationView,
+} from "@/components/ui";
 
 /**
  * Smart References — the scholar's writing assistant.
@@ -81,14 +92,20 @@ function ReasonDisclosure({ reasonBn }: { reasonBn: string }) {
   );
 }
 
-/** A single suggested verse or hadith, ready to attach. */
+/**
+ * A single suggested verse or hadith.
+ *
+ * Its two buttons are the picker's two gestures: `onInsert(suggestion)` writes
+ * the citation into the sentence, `onInsert(suggestion, true)` writes the whole
+ * quotation — the same pair Enter and Shift+Enter produce while typing `#`.
+ */
 export function ReferenceSuggestionCard({
   suggestion,
   onInsert,
   className,
 }: {
   suggestion: ReferenceSuggestion;
-  onInsert?: (suggestion: ReferenceSuggestion) => void;
+  onInsert?: (suggestion: ReferenceSuggestion, asQuote?: boolean) => void;
   className?: string;
 }) {
   const { t, locale } = useI18n();
@@ -148,13 +165,23 @@ export function ReferenceSuggestionCard({
 
       <ReasonDisclosure reasonBn={suggestion.reasonBn} />
 
-      <footer className="mt-3.5 flex items-center justify-between gap-3 border-t border-border pt-3.5">
+      <footer className="mt-3.5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5">
         <span className="text-[0.6875rem] tabular text-subtle-foreground">
           {formatNumber(Math.round(suggestion.score * 100), locale)}/১০০
         </span>
-        <Button size="sm" icon={Sparkles} onClick={() => onInsert?.(suggestion)}>
-          {t("action.useReference")}
-        </Button>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            icon={TextQuote}
+            onClick={() => onInsert?.(suggestion, true)}
+          >
+            {t("editor.insertQuote")}
+          </Button>
+          <Button size="sm" icon={Sparkles} onClick={() => onInsert?.(suggestion)}>
+            {t("action.useReference")}
+          </Button>
+        </div>
       </footer>
     </article>
   );
@@ -170,7 +197,8 @@ export function ReferenceSuggester({
   className,
 }: {
   draftText: string;
-  onInsert?: (suggestion: ReferenceSuggestion) => void;
+  /** Inline citation, or the full quotation block when `asQuote` is set. */
+  onInsert?: (suggestion: ReferenceSuggestion, asQuote?: boolean) => void;
   className?: string;
 }) {
   const { t, locale } = useI18n();
@@ -252,7 +280,90 @@ export function ReferenceSuggester({
   );
 }
 
-/** References already attached to the draft, each removable. */
+/**
+ * One attached reference.
+ *
+ * The row is the attached snapshot, so it stays short; opening it shows the
+ * reference itself — the full Arabic from the index where the index knows it,
+ * the scholar's own reason for attaching it, and the page the source lives on.
+ */
+function AttachedReferenceRow({
+  reference,
+  onRemove,
+}: {
+  reference: ContentReference;
+  onRemove?: (id: string) => void;
+}) {
+  const { t } = useI18n();
+  const [open, setOpen] = useState(false);
+  const meta = KIND_META[reference.kind];
+  const Icon = meta.icon;
+
+  // The rail keeps the scholar's own snapshot in the row; the dialog completes it
+  // with the index — full Arabic, pronunciation, provenance, grading — so an
+  // attached reference reads exactly like the same one cited in the draft.
+  const detail: CitationView = citationDetailFor(reference);
+
+  return (
+    <li className="flex items-start gap-3 rounded-card border border-border bg-surface p-3.5">
+      <span
+        className={cn(
+          "grid size-8 shrink-0 place-items-center rounded-lg",
+          reference.kind === "ayah"
+            ? "bg-primary-soft text-primary"
+            : "bg-accent-soft text-accent-soft-foreground",
+        )}
+      >
+        <Icon className="size-4" aria-hidden />
+      </span>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-label={`${reference.refBn} — ${t("citation.view")}`}
+        className="group min-w-0 flex-1 text-left"
+      >
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="text-[0.8125rem] font-semibold text-foreground underline decoration-transparent decoration-dotted underline-offset-2 transition-colors group-hover:decoration-current">
+            {reference.refBn}
+          </span>
+          <span className="inline-flex items-center gap-1 text-[0.6875rem] font-medium text-subtle-foreground transition-colors group-hover:text-primary">
+            {t("citation.view")}
+            <ChevronRight className="size-3" aria-hidden />
+          </span>
+        </span>
+        <span className="arabic mt-1 line-clamp-2 block text-[0.9375rem] text-muted-foreground">
+          {reference.arabic}
+        </span>
+        {reference.note ? (
+          <span className="mt-1.5 block text-[0.6875rem] leading-relaxed text-subtle-foreground">
+            {reference.note}
+          </span>
+        ) : null}
+      </button>
+      {onRemove ? (
+        <button
+          type="button"
+          onClick={() => onRemove(reference.id)}
+          aria-label={`${reference.refBn} সরান`}
+          className="grid size-8 shrink-0 place-items-center rounded-lg text-subtle-foreground transition-colors hover:bg-danger-soft hover:text-danger"
+        >
+          <Trash2 className="size-4" aria-hidden />
+        </button>
+      ) : null}
+
+      {open ? <ReferenceDetailDialog detail={detail} onClose={() => setOpen(false)} /> : null}
+    </li>
+  );
+}
+
+/**
+ * The evidence attached to the draft, each one openable and removable.
+ *
+ * Titled "দলিল ও রেফারেন্স" like every other evidence block in the product: this
+ * is the same list a reader will see under the published piece, shown to the
+ * scholar while the piece is still a draft.
+ */
 export function AttachedReferenceList({
   references,
   onRemove,
@@ -285,50 +396,20 @@ export function AttachedReferenceList({
           {t("console.noRefsYet")}
         </p>
       ) : (
-        <ul className="space-y-2.5">
-          {references.map((reference) => {
-            const meta = KIND_META[reference.kind];
-            const Icon = meta.icon;
-            return (
-              <li
+        <>
+          <ul className="space-y-2.5">
+            {references.map((reference) => (
+              <AttachedReferenceRow
                 key={reference.id}
-                className="flex items-start gap-3 rounded-card border border-border bg-surface p-3.5"
-              >
-                <span
-                  className={cn(
-                    "grid size-8 shrink-0 place-items-center rounded-lg",
-                    reference.kind === "ayah"
-                      ? "bg-primary-soft text-primary"
-                      : "bg-accent-soft text-accent-soft-foreground",
-                  )}
-                >
-                  <Icon className="size-4" aria-hidden />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[0.8125rem] font-semibold text-foreground">{reference.refBn}</p>
-                  <p className="arabic mt-1 line-clamp-2 text-[0.9375rem] text-muted-foreground">
-                    {reference.arabic}
-                  </p>
-                  {reference.note ? (
-                    <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-subtle-foreground">
-                      {reference.note}
-                    </p>
-                  ) : null}
-                </div>
-                {onRemove ? (
-                  <button
-                    type="button"
-                    onClick={() => onRemove(reference.id)}
-                    aria-label={`${reference.refBn} সরান`}
-                    className="grid size-8 shrink-0 place-items-center rounded-lg text-subtle-foreground transition-colors hover:bg-danger-soft hover:text-danger"
-                  >
-                    <Trash2 className="size-4" aria-hidden />
-                  </button>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
+                reference={reference}
+                onRemove={onRemove}
+              />
+            ))}
+          </ul>
+          <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-subtle-foreground">
+            {t("citation.hint")}
+          </p>
+        </>
       )}
     </section>
   );

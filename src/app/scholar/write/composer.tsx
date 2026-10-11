@@ -27,6 +27,7 @@ import {
   SmartReferenceCounter,
   type RichTextEditorHandle,
 } from "@/components/console";
+import { ReferenceList } from "@/components/knowledge";
 import {
   Badge,
   Button,
@@ -134,15 +135,18 @@ export function Composer({
   }
 
   /**
-   * The rail's suggestion does exactly what the editor's `#` picker does: the
-   * citation is written into the sentence at the caret *and* kept beside the
-   * draft — the editor reports it back through `attach`, so both roads end in
-   * the same place. When the editor is not mounted (the preview is showing),
-   * there is nowhere to write, so the reference is only attached.
+   * The rail's suggestions do exactly what the editor's `#` picker does: the
+   * citation goes into the sentence at the caret — with its Bangla meaning, so a
+   * reader meets the evidence rather than a bare reference — *and* stays beside
+   * the draft, because the editor reports it back through `attach`. Both roads end
+   * in the same place. The card's quotation button asks for the same writer's
+   * other form, the Arabic and translation as a block. When the editor is not
+   * mounted (the preview is showing), there is nowhere to write, so the reference
+   * is only attached.
    */
-  function handleInsert(suggestion: ReferenceSuggestion) {
+  function handleInsert(suggestion: ReferenceSuggestion, asQuote = false) {
     const reference = toReference(suggestion);
-    if (editorRef.current) editorRef.current.insert(reference);
+    if (editorRef.current) editorRef.current.insert(reference, asQuote);
     else attach(reference);
   }
 
@@ -315,21 +319,10 @@ export function Composer({
                         প্রিভিউ দেখতে কিছু লিখুন।
                       </p>
                     )}
+                    {/* The evidence as a reader meets it — the same block the
+                        published piece ends with, not a draft-only summary. */}
                     {attached.length > 0 ? (
-                      <div className="mt-5 border-t border-border pt-4">
-                        <p className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-                          {t("console.attachedRefs")}
-                        </p>
-                        <ul className="space-y-2">
-                          {attached.map((reference) => (
-                            <li key={reference.id} className="text-[0.75rem] text-muted-foreground">
-                              <span className="font-medium text-foreground">{reference.refBn}</span>
-                              {" — "}
-                              {reference.translationBn}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      <ReferenceList references={attached} className="mt-5" />
                     ) : null}
                   </div>
                 ) : (
