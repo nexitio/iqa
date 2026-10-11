@@ -9,6 +9,8 @@ import {
 } from "next/font/google";
 import type { ReactNode } from "react";
 import { Providers } from "@/components/providers";
+import { SessionProvider } from "@/components/auth/session-provider";
+import { getSessionUser } from "@/lib/session";
 import "./globals.css";
 
 /* Latin UI face */
@@ -95,7 +97,18 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+/**
+ * The session is resolved once, here, for the whole tree.
+ *
+ * Reading a cookie makes every route render per request, which is the honest
+ * cost of pages that say who is signed in: a statically prerendered header would
+ * show the wrong name to whoever is holding the document. `getSessionUser` is
+ * cached per request, so the layout, the header and any page that asks all share
+ * one call to the API.
+ */
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const user = await getSessionUser();
+
   return (
     <html
       lang="bn"
@@ -115,7 +128,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       ].join(" ")}
     >
       <body className="min-h-full antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <SessionProvider user={user}>{children}</SessionProvider>
+        </Providers>
       </body>
     </html>
   );

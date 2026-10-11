@@ -468,7 +468,7 @@ export const TOPICS: Topic[] = [
     trending: false,
   },
   {
-    id: "topic-zakat",
+    id: "topic-zakat-calculation",
     slug: "zakat-calculation",
     name: { bn: "যাকাত হিসাব", en: "Zakat Calculation" },
     description: {

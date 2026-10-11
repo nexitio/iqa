@@ -15,6 +15,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { CURRENT_USER } from "@/lib/data/personal";
+import { useSession } from "@/components/auth/session-provider";
 import type { Role } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 import { useDismissable } from "@/lib/use-dismissable";
@@ -204,9 +205,14 @@ function AddDisc({ open, onClick }: { open: boolean; onClick: () => void }) {
  * Below `lg` this is not rendered at all — the tab bar's centre is the add
  * button there, and two of them on one phone screen would be one too many.
  */
-export function ComposeFab({ role = CURRENT_USER.role }: { role?: Role }) {
+export function ComposeFab({ role }: { role?: Role }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  // What a signed-in account may publish comes from the session; the fixture
+  // stands in only for a visitor who has not signed in, because the menu still
+  // has to draw something before they do.
+  const { user } = useSession();
+  const actingRole = role ?? user?.role ?? CURRENT_USER.role;
 
   useDismissable(open, () => setOpen(false), (target) =>
     Boolean(rootRef.current?.contains(target)),
@@ -217,7 +223,7 @@ export function ComposeFab({ role = CURRENT_USER.role }: { role?: Role }) {
       ref={rootRef}
       className="fixed bottom-8 right-6 z-40 hidden flex-col items-end gap-3 lg:flex lg:right-8"
     >
-      {open ? <ComposeMenu role={role} onClose={() => setOpen(false)} /> : null}
+      {open ? <ComposeMenu role={actingRole} onClose={() => setOpen(false)} /> : null}
       <AddDisc open={open} onClick={() => setOpen((value) => !value)} />
     </div>
   );
@@ -235,10 +241,12 @@ export function ComposeFab({ role = CURRENT_USER.role }: { role?: Role }) {
  * and covered the bar itself. The same trap that the account menu's dismiss hook
  * documents, so the outside-tap layer is rendered where the viewport is real.
  */
-export function ComposeNavButton({ role = CURRENT_USER.role }: { role?: Role }) {
+export function ComposeNavButton({ role }: { role?: Role }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const { user } = useSession();
+  const actingRole = role ?? user?.role ?? CURRENT_USER.role;
 
   useDismissable(open, () => setOpen(false), (target) =>
     Boolean(triggerRef.current?.contains(target) || panelRef.current?.contains(target)),
@@ -265,7 +273,7 @@ export function ComposeNavButton({ role = CURRENT_USER.role }: { role?: Role }) 
                 ref={panelRef}
                 className="fixed inset-x-0 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] z-50 flex justify-center px-4 lg:hidden"
               >
-                <ComposeMenu role={role} onClose={() => setOpen(false)} />
+                <ComposeMenu role={actingRole} onClose={() => setOpen(false)} />
               </div>
             </>,
             document.body,

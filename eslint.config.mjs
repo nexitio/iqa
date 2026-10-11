@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The API server is plain Node/Hono, checked by its own tsconfig.
+    "server/**",
   ]),
 ]);
 

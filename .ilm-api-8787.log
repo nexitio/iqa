@@ -1,0 +1,3165 @@
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 7ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 68ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 14ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 40ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 28ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 12ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 43ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 6ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 7ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 4ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 1ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 6ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 11ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 5ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 7ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 6ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 4ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 7ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 5ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 53ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 18ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 10ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 19ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 15ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 9ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 15ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 13ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 13ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 6ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 12ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 16ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 2ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 18ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 11ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 12ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 6ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 49ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 58ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 9ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 6ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 2ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 28ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 0ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 22ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 9ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 19ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 3ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3gz2t0
+--> DELETE /api/v1/me/bookmarks/bm-mv3gz2t0 [32m200[0m 6ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3gz2t0
+--> DELETE /api/v1/me/bookmarks/bm-mv3gz2t0 [33m404[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 40ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 5ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 4ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 8ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 4ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 37ms
+<-- GET /api/v1/me/bookmarks
+--> GET /api/v1/me/bookmarks [32m200[0m 37ms
+<-- GET /api/v1/me/bookmarks?limit=50
+--> GET /api/v1/me/bookmarks?limit=50 [32m200[0m 43ms
+12:57:54 PM [tsx] change in ./src\routes\personal.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+12:58:10 PM [tsx] change in ./src\routes\filters.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+12:58:25 PM [tsx] change in ./src\routes\content.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+12:58:41 PM [tsx] change in ./src\routes\qa.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+12:58:57 PM [tsx] change in ./src\routes\community.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+12:59:12 PM [tsx] change in ./src\routes\community.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+1:00:00 PM [tsx] change in ./src\routes\qa.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 54ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 31ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 20ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 17ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 57ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 8ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 7ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 4ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 9ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 5ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 2ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 4ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 8ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 7ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 8ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 15ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 7ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 65ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 27ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 11ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 8ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 5ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 21ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 8ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 6ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 2ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 11ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 6ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 10ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 6ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 13ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 4ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 67ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 165ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 11ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 5ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 3ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 33ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 2ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 23ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 11ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 16ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3h5c7u
+--> DELETE /api/v1/me/bookmarks/bm-mv3h5c7u [32m200[0m 4ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3h5c7u
+--> DELETE /api/v1/me/bookmarks/bm-mv3h5c7u [33m404[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 46ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 7ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 6ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 6ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 34ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 21ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 6ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 42ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 3ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 5ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 3ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 1ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 4ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 4ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 2ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 6ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 4ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 5ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 5ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 8ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 4ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 44ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 9ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 4ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 8ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 15ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 11ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 7ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 3ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 12ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 7ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 6ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 5ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 11ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 12ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 2ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 13ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 4ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 11ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 5ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 164ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 52ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 6ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 3ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 4ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 25ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 0ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 18ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 11ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 20ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 3ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3h74xk
+--> DELETE /api/v1/me/bookmarks/bm-mv3h74xk [32m200[0m 3ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3h74xk
+--> DELETE /api/v1/me/bookmarks/bm-mv3h74xk [33m404[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 39ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 3ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 6ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 5ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 5ms
+<-- OPTIONS /api/v1/articles
+--> OPTIONS /api/v1/articles [32m204[0m 1ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 28ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 34ms
+2:09:48 PM [tsx] change in ./src\env.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:10:18 PM [tsx] change in ./src\app.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:10:25 PM [tsx] change in ./src\context.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:10:53 PM [tsx] change in ./src\auth\session.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 38ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 25ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 20ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 49ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 14ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 10ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 7ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 7ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 10ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 5ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 4ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 8ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 11ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 5ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 13ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 7ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 58ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 17ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 5ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 17ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 14ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 16ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 15ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 5ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 15ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 4ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 10ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 5ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 13ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 10ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 2ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 11ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 7ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 11ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 7ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 50ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 156ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 112ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 10ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 8ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 72ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 103ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 94ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 82ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 163ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 7ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 6ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 11ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 6ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 35ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 3ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 36ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 13ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 20ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jq01q
+--> DELETE /api/v1/me/bookmarks/bm-mv3jq01q [32m200[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jq01q
+--> DELETE /api/v1/me/bookmarks/bm-mv3jq01q [33m404[0m 5ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 33ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 3ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 41ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 13ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 4ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 6ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 126ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 128ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m429[0m 1ms
+2:14:11 PM [tsx] change in ./src\routes\auth.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 118ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m403[0m 14ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 86ms
+<-- GET /api/v1/me/bookmarks
+--> GET /api/v1/me/bookmarks [33m403[0m 7ms
+<-- GET /api/v1/articles?limit=1
+--> GET /api/v1/articles?limit=1 [32m200[0m 60ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 116ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 1ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 24ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 6ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 10ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 12ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 14ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 2ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 1ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 5ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 7ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 4ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 4ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 7ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 8ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 8ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 13ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 4ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 52ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 14ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 5ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 9ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 6ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 4ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 2ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 15ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 7ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 13ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 2ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 13ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 11ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 11ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 7ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 10ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 11ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 50ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 53ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 68ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 11ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 6ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 82ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 90ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 62ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 87ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 87ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 56ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 108ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 63ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 112ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 206ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 140ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 111ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 92ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 98ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 4ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 10ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 6ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 14ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2/answers [33m403[0m 5ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2/answers [32m201[0m 18ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2 [32m200[0m 13ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 18ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 7ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jrz9o
+--> DELETE /api/v1/me/bookmarks/bm-mv3jrz9o [32m200[0m 7ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jrz9o
+--> DELETE /api/v1/me/bookmarks/bm-mv3jrz9o [33m404[0m 3ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 19ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 4ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 42ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 12ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 2ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 4ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 1ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 18ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 5ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 9ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 5ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 5ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 1ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 1ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 5ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 4ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 5ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 6ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 6ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 4ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 8ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 5ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 11ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 18ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 9ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 9ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 13ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 12ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 3ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 14ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 9ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 6ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 2ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 18ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-2 [32m200[0m 6ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 2ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 9ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 4ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 11ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 6ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 9ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 18ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 79ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 11ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 2ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 2ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 148ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 87ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 156ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 71ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 47ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 101ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 118ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 136ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 89ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 95ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 67ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 140ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 68ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 61ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 5ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 6ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 10ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 10ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 22ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3/answers [33m403[0m 4ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3/answers [32m201[0m 25ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8-3 [32m200[0m 8ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 10ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 4ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3js61m
+--> DELETE /api/v1/me/bookmarks/bm-mv3js61m [32m200[0m 4ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3js61m
+--> DELETE /api/v1/me/bookmarks/bm-mv3js61m [33m404[0m 4ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 6ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 10ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 7ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 4ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 4ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 0ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 4ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 30ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 22ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 8ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 39ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 3ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 6ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 4ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 6ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 3ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 1ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 4ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 6ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 6ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 4ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 8ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 7ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 51ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 12ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 3ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 11ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 8ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 3ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 2ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 11ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 6ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 13ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 9ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 15ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 9ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 9ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 5ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 6ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 4ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 52ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 52ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 0ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 61ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 5ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 5ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 105ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 66ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 48ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 85ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 119ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 47ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 123ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 79ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 132ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 90ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 111ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 167ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 92ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 150ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 5ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 8ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 9ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 10ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 8ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 26ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 3ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 21ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 9ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 17ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 8ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jsrch
+--> DELETE /api/v1/me/bookmarks/bm-mv3jsrch [32m200[0m 6ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3jsrch
+--> DELETE /api/v1/me/bookmarks/bm-mv3jsrch [33m404[0m 2ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 18ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 3ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 42ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 11ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 6ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 3ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 0ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 6ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 29ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 23ms
+<-- GET /api/auth/google
+--> GET /api/auth/google [33m404[0m 0ms
+<-- GET /favicon.ico
+--> GET /favicon.ico [33m404[0m 1ms
+2:24:57 PM [tsx] change in ./src\db\schema\enums.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:27:42 PM [tsx] change in ./src\db\schema\auth.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:29:48 PM [tsx] change in ./src\env.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:37:13 PM [tsx] change in ./src\routes\auth.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+2:37:33 PM [tsx] change in ./src\app.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 49ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 26ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 12ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 68ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 9ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 8ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 3ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 12ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 10ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 5ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 9ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 5ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 6ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 14ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 8ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 63ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 27ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 10ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 16ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 16ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 16ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 13ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 8ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 13ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 15ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 16ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 5ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 18ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 9ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 3ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 13ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 4ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 15ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 16ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 58ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 55ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 0ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 73ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 10ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 6ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 136ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 85ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 67ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 73ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 98ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 64ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 116ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 141ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 65ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 113ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 187ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 130ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 128ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 66ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 5ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 5ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 5ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 6ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 9ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 25ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 3ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 25ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 15ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 21ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 6ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3kmvxf
+--> DELETE /api/v1/me/bookmarks/bm-mv3kmvxf [32m200[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3kmvxf
+--> DELETE /api/v1/me/bookmarks/bm-mv3kmvxf [33m404[0m 2ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 26ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 5ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 48ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 10ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 8ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 0ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 6ms
+2:42:42 PM [tsx] change in ./src\routes\mfa.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 46ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 25ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 25ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 62ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 13ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 8ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 8ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 3ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 6ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 5ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 2ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 9ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 6ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 5ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 6ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 14ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 6ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 48ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 16ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 9ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 12ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 9ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 6ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 8ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 18ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 10ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 11ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 6ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 11ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 7ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 9ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 4ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 16ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 8ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 58ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 56ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 97ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 9ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 3ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 106ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 110ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 91ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 133ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 138ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 96ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 119ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 84ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 178ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 114ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 119ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 86ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 123ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 89ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 3ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 9ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 7ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 6ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 29ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 3ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 19ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 9ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 14ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 3ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3kyxa4
+--> DELETE /api/v1/me/bookmarks/bm-mv3kyxa4 [32m200[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3kyxa4
+--> DELETE /api/v1/me/bookmarks/bm-mv3kyxa4 [33m404[0m 6ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 77ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m400[0m 2ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 62ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 1ms
+<-- POST /api/v1/me/mfa/email/start
+[ilm] email code for reader@example.test: 983098 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/email/start [32m200[0m 170ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 168ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [32m201[0m 311ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 3ms
+<-- POST /api/v1/me/mfa/sms/start
+--> POST /api/v1/me/mfa/sms/start [33m400[0m 71ms
+<-- POST /api/v1/me/mfa/sms/start
+[ilm] sms code for +8801712345678: 759518 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/sms/start [32m200[0m 164ms
+<-- POST /api/v1/me/mfa/sms/confirm
+--> POST /api/v1/me/mfa/sms/confirm [32m201[0m 121ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 4ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 68ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- POST /api/v1/auth/mfa/challenge
+--> POST /api/v1/auth/mfa/challenge [33m401[0m 4ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] sms code for +8801712345678: 012411 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 107ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 104ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [32m200[0m 168ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 69ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] email code for reader@example.test: 737064 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 51ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 50ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 78ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 133ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 65ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m429[0m 67ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 1ms
+<-- POST /api/v1/me/mfa/passkey/start
+--> POST /api/v1/me/mfa/passkey/start [32m200[0m 62ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [32m201[0m 8ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [33m401[0m 7ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 65ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 6ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [33m401[0m 3ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 3ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [32m200[0m 19ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 142ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [32m200[0m 79ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 86ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 725ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 730ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 2ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 2ms
+<-- DELETE /api/v1/me/mfa/mfa-b8c4f53d554405c3
+--> DELETE /api/v1/me/mfa/mfa-b8c4f53d554405c3 [33m401[0m 141ms
+<-- DELETE /api/v1/me/mfa/mfa-b8c4f53d554405c3
+--> DELETE /api/v1/me/mfa/mfa-b8c4f53d554405c3 [32m200[0m 121ms
+<-- DELETE /api/v1/me/mfa/mfa-does-not-exist
+--> DELETE /api/v1/me/mfa/mfa-does-not-exist [33m400[0m 169ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [32m200[0m 252ms
+<-- DELETE /api/v1/me/mfa/mfa-d5a7438a1f6f8dda
+--> DELETE /api/v1/me/mfa/mfa-d5a7438a1f6f8dda [32m200[0m 52ms
+<-- DELETE /api/v1/me/mfa/mfa-e7cf26fc4e83c19a
+--> DELETE /api/v1/me/mfa/mfa-e7cf26fc4e83c19a [32m200[0m 143ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 3ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [33m400[0m 97ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 91ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 27ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 3ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 49ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 9ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 9ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 8ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 34ms
+2:58:23 PM [tsx] change in ./src\db\schema\auth.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:01:02 PM [tsx] change in ./src\auth\session.ts Restarting...
+node:internal/modules/esm/resolve:275
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\auth\device.ts' imported from C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\auth\session.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    at moduleResolve (node:internal/modules/esm/resolve:861:10)
+    at defaultResolve (node:internal/modules/esm/resolve:985:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveBaseSync (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    at resolveDirectorySync (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    at resolveTsPathsSync (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    at resolve (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/server/src/auth/device.ts'
+}
+
+Node.js v22.23.2
+3:04:17 PM [tsx] change in ./src\routes\auth.ts Rerunning...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:04:32 PM [tsx] change in ./src\routes\mfa.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:04:41 PM [tsx] change in ./src\app.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- POST /api/v1/auth/login
+POST /api/v1/auth/login failed: DrizzleQueryError: Failed query: insert into "sessions" ("id", "token_hash", "user_id", "created_at", "expires_at", "last_seen_at", "user_agent") values ($1, $2, $3, $4, $5, $6, $7)
+params: sess-48c6e96b0df148eb,5d87ee9c604a172cacb456ee6350d8dd740bec635344fcd445ec23afe551dd9b,user-me,2026-10-11T09:06:04.620Z,2026-11-10T09:06:04.620Z,2026-10-11T09:06:04.620Z,curl/8.14.1
+    at NodePgPreparedQuery.queryWithCache (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\node_modules\.pnpm\drizzle-orm@0.45.4_@types+pg@8.23.1_pg@8.23.1\node_modules\src\pg-core\session.ts:73:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async openSession (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\auth\session.ts:107:3)
+    ... 4 lines matching cause stack trace ...
+    at async dispatch (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/hono@4.13.13/node_modules/hono/dist/compose.js:35:11)
+    at async <anonymous> (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\app.ts:105:5)
+    at async dispatch (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/hono@4.13.13/node_modules/hono/dist/compose.js:35:11) {
+  query: 'insert into "sessions" ("id", "token_hash", "user_id", "created_at", "expires_at", "last_seen_at", "user_agent") values ($1, $2, $3, $4, $5, $6, $7)',
+  params: [
+    'sess-48c6e96b0df148eb',
+    '5d87ee9c604a172cacb456ee6350d8dd740bec635344fcd445ec23afe551dd9b',
+    'user-me',
+    '2026-10-11T09:06:04.620Z',
+    '2026-11-10T09:06:04.620Z',
+    '2026-10-11T09:06:04.620Z',
+    'curl/8.14.1'
+  ],
+  cause: error: column "id" of relation "sessions" does not exist
+      at C:\Users\mdimr\OneDrive\Desktop\ai\iqa\node_modules\.pnpm\pg-pool@3.14.0_pg@8.23.1\node_modules\pg-pool\index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async <anonymous> (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\node_modules\.pnpm\drizzle-orm@0.45.4_@types+pg@8.23.1_pg@8.23.1\node_modules\src\node-postgres\session.ts:149:14)
+      at async NodePgPreparedQuery.queryWithCache (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\node_modules\.pnpm\drizzle-orm@0.45.4_@types+pg@8.23.1_pg@8.23.1\node_modules\src\pg-core\session.ts:71:12)
+      at async openSession (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\auth\session.ts:107:3)
+      at async issueSession (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\auth\login.ts:40:17)
+      at async <anonymous> (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\routes\auth.ts:220:25)
+      at async dispatch (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/hono@4.13.13/node_modules/hono/dist/compose.js:35:11)
+      at async <anonymous> (C:\Users\mdimr\OneDrive\Desktop\ai\iqa\server\src\routes\auth.ts:87:3)
+      at async dispatch (file:///C:/Users/mdimr/OneDrive/Desktop/ai/iqa/node_modules/.pnpm/hono@4.13.13/node_modules/hono/dist/compose.js:35:11) {
+    length: 123,
+    severity: 'ERROR',
+    code: '42703',
+    detail: undefined,
+    hint: undefined,
+    position: '25',
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'parse_target.c',
+    line: '1073',
+    routine: 'checkInsertTargets'
+  }
+}
+--> POST /api/v1/auth/login [31m500[0m 219ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 191ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 14ms
+3:10:06 PM [tsx] change in ./src\routes\account.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 35ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 23ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 11ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 40ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 4ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 6ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 3ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 5ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 6ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 2ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 4ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 4ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 4ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 6ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 4ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 44ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 14ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 2ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 10ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 16ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 9ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 4ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 2ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 8ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 3ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 7ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 1ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 9ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 6ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 9ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 3ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 11ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 4ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 47ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 153ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 0ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 80ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 9ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 4ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 0ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 64ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 50ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 54ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 48ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 54ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 54ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 49ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 53ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 49ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 64ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 57ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 56ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 52ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 53ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 3ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 5ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 6ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 5ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 18ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 2ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 16ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 11ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 14ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3ltogz
+--> DELETE /api/v1/me/bookmarks/bm-mv3ltogz [32m200[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3ltogz
+--> DELETE /api/v1/me/bookmarks/bm-mv3ltogz [33m404[0m 2ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 59ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m400[0m 2ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 55ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 0ms
+<-- POST /api/v1/me/mfa/email/start
+[ilm] email code for reader@example.test: 421239 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/email/start [32m200[0m 113ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 54ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [32m201[0m 240ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 4ms
+<-- POST /api/v1/me/mfa/sms/start
+--> POST /api/v1/me/mfa/sms/start [33m400[0m 53ms
+<-- POST /api/v1/me/mfa/sms/start
+[ilm] sms code for +8801712345678: 019512 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/sms/start [32m200[0m 104ms
+<-- POST /api/v1/me/mfa/sms/confirm
+--> POST /api/v1/me/mfa/sms/confirm [32m201[0m 58ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 4ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 58ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- POST /api/v1/auth/mfa/challenge
+--> POST /api/v1/auth/mfa/challenge [33m401[0m 2ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] sms code for +8801712345678: 078139 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 55ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 52ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [32m200[0m 64ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 3ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 58ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] email code for reader@example.test: 722185 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 54ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 55ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 55ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 54ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 51ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m429[0m 51ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 3ms
+<-- POST /api/v1/me/mfa/passkey/start
+--> POST /api/v1/me/mfa/passkey/start [32m200[0m 58ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [32m201[0m 9ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [33m401[0m 4ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 57ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 3ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [33m401[0m 4ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 4ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [32m200[0m 13ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 2ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 60ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [32m200[0m 62ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 61ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 461ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 457ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 3ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 2ms
+<-- DELETE /api/v1/me/mfa/mfa-5007a71c21212e47
+--> DELETE /api/v1/me/mfa/mfa-5007a71c21212e47 [33m401[0m 53ms
+<-- DELETE /api/v1/me/mfa/mfa-5007a71c21212e47
+--> DELETE /api/v1/me/mfa/mfa-5007a71c21212e47 [32m200[0m 59ms
+<-- DELETE /api/v1/me/mfa/mfa-does-not-exist
+--> DELETE /api/v1/me/mfa/mfa-does-not-exist [33m400[0m 53ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [32m200[0m 230ms
+<-- DELETE /api/v1/me/mfa/mfa-796174cf044d3c2c
+--> DELETE /api/v1/me/mfa/mfa-796174cf044d3c2c [32m200[0m 53ms
+<-- DELETE /api/v1/me/mfa/mfa-dc55a99cd3d1dc28
+--> DELETE /api/v1/me/mfa/mfa-dc55a99cd3d1dc28 [32m200[0m 58ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 2ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [33m400[0m 53ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 55ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 57ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 0ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 55ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 2ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 99ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 56ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [32m200[0m 170ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 49ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 55ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 21ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 0ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 41ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 11ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 62ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 68ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 53ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [33m401[0m 0ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 5ms
+<-- DELETE /api/v1/me/sessions/sess-e8600a1b4082cc4e
+--> DELETE /api/v1/me/sessions/sess-e8600a1b4082cc4e [33m400[0m 1ms
+<-- DELETE /api/v1/me/sessions/sess-not-real
+--> DELETE /api/v1/me/sessions/sess-not-real [33m404[0m 3ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 2ms
+<-- DELETE /api/v1/me/sessions/sess-9304c4be4e842945
+--> DELETE /api/v1/me/sessions/sess-9304c4be4e842945 [32m200[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 62ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 2ms
+<-- DELETE /api/v1/me/sessions/sess-5d1c17123b66d974
+--> DELETE /api/v1/me/sessions/sess-5d1c17123b66d974 [33m404[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 3ms
+<-- DELETE /api/v1/me/sessions
+--> DELETE /api/v1/me/sessions [32m200[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 3ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 0ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 4ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 29ms
+3:57:16 PM [tsx] change in ./src\db\schema\enums.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:59:01 PM [tsx] change in ./src\db\schema\index.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:59:08 PM [tsx] change in ./src\env.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+3:59:35 PM [tsx] change in ./src\db\schema\social.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/auth/google
+--> GET /api/auth/google [33m404[0m 5ms
+4:02:09 PM [tsx] change in ./src\app.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+4:02:18 PM [tsx] change in ./src\routes\auth.ts Restarting...
+◇ injected env (3) from .env
+Ilm API listening on http://127.0.0.1:8787 (development)
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 55ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 32ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 23ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 10ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 40ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 6ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 9ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 5ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 2ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 6ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 7ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 6ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 8ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 8ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 9ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 14ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 3ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 45ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 20ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 4ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 11ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 20ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 18ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 5ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 5ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 1ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 10ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 5ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 9ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 9ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 10ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 6ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 3ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 9ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 7ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 15ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 14ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 63ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 177ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 94ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 13ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 5ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 2ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 108ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 64ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 47ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 49ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 88ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 133ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 139ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 129ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 58ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 107ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 143ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 130ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 87ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 80ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 5ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 5ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 1ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 7ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 11ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 7ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 22ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 2ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 16ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 18ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 18ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 8ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3npztl
+--> DELETE /api/v1/me/bookmarks/bm-mv3npztl [32m200[0m 7ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3npztl
+--> DELETE /api/v1/me/bookmarks/bm-mv3npztl [33m404[0m 5ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 123ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 13ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m400[0m 5ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 101ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 0ms
+<-- POST /api/v1/me/mfa/email/start
+[ilm] email code for reader@example.test: 174736 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/email/start [32m200[0m 142ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 124ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [32m201[0m 316ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 4ms
+<-- POST /api/v1/me/mfa/sms/start
+--> POST /api/v1/me/mfa/sms/start [33m400[0m 64ms
+<-- POST /api/v1/me/mfa/sms/start
+[ilm] sms code for +8801712345678: 662569 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/sms/start [32m200[0m 121ms
+<-- POST /api/v1/me/mfa/sms/confirm
+--> POST /api/v1/me/mfa/sms/confirm [32m201[0m 55ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 6ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 58ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- POST /api/v1/auth/mfa/challenge
+--> POST /api/v1/auth/mfa/challenge [33m401[0m 1ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] sms code for +8801712345678: 931772 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 146ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 124ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [32m200[0m 100ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 6ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 66ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] email code for reader@example.test: 147296 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 56ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 131ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 104ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 81ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 116ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m429[0m 162ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 4ms
+<-- POST /api/v1/me/mfa/passkey/start
+--> POST /api/v1/me/mfa/passkey/start [32m200[0m 73ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [32m201[0m 29ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [33m401[0m 9ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 140ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 10ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [33m401[0m 5ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 9ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [32m200[0m 20ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 106ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [32m200[0m 68ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 57ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 764ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 780ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- DELETE /api/v1/me/mfa/mfa-01cc0a005c403525
+--> DELETE /api/v1/me/mfa/mfa-01cc0a005c403525 [33m401[0m 178ms
+<-- DELETE /api/v1/me/mfa/mfa-01cc0a005c403525
+--> DELETE /api/v1/me/mfa/mfa-01cc0a005c403525 [32m200[0m 159ms
+<-- DELETE /api/v1/me/mfa/mfa-does-not-exist
+--> DELETE /api/v1/me/mfa/mfa-does-not-exist [33m400[0m 105ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [32m200[0m 228ms
+<-- DELETE /api/v1/me/mfa/mfa-e97987306db83f70
+--> DELETE /api/v1/me/mfa/mfa-e97987306db83f70 [32m200[0m 53ms
+<-- DELETE /api/v1/me/mfa/mfa-22b8988ac3b47ac5
+--> DELETE /api/v1/me/mfa/mfa-22b8988ac3b47ac5 [32m200[0m 54ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 2ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [33m400[0m 100ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 85ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 162ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 2ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 76ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 3ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 210ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 150ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [32m200[0m 355ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 7ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 84ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 55ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 27ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 40ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 10ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 5ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 4ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 152ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 137ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 95ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [33m401[0m 0ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 6ms
+<-- DELETE /api/v1/me/sessions/sess-84746cbd91af56a4
+--> DELETE /api/v1/me/sessions/sess-84746cbd91af56a4 [33m400[0m 2ms
+<-- DELETE /api/v1/me/sessions/sess-not-real
+--> DELETE /api/v1/me/sessions/sess-not-real [33m404[0m 5ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 5ms
+<-- DELETE /api/v1/me/sessions/sess-5df1cf8bdf50aa81
+--> DELETE /api/v1/me/sessions/sess-5df1cf8bdf50aa81 [32m200[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 180ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 14ms
+<-- DELETE /api/v1/me/sessions/sess-3c21c9703893ccf1
+--> DELETE /api/v1/me/sessions/sess-3c21c9703893ccf1 [33m404[0m 6ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- DELETE /api/v1/me/sessions
+--> DELETE /api/v1/me/sessions [32m200[0m 7ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 5ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [33m401[0m 1ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m403[0m 4ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m400[0m 4ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m400[0m 3ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [32m201[0m 83ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 4ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [33m404[0m 5ms
+<-- PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75
+--> PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75 [32m200[0m 9ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- POST /api/v1/admin/social-providers/sp-3e09136b8c33fb75/inspect
+--> POST /api/v1/admin/social-providers/sp-3e09136b8c33fb75/inspect [32m200[0m 7ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 13ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 8ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=at4k3F0D5mDoVih2k_xXWuw2LJHszCN0r-iZsCcWRPQ
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=at4k3F0D5mDoVih2k_xXWuw2LJHszCN0r-iZsCcWRPQ [32m200[0m 66ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 9ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 4ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=mC8aAhEnsSHsvEGH4DG0L5TBvZQ85EWk6hG39bbG1G4
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=mC8aAhEnsSHsvEGH4DG0L5TBvZQ85EWk6hG39bbG1G4 [32m200[0m 40ms
+<-- GET /api/v1/auth/social/stub/start?returnTo=%2Fsettings%2Fsecurity
+--> GET /api/v1/auth/social/stub/start?returnTo=%2Fsettings%2Fsecurity [36m302[0m 14ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=KyrL5qaM8GWw8r45bbR825CBJbEFtZ14OwHsbW1LtYQ
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=KyrL5qaM8GWw8r45bbR825CBJbEFtZ14OwHsbW1LtYQ [36m302[0m 30ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=forged-state-value
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=forged-state-value [33m400[0m 5ms
+<-- GET /api/v1/auth/social/stub/callback?error=access_denied&state=whatever
+--> GET /api/v1/auth/social/stub/callback?error=access_denied&state=whatever [33m400[0m 3ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 6ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=WsQwC1h68fQNkB0EPdnVTlzEa8D7y2Ui9wOICxCkXHc
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=WsQwC1h68fQNkB0EPdnVTlzEa8D7y2Ui9wOICxCkXHc [32m200[0m 46ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=WsQwC1h68fQNkB0EPdnVTlzEa8D7y2Ui9wOICxCkXHc
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=WsQwC1h68fQNkB0EPdnVTlzEa8D7y2Ui9wOICxCkXHc [33m400[0m 9ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 6ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=G4JsM_ii6gdC8EDYTdQG9remXKlJIHWDmn3kfBA1l0k
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=G4JsM_ii6gdC8EDYTdQG9remXKlJIHWDmn3kfBA1l0k [33m409[0m 28ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 2ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=xej3g1U1JiFqsi3pu5sg5JbtaezdGGvQIrc71i8qRKs
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=xej3g1U1JiFqsi3pu5sg5JbtaezdGGvQIrc71i8qRKs [32m200[0m 43ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 168ms
+<-- PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75
+--> PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75 [32m200[0m 11ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 9ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=EYYSDPOkDPEsu-AWqfys8SxqEfq143y2w5PSK19gauM
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=EYYSDPOkDPEsu-AWqfys8SxqEfq143y2w5PSK19gauM [33m409[0m 37ms
+<-- PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75
+--> PATCH /api/v1/admin/social-providers/sp-3e09136b8c33fb75 [32m200[0m 9ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 7ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=h6R0LrBW-_8oNAnBow-wwzuYmSO-IznbEMsgtWpbKzI
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=h6R0LrBW-_8oNAnBow-wwzuYmSO-IznbEMsgtWpbKzI [33m400[0m 36ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 91ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [33m401[0m 0ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 4ms
+<-- DELETE /api/v1/me/identities/si-0e034ebe153e4e30
+--> DELETE /api/v1/me/identities/si-0e034ebe153e4e30 [33m400[0m 5ms
+<-- DELETE /api/v1/me/identities/si-0e034ebe153e4e30
+--> DELETE /api/v1/me/identities/si-0e034ebe153e4e30 [32m200[0m 110ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 14ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 3ms
+<-- DELETE /api/v1/me/identities/si-b4cff81c3299d9e1
+--> DELETE /api/v1/me/identities/si-b4cff81c3299d9e1 [33m400[0m 5ms
+<-- GET /api/v1/auth/social/stub/link
+--> GET /api/v1/auth/social/stub/link [33m401[0m 1ms
+<-- GET /api/v1/auth/social/stub/link
+--> GET /api/v1/auth/social/stub/link [36m302[0m 4ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=tpZF-00tGxXbdx5UkmR8izQCHHnzKEpqqCPzxR1qc4k
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=tpZF-00tGxXbdx5UkmR8izQCHHnzKEpqqCPzxR1qc4k [32m200[0m 37ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 4ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 1ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 7ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 136ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [32m200[0m 11ms
+<-- POST /api/v1/admin/social-providers/sp-facebook/inspect
+--> POST /api/v1/admin/social-providers/sp-facebook/inspect [32m200[0m 2ms
+<-- POST /api/v1/admin/social-providers/sp-google/inspect
+--> POST /api/v1/admin/social-providers/sp-google/inspect [32m200[0m 4ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 68ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [32m200[0m 3ms
+<-- POST /api/v1/admin/social-providers/sp-facebook/inspect
+--> POST /api/v1/admin/social-providers/sp-facebook/inspect [32m200[0m 3ms
+<-- POST /api/v1/admin/social-providers/sp-google/inspect
+--> POST /api/v1/admin/social-providers/sp-google/inspect [32m200[0m 2ms
+<-- GET /api/v1/health
+--> GET /api/v1/health [32m200[0m 147ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 23ms
+<-- GET /api/v1/departments
+--> GET /api/v1/departments [32m200[0m 6ms
+<-- GET /api/v1/departments/family
+--> GET /api/v1/departments/family [32m200[0m 41ms
+<-- GET /api/v1/topics
+--> GET /api/v1/topics [32m200[0m 4ms
+<-- GET /api/v1/topics/dowry
+--> GET /api/v1/topics/dowry [32m200[0m 11ms
+<-- GET /api/v1/districts
+--> GET /api/v1/districts [32m200[0m 2ms
+<-- GET /api/v1/topics/nope
+--> GET /api/v1/topics/nope [33m404[0m 3ms
+<-- GET /api/v1/quran/surahs
+--> GET /api/v1/quran/surahs [32m200[0m 7ms
+<-- GET /api/v1/quran/surahs/2
+--> GET /api/v1/quran/surahs/2 [32m200[0m 3ms
+<-- GET /api/v1/quran/ayahs?ref=2:1
+--> GET /api/v1/quran/ayahs?ref=2:1 [32m200[0m 1ms
+<-- GET /api/v1/hadith/collections
+--> GET /api/v1/hadith/collections [32m200[0m 3ms
+<-- GET /api/v1/hadith/collections/bukhari
+--> GET /api/v1/hadith/collections/bukhari [32m200[0m 5ms
+<-- GET /api/v1/hadith/bukhari/1
+--> GET /api/v1/hadith/bukhari/1 [32m200[0m 6ms
+<-- GET /api/v1/hadith/hadiths?topic=fiqh
+--> GET /api/v1/hadith/hadiths?topic=fiqh [32m200[0m 6ms
+<-- GET /api/v1/duas
+--> GET /api/v1/duas [32m200[0m 10ms
+<-- GET /api/v1/duas?category=nope
+--> GET /api/v1/duas?category=nope [33m400[0m 3ms
+<-- GET /api/v1/daily
+--> GET /api/v1/daily [32m200[0m 43ms
+<-- GET /api/v1/articles
+--> GET /api/v1/articles [32m200[0m 11ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 3ms
+<-- GET /api/v1/articles/sud-mukt-jibon-halal-uparjon
+--> GET /api/v1/articles/sud-mukt-jibon-halal-uparjon [32m200[0m 6ms
+<-- GET /api/v1/articles?topic=dowry
+--> GET /api/v1/articles?topic=dowry [32m200[0m 9ms
+<-- GET /api/v1/articles?topic=dowry&includeRelated=true
+--> GET /api/v1/articles?topic=dowry&includeRelated=true [32m200[0m 10ms
+<-- GET /api/v1/articles?department=family
+--> GET /api/v1/articles?department=family [32m200[0m 7ms
+<-- GET /api/v1/articles?status=draft
+--> GET /api/v1/articles?status=draft [32m200[0m 6ms
+<-- GET /api/v1/articles?status=nonsense
+--> GET /api/v1/articles?status=nonsense [33m400[0m 0ms
+<-- GET /api/v1/fatwas
+--> GET /api/v1/fatwas [32m200[0m 13ms
+<-- GET /api/v1/fatwas?pinned=true
+--> GET /api/v1/fatwas?pinned=true [32m200[0m 10ms
+<-- GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak
+--> GET /api/v1/fatwas/mobail-banking-sud-o-kashbyak [32m200[0m 13ms
+<-- GET /api/v1/references?kind=ayah
+--> GET /api/v1/references?kind=ayah [32m200[0m 4ms
+<-- GET /api/v1/questions
+--> GET /api/v1/questions [32m200[0m 13ms
+<-- GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki
+--> GET /api/v1/questions/bikash-sonchoy-skim-e-sud-hoy-ki [32m200[0m 11ms
+<-- GET /api/v1/questions/not-a-question
+--> GET /api/v1/questions/not-a-question [33m404[0m 1ms
+<-- GET /api/v1/discussions
+--> GET /api/v1/discussions [32m200[0m 16ms
+<-- GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo
+--> GET /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo [32m200[0m 7ms
+<-- GET /api/v1/scholars
+--> GET /api/v1/scholars [32m200[0m 9ms
+<-- GET /api/v1/scholars?department=family
+--> GET /api/v1/scholars?department=family [32m200[0m 6ms
+<-- GET /api/v1/scholars/mufti-nurul-amin
+--> GET /api/v1/scholars/mufti-nurul-amin [32m200[0m 56ms
+<-- GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6
+--> GET /api/v1/search?q=%E0%A6%B8%E0%A7%81%E0%A6%A6 [32m200[0m 176ms
+<-- GET /api/v1/search?q=a
+--> GET /api/v1/search?q=a [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [32m201[0m 79ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 4ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m409[0m 2ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 1ms
+<-- POST /api/v1/auth/register
+--> POST /api/v1/auth/register [33m400[0m 3ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m403[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 163ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 115ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 84ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 47ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 111ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 143ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 91ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 52ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 168ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m429[0m 1ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 158ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 99ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 91ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 70ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 109ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 7ms
+<-- POST /api/v1/auth/logout
+--> POST /api/v1/auth/logout [32m200[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 1ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 4ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 0ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [33m401[0m 0ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- GET /api/v1/me/bookmark-collections
+--> GET /api/v1/me/bookmark-collections [32m200[0m 18ms
+<-- GET /api/v1/me/learning
+--> GET /api/v1/me/learning [32m200[0m 8ms
+<-- POST /api/v1/questions
+--> POST /api/v1/questions [32m201[0m 14ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [33m403[0m 3ms
+<-- POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers
+--> POST /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8/answers [32m201[0m 13ms
+<-- GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8
+--> GET /api/v1/questions/%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%8B%E0%A6%95-%E0%A6%9F%E0%A7%87%E0%A6%B8%E0%A7%8D%E0%A6%9F%E0%A7%87-%E0%A6%9C%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%B8%E0%A6%BE-%E0%A6%95%E0%A6%B0%E0%A6%BE-%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A7%8D%E0%A6%A8 [32m200[0m 26ms
+<-- POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies
+--> POST /api/v1/discussions/madhhab-parthokkye-adab-kivabe-rakhbo/replies [32m201[0m 23ms
+<-- POST /api/v1/me/bookmarks
+--> POST /api/v1/me/bookmarks [32m201[0m 7ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3nu0pl
+--> DELETE /api/v1/me/bookmarks/bm-mv3nu0pl [32m200[0m 5ms
+<-- DELETE /api/v1/me/bookmarks/bm-mv3nu0pl
+--> DELETE /api/v1/me/bookmarks/bm-mv3nu0pl [33m404[0m 5ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 142ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m400[0m 5ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 98ms
+<-- POST /api/v1/me/mfa/email/start
+--> POST /api/v1/me/mfa/email/start [33m401[0m 0ms
+<-- POST /api/v1/me/mfa/email/start
+[ilm] email code for reader@example.test: 046345 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/email/start [32m200[0m 185ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 150ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [32m201[0m 278ms
+<-- POST /api/v1/me/mfa/email/confirm
+--> POST /api/v1/me/mfa/email/confirm [33m401[0m 3ms
+<-- POST /api/v1/me/mfa/sms/start
+--> POST /api/v1/me/mfa/sms/start [33m400[0m 59ms
+<-- POST /api/v1/me/mfa/sms/start
+[ilm] sms code for +8801712345678: 334795 (enroll, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/me/mfa/sms/start [32m200[0m 100ms
+<-- POST /api/v1/me/mfa/sms/confirm
+--> POST /api/v1/me/mfa/sms/confirm [32m201[0m 61ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 93ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- POST /api/v1/auth/mfa/challenge
+--> POST /api/v1/auth/mfa/challenge [33m401[0m 2ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] sms code for +8801712345678: 306819 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 100ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 79ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [32m200[0m 73ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 3ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 73ms
+<-- POST /api/v1/auth/mfa/challenge
+[ilm] email code for reader@example.test: 200640 (login, valid 10 minute(s)) — not sent, no provider configured
+--> POST /api/v1/auth/mfa/challenge [32m200[0m 84ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 98ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 70ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 136ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 87ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m429[0m 95ms
+<-- POST /api/v1/auth/mfa/verify
+--> POST /api/v1/auth/mfa/verify [33m401[0m 2ms
+<-- POST /api/v1/me/mfa/passkey/start
+--> POST /api/v1/me/mfa/passkey/start [32m200[0m 179ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [32m201[0m 16ms
+<-- POST /api/v1/me/mfa/passkey/confirm
+--> POST /api/v1/me/mfa/passkey/confirm [33m401[0m 7ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 131ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 9ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [33m401[0m 9ms
+<-- POST /api/v1/auth/mfa/passkey/options
+--> POST /api/v1/auth/mfa/passkey/options [32m200[0m 8ms
+<-- POST /api/v1/auth/mfa/passkey/verify
+--> POST /api/v1/auth/mfa/passkey/verify [32m200[0m 21ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 7ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 170ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [32m200[0m 192ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 105ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 589ms
+<-- POST /api/v1/auth/mfa/recovery
+--> POST /api/v1/auth/mfa/recovery [33m401[0m 683ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 3ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 3ms
+<-- DELETE /api/v1/me/mfa/mfa-50e688fbf611b569
+--> DELETE /api/v1/me/mfa/mfa-50e688fbf611b569 [33m401[0m 75ms
+<-- DELETE /api/v1/me/mfa/mfa-50e688fbf611b569
+--> DELETE /api/v1/me/mfa/mfa-50e688fbf611b569 [32m200[0m 110ms
+<-- DELETE /api/v1/me/mfa/mfa-does-not-exist
+--> DELETE /api/v1/me/mfa/mfa-does-not-exist [33m400[0m 69ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [32m200[0m 345ms
+<-- DELETE /api/v1/me/mfa/mfa-07bab1dd31121182
+--> DELETE /api/v1/me/mfa/mfa-07bab1dd31121182 [32m200[0m 132ms
+<-- DELETE /api/v1/me/mfa/mfa-61a2f279ebed729c
+--> DELETE /api/v1/me/mfa/mfa-61a2f279ebed729c [32m200[0m 143ms
+<-- GET /api/v1/me/mfa
+--> GET /api/v1/me/mfa [32m200[0m 5ms
+<-- POST /api/v1/me/mfa/recovery-codes
+--> POST /api/v1/me/mfa/recovery-codes [33m400[0m 133ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 86ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 127ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 1ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m401[0m 125ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 4ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [33m400[0m 187ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 78ms
+<-- POST /api/v1/me/password
+--> POST /api/v1/me/password [32m200[0m 217ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 8ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [33m401[0m 88ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 86ms
+<-- GET /api/v1/status
+--> GET /api/v1/status [32m200[0m 18ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m401[0m 1ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [33m403[0m 2ms
+<-- GET /api/v1/admin/overview
+--> GET /api/v1/admin/overview [32m200[0m 38ms
+<-- GET /api/v1/admin/reports
+--> GET /api/v1/admin/reports [32m200[0m 8ms
+<-- GET /api/v1/admin/applications
+--> GET /api/v1/admin/applications [32m200[0m 4ms
+<-- GET /api/v1/admin/users
+--> GET /api/v1/admin/users [32m200[0m 2ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 134ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 111ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 108ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [33m401[0m 0ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 5ms
+<-- DELETE /api/v1/me/sessions/sess-6bb8ab84574e644a
+--> DELETE /api/v1/me/sessions/sess-6bb8ab84574e644a [33m400[0m 4ms
+<-- DELETE /api/v1/me/sessions/sess-not-real
+--> DELETE /api/v1/me/sessions/sess-not-real [33m404[0m 4ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 4ms
+<-- DELETE /api/v1/me/sessions/sess-c6e665d5736feb9d
+--> DELETE /api/v1/me/sessions/sess-c6e665d5736feb9d [32m200[0m 6ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 3ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 87ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 1ms
+<-- DELETE /api/v1/me/sessions/sess-2438f277946f1f07
+--> DELETE /api/v1/me/sessions/sess-2438f277946f1f07 [33m404[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 2ms
+<-- DELETE /api/v1/me/sessions
+--> DELETE /api/v1/me/sessions [32m200[0m 3ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [33m401[0m 2ms
+<-- GET /api/v1/me/sessions
+--> GET /api/v1/me/sessions [32m200[0m 4ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [33m401[0m 0ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m403[0m 4ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m400[0m 4ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [33m400[0m 5ms
+<-- POST /api/v1/admin/social-providers
+--> POST /api/v1/admin/social-providers [32m201[0m 12ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 6ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [33m404[0m 2ms
+<-- PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f
+--> PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f [32m200[0m 7ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- POST /api/v1/admin/social-providers/sp-55ce6763c123486f/inspect
+--> POST /api/v1/admin/social-providers/sp-55ce6763c123486f/inspect [32m200[0m 6ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 6ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 3ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=KJUiwG-LUWbg_0gaH4WqwwxJoKINCczLskMVHZNjYxI
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=KJUiwG-LUWbg_0gaH4WqwwxJoKINCczLskMVHZNjYxI [32m200[0m 25ms
+<-- GET /api/v1/me
+--> GET /api/v1/me [32m200[0m 4ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 14ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=PHIKcG9x10_4OcW5hXFuYT2cyGS6KCV0wlkGZpKYEzM
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=PHIKcG9x10_4OcW5hXFuYT2cyGS6KCV0wlkGZpKYEzM [32m200[0m 47ms
+<-- GET /api/v1/auth/social/stub/start?returnTo=%2Fsettings%2Fsecurity
+--> GET /api/v1/auth/social/stub/start?returnTo=%2Fsettings%2Fsecurity [36m302[0m 5ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=IILyIeJacVZ0-VJRZGfBO0hL1eXB8aryzS_B0HwtmQ0
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=IILyIeJacVZ0-VJRZGfBO0hL1eXB8aryzS_B0HwtmQ0 [36m302[0m 40ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=forged-state-value
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=forged-state-value [33m400[0m 5ms
+<-- GET /api/v1/auth/social/stub/callback?error=access_denied&state=whatever
+--> GET /api/v1/auth/social/stub/callback?error=access_denied&state=whatever [33m400[0m 2ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 7ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=fceLqTsZSTHnA4eteP7f2Dfvczjd6sqXtmRolmyvdaw
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=fceLqTsZSTHnA4eteP7f2Dfvczjd6sqXtmRolmyvdaw [32m200[0m 46ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=fceLqTsZSTHnA4eteP7f2Dfvczjd6sqXtmRolmyvdaw
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=fceLqTsZSTHnA4eteP7f2Dfvczjd6sqXtmRolmyvdaw [33m400[0m 5ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 7ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=PzjZxbUa_IHWbx-0fE1JQBeq-AYF5hUUsHJIiYdB_Hs
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=PzjZxbUa_IHWbx-0fE1JQBeq-AYF5hUUsHJIiYdB_Hs [33m409[0m 37ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 7ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=xdphGJobjIup9kcz6B5u6H9kt1eHVg3M-6tVzxPW4Fg
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=xdphGJobjIup9kcz6B5u6H9kt1eHVg3M-6tVzxPW4Fg [32m200[0m 29ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 136ms
+<-- PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f
+--> PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f [32m200[0m 7ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 7ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=ZSKtQsejdGL1kCRtUc-7sNyBpXdt00ezcHK2IZ25LKY
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=ZSKtQsejdGL1kCRtUc-7sNyBpXdt00ezcHK2IZ25LKY [33m409[0m 25ms
+<-- PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f
+--> PATCH /api/v1/admin/social-providers/sp-55ce6763c123486f [32m200[0m 5ms
+<-- GET /api/v1/auth/social/stub/start
+--> GET /api/v1/auth/social/stub/start [36m302[0m 6ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=hsZBWhkygxFwX6PL3eB8aJp7ldD3o4HKfgqAPw6ipJ4
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=hsZBWhkygxFwX6PL3eB8aJp7ldD3o4HKfgqAPw6ipJ4 [33m400[0m 25ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 123ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [33m401[0m 0ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 7ms
+<-- DELETE /api/v1/me/identities/si-4e29d2cd808b4a45
+--> DELETE /api/v1/me/identities/si-4e29d2cd808b4a45 [33m400[0m 7ms
+<-- DELETE /api/v1/me/identities/si-4e29d2cd808b4a45
+--> DELETE /api/v1/me/identities/si-4e29d2cd808b4a45 [32m200[0m 92ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 2ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 5ms
+<-- DELETE /api/v1/me/identities/si-1ca83a92aeefa4a6
+--> DELETE /api/v1/me/identities/si-1ca83a92aeefa4a6 [33m400[0m 3ms
+<-- GET /api/v1/auth/social/stub/link
+--> GET /api/v1/auth/social/stub/link [33m401[0m 0ms
+<-- GET /api/v1/auth/social/stub/link
+--> GET /api/v1/auth/social/stub/link [36m302[0m 6ms
+<-- GET /api/v1/auth/social/stub/callback?code=stub-code&state=1NJHiWJjXh7TvjbqLrTBcwsnpHJWmrleRWUwsolXwdU
+--> GET /api/v1/auth/social/stub/callback?code=stub-code&state=1NJHiWJjXh7TvjbqLrTBcwsnpHJWmrleRWUwsolXwdU [32m200[0m 36ms
+<-- GET /api/v1/me/identities
+--> GET /api/v1/me/identities [32m200[0m 6ms
+<-- GET /api/v1/nope
+--> GET /api/v1/nope [33m404[0m 1ms
+<-- GET /api/v1/articles?limit=9999
+--> GET /api/v1/articles?limit=9999 [33m400[0m 0ms
+<-- GET /api/v1/articles?department=nope
+--> GET /api/v1/articles?department=nope [33m400[0m 3ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 73ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 32ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 146ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [32m200[0m 10ms
+<-- PATCH /api/v1/admin/social-providers/sp-facebook
+--> PATCH /api/v1/admin/social-providers/sp-facebook [32m200[0m 6ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/facebook/start?returnTo=%2F
+--> GET /api/v1/auth/social/facebook/start?returnTo=%2F [36m302[0m 227ms
+<-- GET /api/auth/facebook
+--> GET /api/auth/facebook [33m404[0m 1ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/facebook/start?returnTo=%2F
+--> GET /api/v1/auth/social/facebook/start?returnTo=%2F [36m302[0m 8ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 38ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 1ms
+<-- GET /api/v1/admin/social-providers
+--> GET /api/v1/admin/social-providers [32m200[0m 41ms
+<-- PATCH /api/v1/admin/social-providers/sp-facebook
+--> PATCH /api/v1/admin/social-providers/sp-facebook [32m200[0m 5ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 1ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 1ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 4ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 35ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 33ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 144ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 44ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 52ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 133ms
+<-- GET /api/v1/auth/session
+--> GET /api/v1/auth/session [32m200[0m 10ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 47ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 45ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 151ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 41ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 50ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 44ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 50ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 44ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 36ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 37ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 152ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 40ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 34ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 36ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 35ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 152ms
+<-- POST /api/v1/auth/login
+--> POST /api/v1/auth/login [32m200[0m 148ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 38ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 56ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 39ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 2ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 37ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 47ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 37ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 46ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 40ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 44ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 43ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 47ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 38ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 169ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 38ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 37ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 40ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 43ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 155ms
+<-- GET /api/v1/auth/social/providers
+--> GET /api/v1/auth/social/providers [32m200[0m 34ms

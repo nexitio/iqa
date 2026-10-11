@@ -52,3 +52,244 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET / 200 in 30ms (next.js: 6ms, application-code: 24ms)
  GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 162ms (next.js: 13ms, generate-params: 6ms, application-code: 143ms)
  GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 145ms (next.js: 9ms, generate-params: 7ms, application-code: 129ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 183ms (next.js: 9ms, generate-params: 7ms, application-code: 168ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 323ms (next.js: 25ms, generate-params: 11ms, application-code: 287ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 308ms (next.js: 8ms, generate-params: 9ms, application-code: 291ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 275ms (next.js: 16ms, generate-params: 20ms, application-code: 238ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 283ms (next.js: 14ms, generate-params: 18ms, application-code: 250ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 172ms (next.js: 8ms, generate-params: 7ms, application-code: 158ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 178ms (next.js: 12ms, generate-params: 6ms, application-code: 159ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 260ms (next.js: 16ms, generate-params: 18ms, application-code: 226ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 216ms (next.js: 15ms, generate-params: 20ms, application-code: 181ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 201ms (next.js: 18ms, generate-params: 14ms, application-code: 169ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 456ms (next.js: 17ms, generate-params: 15ms, application-code: 424ms)
+✓ Compiled in 1056ms
+ GET /scholar/write 200 in 85ms (next.js: 19ms, application-code: 66ms)
+ GET / 200 in 147ms (next.js: 78ms, application-code: 69ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 202ms (next.js: 16ms, generate-params: 6ms, application-code: 179ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 198ms (next.js: 8ms, generate-params: 8ms, application-code: 182ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 674ms (next.js: 165ms, generate-params: 10ms, application-code: 499ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 194ms (next.js: 10ms, generate-params: 8ms, application-code: 175ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 214ms (next.js: 12ms, generate-params: 5ms, application-code: 197ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 224ms (next.js: 11ms, generate-params: 8ms, application-code: 205ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 265ms (next.js: 9ms, generate-params: 8ms, application-code: 248ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 228ms (next.js: 7ms, generate-params: 12ms, application-code: 209ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 248ms (next.js: 9ms, generate-params: 11ms, application-code: 228ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 328ms (next.js: 13ms, generate-params: 22ms, application-code: 293ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 212ms (next.js: 12ms, generate-params: 11ms, application-code: 189ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 210ms (next.js: 6ms, generate-params: 15ms, application-code: 189ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 259ms (next.js: 22ms, generate-params: 19ms, application-code: 218ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 221ms (next.js: 9ms, generate-params: 6ms, application-code: 205ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 242ms (next.js: 8ms, generate-params: 20ms, application-code: 214ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 308ms (next.js: 12ms, generate-params: 9ms, application-code: 287ms)
+ GET /questions/talaq-poddhoti-o-sontaner-bharonposhon 200 in 286ms (next.js: 9ms, generate-params: 14ms, application-code: 264ms)
+✓ Finished filesystem cache database compaction in 13.4s
+ GET / 200 in 212ms (next.js: 37ms, application-code: 175ms)
+ GET / 200 in 145ms (next.js: 7ms, application-code: 137ms)
+○ Compiling /login ...
+ GET / 200 in 154ms (next.js: 10ms, application-code: 144ms)
+ GET /login 200 in 1056ms (next.js: 967ms, application-code: 89ms)
+ GET /login 200 in 191ms (next.js: 5ms, application-code: 186ms)
+ GET / 200 in 502ms (next.js: 59ms, application-code: 444ms)
+ GET /login 200 in 106ms (next.js: 24ms, application-code: 82ms)
+ GET /login 200 in 109ms (next.js: 6ms, application-code: 103ms)
+✓ Compiled in 3.7s
+ GET / 200 in 58ms (next.js: 13ms, application-code: 45ms)
+ GET /scholar 200 in 290ms (next.js: 185ms, application-code: 105ms)
+ GET / 200 in 37ms (next.js: 7ms, application-code: 30ms)
+ GET /admin 200 in 334ms (next.js: 210ms, application-code: 124ms)
+ GET /admin/scholars 200 in 266ms (next.js: 167ms, application-code: 99ms)
+ GET /admin/review 200 in 2.9s (next.js: 2.8s, application-code: 63ms)
+ GET /admin/scholars 200 in 68ms (next.js: 7ms, application-code: 62ms)
+ GET /admin/scholars/new 200 in 1759ms (next.js: 1685ms, application-code: 73ms)
+ GET /admin/departments 200 in 1871ms (next.js: 1748ms, application-code: 123ms)
+ GET /admin/review 200 in 57ms (next.js: 14ms, application-code: 42ms)
+ GET /admin/users 200 in 1750ms (next.js: 1669ms, application-code: 82ms)
+ GET /admin/reports 200 in 1010ms (next.js: 952ms, application-code: 58ms)
+ GET /questions/sud-na-dile-imaan-batil 200 in 1691ms (next.js: 646ms, generate-params: 75ms, application-code: 970ms)
+ GET /admin 200 in 94ms (next.js: 16ms, application-code: 78ms)
+ GET /admin 200 in 66ms (next.js: 7ms, application-code: 59ms)
+ GET / 200 in 139ms (next.js: 87ms, application-code: 51ms)
+ GET /quran 200 in 282ms (next.js: 172ms, application-code: 110ms)
+ GET / 200 in 38ms (next.js: 7ms, application-code: 31ms)
+ GET /articles/sud-mukt-jibon-halal-uparjon 200 in 1293ms (next.js: 191ms, generate-params: 968ms, application-code: 134ms)
+ GET / 200 in 37ms (next.js: 7ms, application-code: 30ms)
+ GET /duas 200 in 227ms (next.js: 142ms, application-code: 85ms)
+ GET /hadith 200 in 306ms (next.js: 183ms, application-code: 123ms)
+ GET /hadith/bukhari 200 in 1182ms (next.js: 162ms, generate-params: 951ms, application-code: 69ms)
+ GET /hadith/bukhari 200 in 70ms (next.js: 9ms, generate-params: 7ms, application-code: 54ms)
+ GET /quran 200 in 63ms (next.js: 7ms, application-code: 56ms)
+ GET / 200 in 35ms (next.js: 7ms, application-code: 28ms)
+ GET / 200 in 163ms (next.js: 12ms, application-code: 151ms)
+ GET /admin 200 in 59ms (next.js: 8ms, application-code: 51ms)
+ GET /admin 200 in 146ms (next.js: 13ms, application-code: 132ms)
+ GET / 200 in 79ms (next.js: 22ms, application-code: 57ms)
+ GET /login 200 in 263ms (next.js: 28ms, application-code: 235ms)
+⚠ Blocked cross-origin request to Next.js dev resource /__nextjs_font/geist-latin.woff2 from "127.0.0.1".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /login 200 in 305ms (next.js: 12ms, application-code: 293ms)
+ GET /login 200 in 173ms (next.js: 7ms, application-code: 166ms)
+ GET /register 200 in 3.8s (next.js: 2.7s, application-code: 1078ms)
+ GET /register 200 in 330ms (next.js: 35ms, application-code: 295ms)
+ GET /register 200 in 501ms (next.js: 8ms, application-code: 493ms)
+✓ Finished filesystem cache database compaction in 10.6s
+ GET /login 200 in 177ms (next.js: 21ms, application-code: 157ms)
+ GET /login 200 in 195ms (next.js: 8ms, application-code: 187ms)
+ GET /login 200 in 224ms (next.js: 9ms, application-code: 215ms)
+ GET /login 200 in 191ms (next.js: 7ms, application-code: 184ms)
+ GET /login 200 in 138ms (next.js: 7ms, application-code: 132ms)
+ GET /login 200 in 275ms (next.js: 8ms, application-code: 267ms)
+ GET / 200 in 224ms (next.js: 15ms, application-code: 209ms)
+ GET / 200 in 158ms (next.js: 10ms, application-code: 148ms)
+ GET /quran 200 in 459ms (next.js: 15ms, application-code: 444ms)
+ GET /login 200 in 181ms (next.js: 15ms, application-code: 166ms)
+ GET /login 200 in 327ms (next.js: 10ms, application-code: 317ms)
+ GET /login 200 in 163ms (next.js: 18ms, application-code: 144ms)
+ GET /login 200 in 313ms (next.js: 39ms, application-code: 274ms)
+ GET /login 200 in 2.9s (next.js: 632ms, application-code: 2.3s)
+ GET /login 200 in 1455ms (next.js: 380ms, application-code: 1075ms)
+ GET /login 200 in 1348ms (next.js: 437ms, application-code: 912ms)
+ GET /login 200 in 149ms (next.js: 16ms, application-code: 133ms)
+ GET /login 200 in 320ms (next.js: 85ms, application-code: 235ms)
+⨯ ./src/lib/session.ts:21:1
+Error: Export serverApiUrl doesn't exist in target module
+  [90m19 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m20 |[0m [36mimport[0m { cache } [36mfrom[0m [32m"react"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m { serverApiUrl } [36mfrom[0m [32m"./api"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m [36mtype[0m { [33mUser[0m } [36mfrom[0m [32m"./types"[0m;
+  [90m23 |[0m
+  [90m24 |[0m [90m/** Mirrors the API's cookie name — see `server/src/auth/session.ts`. */[0m
+
+The export serverApiUrl was not found in module [project]/src/lib/api.ts [app-rsc] (ecmascript).
+Did you mean to import enabledSocialProviders?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./src/lib/session.ts
+    ./src/app/layout.tsx
+
+
+ GET /login 500 in 1830ms (next.js: 1364ms, application-code: 466ms)
+ GET /login 200 in 393ms (next.js: 58ms, application-code: 335ms)
+ GET /login 200 in 208ms (next.js: 14ms, application-code: 193ms)
+ GET /login 200 in 236ms (next.js: 17ms, application-code: 219ms)
+ GET /login 200 in 215ms (next.js: 10ms, application-code: 204ms)
+✓ Finished filesystem cache database compaction in 12.2s
+✓ Finished filesystem cache database compaction in 12.9s
+ GET /login 200 in 184ms (next.js: 25ms, application-code: 159ms)
+ GET /login 200 in 217ms (next.js: 28ms, application-code: 189ms)
+ GET /login 200 in 287ms (next.js: 14ms, application-code: 274ms)
+✓ Finished filesystem cache database compaction in 10.9s
+ GET /login 200 in 226ms (next.js: 47ms, application-code: 178ms)
+ GET /login 200 in 206ms (next.js: 34ms, application-code: 172ms)
+⨯ ./src/app/(auth)/login/login-form.tsx:13:1
+Error: Export useRecoveryCode doesn't exist in target module
+  [90m11 |[0m } [36mfrom[0m [32m"@/components/auth/social-buttons"[0m;
+  [90m12 |[0m [36mimport[0m [36mtype[0m { [33mSocialProvider[0m } [36mfrom[0m [32m"@/lib/api"[0m;
+[31m[1m>[0m [90m13 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   sendSecondFactorCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   signIn,
+  [90m   |[0m [31m[1m^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   useRecoveryCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   verifySecondFactorCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [36mtype[0m [33mChallenge[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [36mtype[0m [33mPendingSecondFactor[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m } [36mfrom[0m [32m"@/lib/auth-client"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m21 |[0m
+  [90m22 |[0m /**
+  [90m23 |[0m  * [33mSigning[0m [36min[0m.
+
+The export useRecoveryCode was not found in module [project]/src/lib/auth-client.ts [app-client] (ecmascript).
+Did you mean to import redeemRecoveryCode?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./src/app/(auth)/login/login-form.tsx
+    ./src/app/(auth)/login/page.tsx
+
+
+
+./src/app/(auth)/login/login-form.tsx:13:1
+Error: Export useRecoveryCode doesn't exist in target module
+  [90m11 |[0m } [36mfrom[0m [32m"@/components/auth/social-buttons"[0m;
+  [90m12 |[0m [36mimport[0m [36mtype[0m { [33mSocialProvider[0m } [36mfrom[0m [32m"@/lib/api"[0m;
+[31m[1m>[0m [90m13 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   sendSecondFactorCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   signIn,
+  [90m   |[0m [31m[1m^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   useRecoveryCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   verifySecondFactorCode,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [36mtype[0m [33mChallenge[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [36mtype[0m [33mPendingSecondFactor[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m } [36mfrom[0m [32m"@/lib/auth-client"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m21 |[0m
+  [90m22 |[0m /**
+  [90m23 |[0m  * [33mSigning[0m [36min[0m.
+
+The export useRecoveryCode was not found in module [project]/src/lib/auth-client.ts [app-ssr] (ecmascript).
+Did you mean to import redeemRecoveryCode?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./src/app/(auth)/login/login-form.tsx
+    ./src/app/(auth)/login/page.tsx
+
+
+ GET /login 500 in 105ms (next.js: 70ms, application-code: 35ms)
+ GET /login 200 in 312ms (next.js: 38ms, application-code: 274ms)
+ POST /api/auth/login 403 in 859ms (next.js: 819ms, application-code: 39ms)
+ POST /api/auth/login 403 in 22ms (next.js: 5ms, application-code: 17ms)
+ POST /api/auth/_debug 404 in 647ms (next.js: 139ms, application-code: 508ms)
+ GET /login 200 in 211ms (next.js: 22ms, application-code: 189ms)
+ POST /api/auth/debug 200 in 648ms (next.js: 616ms, application-code: 32ms)
+ POST /api/auth/login 200 in 621ms (next.js: 442ms, application-code: 179ms)
+ POST /api/auth/login 200 in 164ms (next.js: 4ms, application-code: 160ms)
+ POST /api/auth/login 403 in 13ms (next.js: 6ms, application-code: 7ms)
+ GET /login 200 in 1920ms (next.js: 485ms, application-code: 1435ms)
+ GET /login?email=mahbub.alam%40ilm.bd&password=wrong-password&remember=on 200 in 163ms (next.js: 9ms, application-code: 155ms)
+ GET /login 200 in 276ms (next.js: 10ms, application-code: 266ms)
+ GET /login 200 in 277ms (next.js: 6ms, application-code: 270ms)
+ GET /login?email=mahbub.alam%40ilm.bd&password=wrong-password&remember=on 200 in 152ms (next.js: 9ms, application-code: 143ms)
+ GET /login 200 in 297ms (next.js: 10ms, application-code: 287ms)
+ GET /login 200 in 262ms (next.js: 19ms, application-code: 244ms)
+ GET /login 200 in 181ms (next.js: 13ms, application-code: 168ms)
+ GET /login 200 in 275ms (next.js: 18ms, application-code: 257ms)
+ GET /login 200 in 227ms (next.js: 16ms, application-code: 211ms)
+ GET /login 200 in 211ms (next.js: 13ms, application-code: 199ms)
+ GET /login 200 in 209ms (next.js: 19ms, application-code: 190ms)
+ GET /login 200 in 218ms (next.js: 16ms, application-code: 202ms)
+ GET /login 200 in 258ms (next.js: 17ms, application-code: 241ms)
+ GET /login 200 in 443ms (next.js: 21ms, application-code: 422ms)
+ GET /login 200 in 178ms (next.js: 17ms, application-code: 162ms)
+ GET /login 200 in 333ms (next.js: 19ms, application-code: 314ms)
+ GET /login 200 in 242ms (next.js: 16ms, application-code: 226ms)
+ GET /login 200 in 194ms (next.js: 15ms, application-code: 180ms)
+ GET /login 200 in 328ms (next.js: 12ms, application-code: 316ms)
+ GET /login 200 in 220ms (next.js: 11ms, application-code: 209ms)

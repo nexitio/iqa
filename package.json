@@ -11,7 +11,14 @@
     "typecheck": "tsc --noEmit",
     "verify:data": "node --experimental-strip-types scripts/verify-data.ts",
     "verify:prayer": "node --experimental-strip-types scripts/verify-prayer-times.ts && node --experimental-strip-types scripts/verify-prayer-day.ts",
-    "verify": "pnpm typecheck && pnpm verify:data && pnpm verify:prayer && pnpm lint"
+    "verify": "pnpm typecheck && pnpm verify:data && pnpm verify:prayer && pnpm lint",
+    "server:dev": "pnpm --filter @ilm/server dev",
+    "server:typecheck": "pnpm --filter @ilm/server typecheck",
+    "server:db:setup": "pnpm --filter @ilm/server db:setup",
+    "server:db:migrate": "pnpm --filter @ilm/server db:migrate",
+    "server:db:seed": "pnpm --filter @ilm/server db:seed",
+    "server:smoke": "pnpm --filter @ilm/server smoke",
+    "server:audit": "pnpm --filter @ilm/server audit:links"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

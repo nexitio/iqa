@@ -10,6 +10,7 @@ import { Avatar, Badge, Button, CountPill } from "@/components/ui";
 import { LocaleToggle, ThemeToggle } from "./toggles";
 import { NotificationBell } from "./notification-bell";
 import { ADMIN_NAV, SCHOLAR_NAV } from "./nav-config";
+import { useSession } from "@/components/auth/session-provider";
 
 /**
  * Console shell shared by the Scholar and Admin workspaces.
@@ -25,27 +26,30 @@ export function ConsoleShell({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+  const { user } = useSession();
   const { t, pick } = useI18n();
 
   const nav = role === "scholar" ? SCHOLAR_NAV : ADMIN_NAV;
   const isScholar = role === "scholar";
 
+  /**
+   * The console's own identity is the role; the person in it is the session.
+   *
+   * These were two different fictions before — a console styled for scholars and
+   * a hard-coded name in the corner — and now the badge still says which console
+   * this is while the name beside it is the account that actually signed in.
+   * There is no fallback name: signed out shows a way to sign in.
+   */
   const identity = isScholar
     ? {
-        name: "মুফতি আব্দুর রহমান",
-        meta: "ফিকহ ও ইবাদত বিভাগ",
         badge: t("nav.scholarConsole"),
         tone: "scholar" as const,
         icon: GraduationCap,
-        color: "#0d6b4f",
       }
     : {
-        name: "ইলম অ্যাডমিন",
-        meta: "সুপার অ্যাডমিন",
         badge: t("nav.adminConsole"),
         tone: "admin" as const,
         icon: ShieldCheck,
-        color: "#a3405f",
       };
 
   const isActive = (href: string) =>
@@ -85,15 +89,23 @@ export function ConsoleShell({
             <Button href="/" variant="ghost" size="sm" icon={ArrowLeft} className="hidden md:inline-flex">
               {t("action.back")}
             </Button>
-            <div className="flex items-center gap-2 rounded-full border border-border bg-surface p-1 pr-3">
-              <Avatar name={identity.name} color={identity.color} size="sm" verified />
-              <span className="hidden min-w-0 sm:block">
-                <span className="block truncate text-[0.75rem] font-semibold leading-tight text-foreground">
-                  {identity.name}
+            {user ? (
+              <div className="flex items-center gap-2 rounded-full border border-border bg-surface p-1 pr-3">
+                <Avatar name={user.name} color={user.avatarColor} size="sm" verified={user.isVerified} />
+                <span className="hidden min-w-0 sm:block">
+                  <span className="block truncate text-[0.75rem] font-semibold leading-tight text-foreground">
+                    {user.name}
+                  </span>
+                  <span className="block truncate text-[0.625rem] text-subtle-foreground">
+                    {identity.badge}
+                  </span>
                 </span>
-                <span className="block truncate text-[0.625rem] text-subtle-foreground">{identity.meta}</span>
-              </span>
-            </div>
+              </div>
+            ) : (
+              <Button href="/login" size="sm" variant="outline">
+                {t("action.signIn")}
+              </Button>
+            )}
           </div>
         </div>
       </header>

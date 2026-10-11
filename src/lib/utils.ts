@@ -145,3 +145,18 @@ export function pct(value: number, total: number) {
 export function range(n: number) {
   return Array.from({ length: n }, (_, i) => i);
 }
+
+/**
+ * Where to send someone after they sign in.
+ *
+ * Only a path on this site is accepted. `//evil.example` and `https://…` are both
+ * absolute URLs wearing a relative costume, and a sign-in page that forwards to
+ * one is the classic phishing relay. Anything unrecognised lands on the home
+ * page, the one destination that cannot be somebody else's.
+ */
+export function safeNext(value: string | string[] | undefined): string {
+  const path = Array.isArray(value) ? value[0] : value;
+  if (!path || path.length > 200) return "/";
+  if (!path.startsWith("/") || path.startsWith("//")) return "/";
+  return path;
+}

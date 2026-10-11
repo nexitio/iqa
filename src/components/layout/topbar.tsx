@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import {
   ChevronDown,
@@ -15,11 +15,13 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { CURRENT_USER, NOTIFICATIONS } from "@/lib/data/personal";
+import { NOTIFICATIONS } from "@/lib/data/personal";
+import { signOut } from "@/lib/auth-client";
+import { useSession } from "@/components/auth/session-provider";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useDismissable } from "@/lib/use-dismissable";
-import { Avatar, CountPill } from "@/components/ui";
+import { Avatar, Button, CountPill } from "@/components/ui";
 import { LocaleToggle, ThemeToggle } from "./toggles";
 import { NotificationBell } from "./notification-bell";
 import { SIDEBAR_GROUPS, SIDEBAR_TOP, ACCOUNT_NAV } from "./nav-config";
@@ -65,9 +67,12 @@ const iconButton =
 
 export function Topbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useSession();
   const { t, pick } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const accountRef = useRef<HTMLDivElement>(null);
@@ -108,6 +113,25 @@ export function Topbar() {
    * stops two palettes from existing at once.
    */
   const openSearch = () => window.dispatchEvent(new CustomEvent("ilm:open-search"));
+
+  /**
+   * Signing out is the API's decision, not the app's: the request revokes the
+   * session row, and the layout is then re-read so the header stops claiming a
+   * name it no longer has. A failure is not swallowed — the button simply stays
+   * in its loading state rather than pretending the session ended.
+   */
+  async function handleSignOut() {
+    setSigningOut(true);
+    const result = await signOut();
+    if (!result.ok) {
+      setSigningOut(false);
+      return;
+    }
+    setAccountOpen(false);
+    router.replace("/");
+    router.refresh();
+    setSigningOut(false);
+  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
@@ -186,6 +210,8 @@ export function Topbar() {
             />
 
             <div className="relative" ref={accountRef}>
+              {user ? (
+                <>
               <button
                 type="button"
                 onClick={() => {
@@ -197,10 +223,10 @@ export function Topbar() {
                 className="flex items-center gap-1 rounded-full p-0.5 transition-colors hover:bg-surface-3"
               >
                 <Avatar
-                  name={CURRENT_USER.name}
-                  color={CURRENT_USER.avatarColor}
+                  name={user.name}
+                  color={user.avatarColor}
                   size="sm"
-                  verified={CURRENT_USER.isVerified}
+                  verified={user.isVerified}
                 />
                 <ChevronDown
                   className={cn(
@@ -216,12 +242,17 @@ export function Topbar() {
                   className="absolute right-0 top-full z-50 mt-2 w-[17rem] animate-scale-in overflow-hidden rounded-panel border border-border bg-surface shadow-overlay"
                 >
                   <div className="flex items-center gap-3 border-b border-border bg-surface-2 p-4">
-                    <Avatar name={CURRENT_USER.name} color={CURRENT_USER.avatarColor} size="md" verified />
+                    <Avatar
+                      name={user.name}
+                      color={user.avatarColor}
+                      size="md"
+                      verified={user.isVerified}
+                    />
                     <div className="min-w-0">
                       <p className="truncate text-[0.875rem] font-semibold text-foreground">
-                        {CURRENT_USER.name}
+                        {user.name}
                       </p>
-                      <p className="truncate text-[0.75rem] text-muted-foreground">{CURRENT_USER.email}</p>
+                      <p className="truncate text-[0.75rem] text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
 
@@ -249,40 +280,65 @@ export function Topbar() {
                     <ThemeToggle />
                   </div>
 
-                  <div className="border-t border-border p-1.5">
-                    <Link
-                      href="/scholar"
-                      role="menuitem"
-                      onClick={closeAccount}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
-                    >
-                      <GraduationCap className="size-4 text-role-scholar" aria-hidden />
-                      {t("nav.scholarConsole")}
-                    </Link>
-                    <Link
-                      href="/admin"
-                      role="menuitem"
-                      onClick={closeAccount}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
-                    >
-                      <ShieldCheck className="size-4 text-role-admin" aria-hidden />
-                      {t("nav.adminConsole")}
-                    </Link>
-                  </div>
+                  {/* The console links are shown to the roles that own them, and
+                      to nobody else: this is the app's own role check, using the
+                      account the API vouched for. The consoles check again on the
+                      way in — a hidden link is not a permission. */}
+                  {user.role === "scholar" || user.role === "admin" ? (
+                    <div className="border-t border-border p-1.5">
+                      {user.role === "scholar" ? (
+                        <Link
+                          href="/scholar"
+                          role="menuitem"
+                          onClick={closeAccount}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
+                        >
+                          <GraduationCap className="size-4 text-role-scholar" aria-hidden />
+                          {t("nav.scholarConsole")}
+                        </Link>
+                      ) : null}
+                      {user.role === "admin" ? (
+                        <Link
+                          href="/admin"
+                          role="menuitem"
+                          onClick={closeAccount}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-foreground transition-colors hover:bg-surface-3"
+                        >
+                          <ShieldCheck className="size-4 text-role-admin" aria-hidden />
+                          {t("nav.adminConsole")}
+                        </Link>
+                      ) : null}
+                    </div>
+                  ) : null}
 
                   <div className="border-t border-border p-1.5">
-                    <Link
-                      href="/login"
+                    <button
+                      type="button"
                       role="menuitem"
-                      onClick={closeAccount}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[0.8125rem] text-danger transition-colors hover:bg-danger-soft"
+                      onClick={handleSignOut}
+                      disabled={signingOut}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-[0.8125rem] text-danger transition-colors hover:bg-danger-soft disabled:opacity-60"
                     >
                       <LogOut className="size-4" aria-hidden />
                       {t("action.signOut")}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ) : null}
+                </>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <Link
+                    href="/register"
+                    className="hidden h-9 items-center rounded-full px-3 text-[0.8125rem] font-medium text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground sm:inline-flex"
+                  >
+                    {t("action.signUp")}
+                  </Link>
+                  <Button href="/login" size="sm">
+                    {t("action.signIn")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -389,17 +445,31 @@ export function Topbar() {
 }
 
 /** Shared identity chip reused by the consoles. */
+/** Shared identity chip reused by the consoles. */
 export function UserChip({ className }: { className?: string }) {
+  const { user } = useSession();
+  const { t } = useI18n();
+
+  if (!user) {
+    return (
+      <div className={cn("flex items-center gap-2.5", className)}>
+        <Button href="/login" size="sm" variant="outline">
+          {t("action.signIn")}
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <Avatar name={CURRENT_USER.name} color={CURRENT_USER.avatarColor} size="sm" verified />
+      <Avatar name={user.name} color={user.avatarColor} size="sm" verified={user.isVerified} />
       <div className="min-w-0">
         <p className="truncate text-[0.8125rem] font-semibold leading-tight text-foreground">
-          {CURRENT_USER.name}
+          {user.name}
         </p>
         <p className="flex items-center gap-1 text-[0.6875rem] text-subtle-foreground">
           <UserRound className="size-3" aria-hidden />
-          {CURRENT_USER.email}
+          {user.email}
         </p>
       </div>
     </div>
