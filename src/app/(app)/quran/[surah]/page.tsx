@@ -1,4 +1,4 @@
-import { Pick, T } from "@/components/i18n-text";
+import { Digits, Num, Pick, T } from "@/components/i18n-text";
 import { ArrowLeft, ArrowRight, BookOpen, Compass, Info, Sparkles } from "@/components/icons";
 import { ContinueLearningCard } from "@/components/personal";
 import { SurahListRow } from "@/components/quran";
@@ -11,7 +11,6 @@ import {
   EmptyState,
   SectionHeader,
 } from "@/components/ui";
-import { formatNumber, toBnDigits } from "@/lib/bn";
 import { READING_PROGRESS } from "@/lib/data/personal";
 import { POPULAR_SURAHS, QURAN_SURAHS, getAyahsForSurah, getSurah } from "@/lib/data/quran";
 import type { Metadata } from "next";
@@ -103,7 +102,7 @@ export default async function SurahPage({ params, searchParams }: RouteParams) {
         <div className="relative flex flex-wrap items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3.5">
             <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary-soft font-display text-[1.0625rem] font-bold leading-none text-primary">
-              {toBnDigits(surah.number)}
+              <Digits value={surah.number} />
             </span>
             <div className="min-w-0">
               <h1 className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 font-display text-lg font-bold leading-snug text-foreground">
@@ -117,14 +116,14 @@ export default async function SurahPage({ params, searchParams }: RouteParams) {
               <ul className="mt-2 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.6875rem] text-subtle-foreground">
                 <li>{surah.revelation === "meccan" ? "মাক্কী" : "মাদানী"}</li>
                 <li>
-                  {formatNumber(surah.ayahCount, "bn")} <T k="label.ayahs" />
+                  <Num value={surah.ayahCount} /> <T k="label.ayahs" />
                 </li>
                 <li>
-                  <T k="label.juz" /> {toBnDigits(surah.juz)}
+                  <T k="label.juz" /> <Digits value={surah.juz} />
                 </li>
                 {isPartial ? (
                   <li className="font-medium text-warning-soft-foreground">
-                    {toBnDigits(loaded)} টি আয়াতের অনুবাদ প্রস্তুত
+                    <Digits value={loaded} /> টি আয়াতের অনুবাদ প্রস্তুত
                   </li>
                 ) : null}
               </ul>
@@ -165,9 +164,13 @@ export default async function SurahPage({ params, searchParams }: RouteParams) {
             <>
               {isPartial ? (
                 <ContentPending
-                  message={`এই সূরার ${toBnDigits(surah.ayahCount)} টি আয়াতের মধ্যে ${toBnDigits(
-                    loaded,
-                  )} টির অনুবাদ এখন যুক্ত হয়েছে। বাকি আয়াতগুলো পাঠ যাচাই করে ধাপে ধাপে যুক্ত করা হচ্ছে ইনশাআল্লাহ।`}
+                  message={
+                    <>
+                      এই সূরার <Digits value={surah.ayahCount} /> টি আয়াতের মধ্যে{" "}
+                      <Digits value={loaded} /> টির অনুবাদ এখন যুক্ত হয়েছে। বাকি আয়াতগুলো পাঠ যাচাই করে
+                      ধাপে ধাপে যুক্ত করা হচ্ছে ইনশাআল্লাহ।
+                    </>
+                  }
                 />
               ) : null}
 

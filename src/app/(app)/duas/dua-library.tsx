@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
 import { Button, Chip, ChipList, EmptyState, SearchInput } from "@/components/ui";
 import { DuaCard, duaCategoryIcon } from "@/components/knowledge";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * The dua collection, grouped by occasion.
@@ -76,7 +77,7 @@ export function DuaLibrary({ initialCategory = null }: { initialCategory?: strin
             tone={item.tone}
             icon={duaCategoryIcon(item.icon)}
             active={category === item.slug}
-            count={DUAS.filter((dua) => dua.categorySlug === item.slug).length}
+            count={<Digits value={DUAS.filter((dua) => dua.categorySlug === item.slug).length} />}
             onClick={() => setCategory((previous) => (previous === item.slug ? null : item.slug))}
           >
             {pick(item.name)}

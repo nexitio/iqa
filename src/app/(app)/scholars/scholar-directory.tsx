@@ -16,6 +16,7 @@ import {
   SegmentButton,
 } from "@/components/ui";
 import { ScholarCard, departmentIcon } from "@/components/people";
+import { Digits } from "@/components/i18n-text";
 
 type SortKey = "contribution" | "followers" | "response";
 
@@ -171,7 +172,7 @@ export function ScholarDirectory({
                     : [...prev, department.id],
                 )
               }
-              count={department.scholarIds.length}
+              count={<Digits value={department.scholarIds.length} />}
             >
               {pick(department.shortName)}
             </Chip>

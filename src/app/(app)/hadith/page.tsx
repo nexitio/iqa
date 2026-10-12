@@ -1,5 +1,5 @@
 import { CollectionCard, HadithCard } from "@/components/hadith";
-import { T } from "@/components/i18n-text";
+import { Num, T } from "@/components/i18n-text";
 import {
   BadgeCheck,
   BookMarked,
@@ -20,7 +20,6 @@ import {
   SectionHeader,
   StatTile
 } from "@/components/ui";
-import { formatNumber } from "@/lib/bn";
 import {
   HADITH_BOOKS,
   HADITH_COLLECTIONS,
@@ -66,21 +65,21 @@ export default function HadithIndexPage() {
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StatTile
             label="সংকলন"
-            value={formatNumber(HADITH_COLLECTIONS.length, "bn")}
+            value={<Num value={HADITH_COLLECTIONS.length} />}
             icon={Library}
             tone="primary"
             size="sm"
           />
           <StatTile
             label="অধ্যায় (কিতাব)"
-            value={formatNumber(HADITH_BOOKS.length, "bn")}
+            value={<Num value={HADITH_BOOKS.length} />}
             icon={Layers}
             tone="info"
             size="sm"
           />
           <StatTile
             label="এখন পড়া যাবে"
-            value={formatNumber(HADITHS.length, "bn")}
+            value={<Num value={HADITHS.length} />}
             hint="বাকিগুলো ধাপে ধাপে যুক্ত হচ্ছে"
             icon={BookMarked}
             tone="success"
@@ -88,7 +87,7 @@ export default function HadithIndexPage() {
           />
           <StatTile
             label="মুত্তাফাকুন আলাইহি"
-            value={formatNumber(AGREED_UPON.length, "bn")}
+            value={<Num value={AGREED_UPON.length} />}
             hint="বুখারী ও মুসলিম উভয়ে বর্ণিত"
             icon={BadgeCheck}
             tone="accent"
@@ -174,14 +173,14 @@ export default function HadithIndexPage() {
                       {collection.name.bn}
                     </span>
                     <span className="shrink-0 text-[0.75rem] font-semibold tabular text-muted-foreground">
-                      {formatNumber(collection.hadithCount, "bn")}
+                      <Num value={collection.hadithCount} />
                     </span>
                   </li>
                 ))}
               </ul>
               <p className="mt-3 text-[0.6875rem] leading-relaxed text-subtle-foreground">
-                সর্বমোট {formatNumber(TOTAL_CANONICAL, "bn")} টি হাদীসের মধ্যে এই সংস্করণে{" "}
-                {formatNumber(HADITHS.length, "bn")} টি পড়া যাচ্ছে।
+                সর্বমোট <Num value={TOTAL_CANONICAL} /> টি হাদীসের মধ্যে এই সংস্করণে{" "}
+                <Num value={HADITHS.length} /> টি পড়া যাচ্ছে।
               </p>
             </CardBody>
           </Card>

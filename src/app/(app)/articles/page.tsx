@@ -18,7 +18,7 @@ import {
   indexBy,
   MAX_LIMIT,
 } from "@/lib/content-api";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, Num, Pick, T } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -34,7 +34,6 @@ import {
   StatTile,
 } from "@/components/ui";
 import { ArticleCard, ArticleRow } from "@/components/knowledge";
-import { toBnDigits } from "@/lib/bn";
 
 export const metadata: Metadata = {
   title: "প্রবন্ধ",
@@ -157,25 +156,25 @@ export default async function ArticlesPage({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label="প্রকাশিত প্রবন্ধ"
-          value={toBnDigits(articles.data.total)}
+          value={<Digits value={articles.data.total} />}
           icon={FileText}
           tone="primary"
         />
         <StatTile
           label="মোট পাঠ"
-          value={toBnDigits(totalReads.toLocaleString("en-IN"))}
+          value={<Num value={totalReads} />}
           icon={Eye}
           tone="info"
         />
         <StatTile
           label="দলিল ও রেফারেন্স"
-          value={toBnDigits(totalReferences)}
+          value={<Digits value={totalReferences} />}
           icon={BookMarked}
           tone="accent"
         />
         <StatTile
           label="লেখক আলেম"
-          value={toBnDigits(authorIds.size)}
+          value={<Digits value={authorIds.size} />}
           icon={Users}
           tone="scholar"
         />
@@ -222,7 +221,7 @@ export default async function ArticlesPage({
               ))}
             </div>
             <p className="text-[0.75rem] tabular text-muted-foreground">
-              {toBnDigits(dept ? published.length : articles.data.total)} টি প্রবন্ধ
+              <Digits value={dept ? published.length : articles.data.total} /> টি প্রবন্ধ
             </p>
           </div>
         </div>
@@ -288,7 +287,7 @@ export default async function ArticlesPage({
               icon={FileText}
               action={
                 <Badge tone="neutral" size="xs" className="tabular">
-                  {toBnDigits(cards.length)}
+                  <Digits value={cards.length} />
                 </Badge>
               }
             />
@@ -370,7 +369,7 @@ export default async function ArticlesPage({
                       </span>
                     </span>
                     <Badge tone="primary" size="xs" className="tabular">
-                      {toBnDigits(count)} টি লেখা
+                      <Digits value={count} /> টি লেখা
                     </Badge>
                   </Link>
                 </li>

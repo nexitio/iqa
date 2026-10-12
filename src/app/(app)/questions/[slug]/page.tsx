@@ -25,7 +25,7 @@ import {
   fetchScholars,
   indexBy,
 } from "@/lib/content-api";
-import { T } from "@/components/i18n-text";
+import { Num, T, TimeAgo } from "@/components/i18n-text";
 import { AnswerCard, AskCtaCard, FatwaRow, QuestionRow } from "@/components/knowledge";
 import { ScholarMiniCard } from "@/components/people";
 import {
@@ -42,8 +42,8 @@ import {
   SectionHeader,
   StatusBadge,
 } from "@/components/ui";
-import { findDistrict, formatNumber } from "@/lib/bn";
-import { relativeTime, toParagraphs } from "@/lib/utils";
+import { findDistrict } from "@/lib/bn";
+import { toParagraphs } from "@/lib/utils";
 
 /**
  * One question, read from the API.
@@ -176,7 +176,7 @@ export default async function QuestionDetailPage({
   // a number is only there when the id happens to carry one; otherwise the id
   // itself is the honest label — it is what the API answers for this question.
   const reference = question.id.replace(/^q-?/, "");
-  const questionRef = /^\d+$/.test(reference) ? formatNumber(Number(reference), "bn") : question.id;
+  const questionRef = /^\d+$/.test(reference) ? <Num value={Number(reference)} /> : question.id;
 
   return (
     <div className="space-y-6">
@@ -184,7 +184,7 @@ export default async function QuestionDetailPage({
         items={[
           { label: "হোম", href: "/" },
           { label: "প্রশ্নোত্তর", href: "/questions" },
-          { label: `প্রশ্ন #${questionRef}` },
+          { label: <>প্রশ্ন #{questionRef}</> },
         ]}
       />
 
@@ -206,7 +206,7 @@ export default async function QuestionDetailPage({
               ) : null}
               <span className="ml-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-subtle-foreground">
                 <Clock className="size-3.5" aria-hidden />
-                {relativeTime(question.createdAt, "bn")}
+                <TimeAgo iso={question.createdAt} />
               </span>
             </div>
 
@@ -240,11 +240,11 @@ export default async function QuestionDetailPage({
                 ) : null}
                 <span className="inline-flex items-center gap-1.5">
                   <Eye className="size-3.5" aria-hidden />
-                  {formatNumber(question.views, "bn")} বার দেখা হয়েছে
+                  <Num value={question.views} /> বার দেখা হয়েছে
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Users className="size-3.5" aria-hidden />
-                  {formatNumber(question.followerCount, "bn")} জন অনুসরণ করছেন
+                  <Num value={question.followerCount} /> জন অনুসরণ করছেন
                 </span>
               </div>
 
@@ -275,7 +275,12 @@ export default async function QuestionDetailPage({
             <SectionHeader
               icon={BookOpenCheck}
               tone="success"
-              title={`উত্তর${answers.length > 0 ? ` (${formatNumber(answers.length, "bn")})` : ""}`}
+              title={
+                <>
+                  উত্তর
+                  {answers.length > 0 ? <> (<Num value={answers.length} />)</> : null}
+                </>
+              }
               description={
                 accepted
                   ? "প্রশ্নকারীর গৃহীত উত্তরটি সবার আগে দেখানো হয়েছে"
@@ -378,7 +383,7 @@ export default async function QuestionDetailPage({
               ].map((step, index) => (
                 <li key={step} className="flex gap-3">
                   <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-3 text-[0.6875rem] font-bold tabular text-muted-foreground">
-                    {formatNumber(index + 1, "bn")}
+                    <Num value={index + 1} />
                   </span>
                   <span
                     className={

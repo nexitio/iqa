@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BellRing, Settings as SettingsIcon, Sparkles } from "@/components/icons";
 import { NOTIFICATIONS } from "@/lib/data/personal";
-import { Num, T } from "@/components/i18n-text";
+import { Digits, Num, T } from "@/components/i18n-text";
 import { Badge, Callout, Card, PageHeader, SectionHeader, StatTile } from "@/components/ui";
 import { NotificationsList } from "./notifications-list";
 
@@ -27,7 +27,13 @@ export default function NotificationsPage() {
         actions={
           <>
             <Badge tone={unread > 0 ? "danger" : "success"} size="md" dot>
-              {unread > 0 ? `${unread}টি অপঠিত` : "সব পড়া হয়েছে"}
+              {unread > 0 ? (
+                <>
+                  <Digits value={unread} />টি অপঠিত
+                </>
+              ) : (
+                "সব পড়া হয়েছে"
+              )}
             </Badge>
             <Link
               href="/settings"

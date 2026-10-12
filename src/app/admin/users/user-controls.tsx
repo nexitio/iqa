@@ -11,9 +11,10 @@ import {
   Users,
 } from "lucide-react";
 import type { AdminUserRow } from "@/lib/data/admin";
-import { findDistrict, formatNumber, toBnDigits } from "@/lib/bn";
+import { findDistrict, formatNumber } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import { relativeTime } from "@/lib/utils";
+import { Digits } from "@/components/i18n-text";
 import { UserTable } from "@/components/console";
 import {
   Avatar,
@@ -30,10 +31,10 @@ import {
 
 type RoleFilter = "all" | "admin" | "scholar" | "user";
 
-const ROLE_LABEL: Record<AdminUserRow["role"], string> = {
-  admin: "অ্যাডমিন",
-  scholar: "আলেম",
-  user: "ব্যবহারকারী",
+const ROLE_KEY: Record<AdminUserRow["role"], string> = {
+  admin: "admin.users.roleAdmin",
+  scholar: "admin.users.roleScholar",
+  user: "admin.users.roleUser",
 };
 
 /**
@@ -45,7 +46,7 @@ const ROLE_LABEL: Record<AdminUserRow["role"], string> = {
  * change to the database is a backend concern.
  */
 export function UserControls({ users }: { users: AdminUserRow[] }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const [roles, setRoles] = useState<Record<string, AdminUserRow["role"]>>({});
   const [statuses, setStatuses] = useState<Record<string, AdminUserRow["status"]>>({});
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
@@ -89,13 +90,13 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <ChipList label="ভূমিকা অনুসারে ফিল্টার">
+        <ChipList label={t("admin.users.roleFilterLabel")}>
           {(
             [
-              { id: "all" as const, label: "সবাই", tone: "neutral" as const },
-              { id: "admin" as const, label: "অ্যাডমিন", tone: "admin" as const },
-              { id: "scholar" as const, label: "আলেম", tone: "scholar" as const },
-              { id: "user" as const, label: "ব্যবহারকারী", tone: "user" as const },
+              { id: "all" as const, label: t("admin.users.filterAll"), tone: "neutral" as const },
+              { id: "admin" as const, label: t(ROLE_KEY.admin), tone: "admin" as const },
+              { id: "scholar" as const, label: t(ROLE_KEY.scholar), tone: "scholar" as const },
+              { id: "user" as const, label: t(ROLE_KEY.user), tone: "user" as const },
             ]
           ).map((option) => (
             <Chip
@@ -103,7 +104,7 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
               tone={option.tone}
               active={roleFilter === option.id}
               onClick={() => setRoleFilter(option.id)}
-              count={counts[option.id]}
+              count={<Digits value={counts[option.id]} />}
             >
               {option.label}
             </Chip>
@@ -116,8 +117,8 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="নাম বা ইমেইল…"
-              aria-label="ব্যবহারকারী খুঁজুন"
+              placeholder={t("admin.users.searchPlaceholder")}
+              aria-label={t("admin.users.searchAria")}
               className="h-10 w-full rounded-xl border border-border bg-surface pl-9 pr-3 text-[0.875rem] text-foreground placeholder:text-subtle-foreground focus:border-primary focus:outline-none sm:w-56"
             />
           </div>
@@ -128,15 +129,15 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
         <div className="min-w-0">
           {visible.length === 0 ? (
             <div className="rounded-panel border border-dashed border-border-strong bg-surface-2 p-10 text-center">
-              <p className="text-[0.875rem] font-medium text-foreground">কোনো ব্যবহারকারী পাওয়া যায়নি</p>
-              <p className="mt-1 text-[0.8125rem] text-muted-foreground">ফিল্টার বা খোঁজের শব্দ বদলে দেখুন।</p>
+              <p className="text-[0.875rem] font-medium text-foreground">{t("admin.users.noUsers")}</p>
+              <p className="mt-1 text-[0.8125rem] text-muted-foreground">{t("admin.users.noUsersHelp")}</p>
             </div>
           ) : (
             <UserTable users={visible} selectedId={selectedId} onSelect={setSelectedId} />
           )}
 
           <p className="mt-2 text-[0.6875rem] text-subtle-foreground">
-            টেবিলে {toBnDigits(visible.length)}জন দেখানো হচ্ছে · মোট {toBnDigits(users.length)}জন
+            {t("admin.users.tableShowing", { shown: visible.length, total: users.length })}
           </p>
         </div>
 
@@ -146,8 +147,8 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
               <CardHeader
                 icon={UserCog}
                 tone="admin"
-                title="ভূমিকা ও অনুমতি"
-                subtitle="নির্বাচিত ব্যবহারকারীর অ্যাকাউন্ট"
+                title={t("admin.users.roleAndPermissions")}
+                subtitle={t("admin.users.selectedAccount")}
               />
 
               <div className="mt-4 flex items-center gap-3">
@@ -165,10 +166,10 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
                       status={statusOf(selected)}
                       label={
                         statusOf(selected) === "active"
-                          ? "সক্রিয়"
+                          ? t("admin.users.statusActive")
                           : statusOf(selected) === "suspended"
-                            ? "স্থগিত"
-                            : "অপেক্ষমাণ"
+                            ? t("admin.users.statusSuspended")
+                            : t("admin.users.statusPending")
                       }
                       size="xs"
                     />
@@ -178,7 +179,9 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
 
               <div className="mt-4 space-y-3 border-t border-border pt-4">
                 <div>
-                  <p className="mb-2 text-[0.75rem] font-semibold text-foreground">ভূমিকা নির্ধারণ</p>
+                  <p className="mb-2 text-[0.75rem] font-semibold text-foreground">
+                    {t("admin.users.assignRole")}
+                  </p>
                   <Select
                     value={roleOf(selected)}
                     onChange={(value) =>
@@ -187,11 +190,11 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
                         [selected.id]: value as AdminUserRow["role"],
                       }))
                     }
-                    aria-label="ভূমিকা"
+                    aria-label={t("admin.users.roleAria")}
                     options={[
-                      { value: "user", label: "ব্যবহারকারী" },
-                      { value: "scholar", label: "আলেম" },
-                      { value: "admin", label: "অ্যাডমিন" },
+                      { value: "user", label: t(ROLE_KEY.user) },
+                      { value: "scholar", label: t(ROLE_KEY.scholar) },
+                      { value: "admin", label: t(ROLE_KEY.admin) },
                     ]}
                   />
                 </div>
@@ -208,7 +211,9 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
                       }))
                     }
                   >
-                    {statusOf(selected) === "suspended" ? "স্থগিতাদেশ প্রত্যাহার" : "অ্যাকাউন্ট স্থগিত করুন"}
+                    {statusOf(selected) === "suspended"
+                      ? t("admin.users.unsuspend")
+                      : t("admin.users.suspend")}
                   </Button>
                   {changed(selected) ? (
                     <Button
@@ -227,30 +232,36 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
                         });
                       }}
                     >
-                      পরিবর্তন বাতিল
+                      {t("admin.users.discardChanges")}
                     </Button>
                   ) : null}
                 </div>
 
                 {changed(selected) ? (
-                  <Callout tone="warning" icon={AlertTriangle} title="অসংরক্ষিত পরিবর্তন">
+                  <Callout
+                    tone="warning"
+                    icon={AlertTriangle}
+                    title={t("admin.users.unsavedTitle")}
+                  >
                     {roleOf(selected) !== selected.role
-                      ? `ভূমিকা বদলে ${ROLE_LABEL[roleOf(selected)]} করা হচ্ছে — `
+                      ? t("admin.users.roleChangePrefix", { role: t(ROLE_KEY[roleOf(selected)]) })
                       : ""}
-                    এই পরিবর্তন সংরক্ষণ করতে ডেটাবেস লাগবে, তাই এটি এখন শুধু প্রিভিউ।
+                    {t("admin.users.unsavedBody")}
                   </Callout>
                 ) : null}
               </div>
 
               <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">
                 <div>
-                  <dt className="text-[0.625rem] text-subtle-foreground">অবদান</dt>
+                  <dt className="text-[0.625rem] text-subtle-foreground">
+                    {t("admin.users.contributions")}
+                  </dt>
                   <dd className="font-display text-base font-bold tabular text-foreground">
                     {formatNumber(selected.contributions, locale)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[0.625rem] text-subtle-foreground">যুক্ত হয়েছেন</dt>
+                  <dt className="text-[0.625rem] text-subtle-foreground">{t("label.joinedOn")}</dt>
                   <dd className="text-[0.8125rem] font-medium text-foreground">
                     {relativeTime(selected.joinedAt, locale)}
                   </dd>
@@ -263,45 +274,43 @@ export function UserControls({ users }: { users: AdminUserRow[] }) {
             <CardHeader
               icon={ShieldCheck}
               tone="danger"
-              title="অনুমতি বাড়ানোর সতর্কতা"
-              subtitle="আলেম ভূমিকা দেওয়া মানে প্রকাশের ক্ষমতা দেওয়া"
+              title={t("admin.users.escalationTitle")}
+              subtitle={t("admin.users.escalationHelp")}
             />
             <ul className="mt-3 space-y-2.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-danger" />
-                আলেম ভূমিকা পেলে ব্যবহারকারী প্রবন্ধ ও ফতোয়া প্রকাশ করতে পারবেন — তাই যোগ্যতা ছাড়া দেবেন না।
+                {t("admin.users.escalationScholar")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-danger" />
-                অ্যাডমিন ভূমিকা কেবল প্রতিষ্ঠাতা পর্যায়ের অ্যাকাউন্টে সীমাবদ্ধ রাখুন।
+                {t("admin.users.escalationAdmin")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-danger" />
-                স্থগিত করা অ্যাকাউন্টের প্রকাশিত কনটেন্ট মুছে যায় না, কেবল অ্যাক্সেস বন্ধ হয়।
+                {t("admin.users.escalationSuspend")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-danger" />
-                প্রতিটি ভূমিকা পরিবর্তন অডিট লগে সংরক্ষিত হওয়া উচিত।
+                {t("admin.users.escalationAudit")}
               </li>
             </ul>
           </Card>
 
           <Card>
-            <CardHeader icon={Users} tone="user" title="অ্যাকাউন্ট তৈরি" />
+            <CardHeader icon={Users} tone="user" title={t("admin.users.createTitle")} />
             <p className="mt-3 text-[0.8125rem] leading-relaxed text-muted-foreground">
-              সাধারণ ব্যবহারকারীরা নিজেরাই নিবন্ধন করেন। আলেম অ্যাকাউন্ট কেবল অ্যাডমিন তৈরি করেন, কারণ এর সাথে প্রশ্ন
-              পাওয়ার দায়িত্ব যুক্ত।
+              {t("admin.users.createBody")}
             </p>
             <Button href="/admin/scholars/new" size="sm" variant="outline" className="mt-3">
-              নতুন আলেম অ্যাকাউন্ট
+              {t("admin.users.newScholarAccount")}
             </Button>
           </Card>
         </aside>
       </div>
 
       <p className="text-[0.6875rem] text-subtle-foreground">
-        ভূমিকা বা অবস্থার পরিবর্তন ডান দিকের প্যানেলে সাথে সাথেই প্রতিফলিত হয়, তবে সংরক্ষণ করতে ডেটাবেস লাগবে —
-        ততক্ষণ এটি প্রিভিউ।
+        {t("admin.users.previewNote")}
       </p>
     </div>
   );

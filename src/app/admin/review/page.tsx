@@ -3,7 +3,6 @@ import { ClipboardCheck, ShieldCheck } from "@/components/icons";
 import { REVIEW_QUEUE } from "@/lib/data/admin";
 import { T } from "@/components/i18n-text";
 import { Callout, PageHeader, SectionHeader, Card } from "@/components/ui";
-import { toBnDigits } from "@/lib/bn";
 import { ReviewBoard } from "./review-board";
 
 export const metadata: Metadata = { title: "পর্যালোচনা সারি" };
@@ -17,17 +16,23 @@ export default function AdminReviewPage() {
       <PageHeader
         eyebrow={<T k="admin.title" />}
         title={<T k="admin.reviewQueue" />}
-        description="প্রকাশের আগে প্রতিটি প্রবন্ধ ও ফতোয়ার দলিল যাচাই করা হয়। প্রশ্ন রাউটিং যেমন আলেমের যোগ্যতার উপর নির্ভর করে, তেমনি প্ল্যাটফর্মের বিশ্বাসযোগ্যতা নির্ভর করে এই যাচাইয়ের উপর।"
+        description={<T k="admin.queue.reviewIntro" />}
         icon={ClipboardCheck}
         tone="admin"
         patterned
-        breadcrumbs={[{ label: "অ্যাডমিন", href: "/admin" }, { label: "পর্যালোচনা" }]}
+        breadcrumbs={[
+          { label: <T k="admin.queue.crumbAdmin" />, href: "/admin" },
+          { label: <T k="admin.queue.crumbReview" /> },
+        ]}
       />
 
       {flagged.length > 0 ? (
-        <Callout tone="danger" icon={ShieldCheck} title="যাচাই প্রয়োজন এমন রেফারেন্স">
-          {toBnDigits(flagged.length)}টি জমায় সন্দেহজনক সন্বর্ধনা বা দুর্বল সূত্র চিহ্নিত হয়েছে। অনুমোদনের আগে অবশ্যই আয়াত
-          ও হাদীসের সূত্র মিলিয়ে দেখুন — একটি ভুল সূত্র পুরো প্ল্যাটফর্মের উপর সন্দেহ তৈরি করে।
+        <Callout
+          tone="danger"
+          icon={ShieldCheck}
+          title={<T k="admin.queue.flaggedRefsTitle" />}
+        >
+          <T k="admin.queue.flaggedRefsBody" vars={{ count: flagged.length }} />
         </Callout>
       ) : null}
 
@@ -36,32 +41,29 @@ export default function AdminReviewPage() {
       <SectionHeader
         size="sm"
         icon={ClipboardCheck}
-        title="পর্যালোচনার ধাপ"
-        description={`বর্তমানে ${toBnDigits(REVIEW_QUEUE.length)}টি জমা আছে, মোট ${toBnDigits(totalWords)} শব্দ`}
+        title={<T k="admin.queue.reviewSteps" />}
+        description={
+          <T
+            k="admin.queue.reviewStepsHelp"
+            vars={{ pending: REVIEW_QUEUE.length, words: totalWords }}
+          />
+        }
       />
       <Card>
         <ol className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            {
-              title: "১. দলিল যাচাই",
-              body: "প্রতিটি আয়াত ও হাদীসের সূত্র মিলিয়ে দেখুন। ভুল সূরার নাম, ভুল হাদীস নম্বর বা দুর্বল হাদীস প্রকাশ করা যাবে না।",
-            },
-            {
-              title: "২. ভাষা ও আদব",
-              body: "আক্রমণাত্মক বা দলাদলিমূলক ভাষা থাকলে পরিবর্তন চেয়ে ফেরত পাঠান। মতভেদ থাকতে পারে, আদব হারানো যাবে না।",
-            },
-            {
-              title: "৩. বিভাগ নির্ধারণ",
-              body: "প্রকাশিত কনটেন্ট সঠিক বিভাগে পড়ছে কি না দেখুন — ভুল বিভাগে গেলে সঠিক পাঠক সেটি খুঁজে পাবেন না।",
-            },
-            {
-              title: "৪. প্রকাশ বা ফেরত",
-              body: "সব ঠিক থাকলে অনুমোদন করুন। ছোট সংশোধন লাগলে পরিবর্তন চান — লেখক নিজের খসড়ায় ফিরে সম্পাদনা করবেন।",
-            },
+            { id: "1", titleKey: "admin.queue.step1Title", bodyKey: "admin.queue.step1Body" },
+            { id: "2", titleKey: "admin.queue.step2Title", bodyKey: "admin.queue.step2Body" },
+            { id: "3", titleKey: "admin.queue.step3Title", bodyKey: "admin.queue.step3Body" },
+            { id: "4", titleKey: "admin.queue.step4Title", bodyKey: "admin.queue.step4Body" },
           ].map((step) => (
-            <li key={step.title}>
-              <p className="font-display text-[0.9375rem] font-semibold text-foreground">{step.title}</p>
-              <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted-foreground">{step.body}</p>
+            <li key={step.id}>
+              <p className="font-display text-[0.9375rem] font-semibold text-foreground">
+                <T k={step.titleKey} />
+              </p>
+              <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
+                <T k={step.bodyKey} />
+              </p>
             </li>
           ))}
         </ol>

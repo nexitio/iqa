@@ -63,15 +63,15 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
       <CardHeader
         icon={Sparkles}
         tone="accent"
-        title="প্রোফাইল সম্পাদনা"
-        subtitle="পাঠকরা যা দেখবেন তা এখান থেকে হালনাগাদ করুন"
+        title={t("scholar.tools.profile.editTitle")}
+        subtitle={t("scholar.tools.profile.editSubtitle")}
         action={
           <Button
             size="sm"
             icon={Save}
-            onClick={() => setNotice("পরিবর্তনগুলো সংরক্ষিত হয়েছে (ব্রাউজারে) — ব্যাকএন্ড যুক্ত হলে সার্ভারে যাবে।")}
+            onClick={() => setNotice(t("scholar.tools.profile.savedNotice"))}
           >
-            সংরক্ষণ
+            {t("action.save")}
           </Button>
         }
       />
@@ -87,9 +87,9 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
 
       <div className="mt-5 space-y-5">
         <Field
-          label="সংক্ষিপ্ত পরিচয়"
+          label={t("scholar.tools.profile.shortBioLabel")}
           htmlFor="short-bio"
-          hint="এক লাইনে আপনার পরিচয় — প্রোফাইল কার্ডে এটিই দেখানো হয়।"
+          hint={t("scholar.tools.profile.shortBioHint")}
         >
           <Textarea
             id="short-bio"
@@ -103,11 +103,11 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
           <SectionHeader
             size="sm"
             icon={Sparkles}
-            title="বিশেষজ্ঞতা"
-            description="যে বিষয়ে আপনি নির্ভরযোগ্যভাবে উত্তর দিতে পারেন"
+            title={t("scholar.tools.profile.specializationTitle")}
+            description={t("scholar.tools.profile.specializationDescription")}
             className="mb-3"
           />
-          <ChipList label="বিশেষজ্ঞতা">
+          <ChipList label={t("scholar.tools.profile.specializationTitle")}>
             {specialisations.map((item) => (
               <Chip key={item} tone="primary" onRemove={() => setSpecialisations((prev) => prev.filter((x) => x !== item))}>
                 {item}
@@ -115,12 +115,16 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
             ))}
           </ChipList>
           <div className="mt-3 flex flex-wrap items-end gap-2">
-            <Field label="নতুন বিশেষজ্ঞতা" htmlFor="new-spec" className="min-w-52 flex-1">
+            <Field
+              label={t("scholar.tools.profile.newSpecializationLabel")}
+              htmlFor="new-spec"
+              className="min-w-52 flex-1"
+            >
               <Input
                 id="new-spec"
                 value={newSpecialisation}
                 onChange={(event) => setNewSpecialisation(event.target.value)}
-                placeholder="যেমন: উত্তরাধিকার ও ফারায়েজ"
+                placeholder={t("scholar.tools.profile.newSpecializationPlaceholder")}
               />
             </Field>
             <Button
@@ -135,7 +139,7 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
                 setNewSpecialisation("");
               }}
             >
-              যোগ করুন
+              {t("action.add")}
             </Button>
           </div>
         </div>
@@ -145,7 +149,7 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
             size="sm"
             icon={Globe}
             title={t("label.languages")}
-            description="যে ভাষায় আপনি উত্তর দিতে স্বচ্ছন্দ"
+            description={t("scholar.tools.profile.languagesDescription")}
             className="mb-3"
           />
           <ChipList label={t("label.languages")}>
@@ -156,12 +160,16 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
             ))}
           </ChipList>
           <div className="mt-3 flex flex-wrap items-end gap-2">
-            <Field label="নতুন ভাষা" htmlFor="new-language" className="min-w-40 flex-1">
+            <Field
+              label={t("scholar.tools.profile.newLanguageLabel")}
+              htmlFor="new-language"
+              className="min-w-40 flex-1"
+            >
               <Input
                 id="new-language"
                 value={newLanguage}
                 onChange={(event) => setNewLanguage(event.target.value)}
-                placeholder="যেমন: ফারসি"
+                placeholder={t("scholar.tools.profile.newLanguagePlaceholder")}
               />
             </Field>
             <Button
@@ -176,13 +184,18 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
                 setNewLanguage("");
               }}
             >
-              যোগ করুন
+              {t("action.add")}
             </Button>
           </div>
         </div>
 
         <div>
-          <SectionHeader size="sm" icon={Info} title="ফিকহি পদ্ধতি" className="mb-3" />
+          <SectionHeader
+            size="sm"
+            icon={Info}
+            title={t("scholar.tools.profile.fiqhTitle")}
+            className="mb-3"
+          />
           <div className="flex flex-wrap gap-1.5">
             {scholar.fiqhFocus.map((focus) => (
               <Badge key={focus} tone="info" size="sm">
@@ -195,23 +208,21 @@ export function ProfileEditor({ scholar }: { scholar: Scholar }) {
         <Switch
           id="available-toggle"
           label={t("label.available")}
-          description="বন্ধ রাখলে নতুন প্রশ্ন আপনার কাছে রাউট হবে না, তবে বিদ্যমান প্রশ্ন দেখা যাবে।"
+          description={t("scholar.tools.profile.availabilityDescription")}
           checked={available}
           onChange={(next) => {
             setAvailable(next);
             setNotice(
               next
-                ? "এখন নতুন প্রশ্ন গ্রহণ করছেন।"
-                : "প্রশ্ন গ্রহণ বন্ধ করা হয়েছে — বিদ্যমান প্রশ্ন আগের মতোই থাকবে।",
+                ? t("scholar.tools.profile.availabilityOn")
+                : t("scholar.tools.profile.availabilityOff"),
             );
           }}
         />
 
         <Callout tone="info">
           <p className="text-[0.8125rem] leading-relaxed">
-            নাম, মাদরাসা ও শিক্ষাগত যোগ্যতা পরিবর্তন করতে অ্যাডমিনের অনুমোদন প্রয়োজন,
-            কারণ সেগুলো যাচাইকৃত তথ্য। বিভাগ পরিবর্তনের আবেদনও অ্যাডমিন প্যানেল থেকে
-            নিশ্চিত করা হয়।
+            {t("scholar.tools.profile.adminApprovalNote")}
           </p>
         </Callout>
       </div>

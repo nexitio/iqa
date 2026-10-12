@@ -16,20 +16,27 @@ export default function AddScholarPage() {
         icon={UserPlus}
         tone="admin"
         patterned
-        breadcrumbs={[{ label: "অ্যাডমিন", href: "/admin" }, { label: "আলেম", href: "/admin/scholars" }, { label: "নতুন" }]}
+        breadcrumbs={[
+          { label: <T k="admin.breadcrumb" />, href: "/admin" },
+          { label: <T k="admin.scholars.breadcrumb" />, href: "/admin/scholars" },
+          { label: <T k="label.new" /> },
+        ]}
       />
 
-      <Callout tone="info" icon={Info} title="যোগ্যতা যাচাই সবার আগে">
-        আলেমের প্রোফাইল পাবলিক হওয়ার সাথে সাথে তাঁর নামে জ্ঞানের দায় অন্তর্ভুক্ত হয়। তাই দাওরা-এ-হাদীস, ইফতা কোর্স বা
-        সমমানের যোগ্যতা যাচাই করা এই ফর্মের সবচেয়ে গুরুত্বপূর্ণ অংশ।
+      {/* `Callout.title` is typed `string`, so these two headings stay Bangla until
+          the shared prop is widened to ReactNode; their bodies are translated. */}
+      <Callout tone="info" icon={Info} title={<T k="admin.scholars.verifyFirstTitle" />}>
+        <T k="admin.scholars.verifyFirstBody" />
       </Callout>
 
       <AddScholarForm />
 
-      <Callout tone="success" icon={BadgeCheck} title="প্রশ্ন রাউটিং কীভাবে প্রভাবিত হয়">
-        আলেমকে যে বিভাগে রাখা হবে, সেই বিভাগের প্রশ্নেই তিনি অগ্রাধিকার পান। একজন আলেম একাধিক বিভাগে থাকতে পারেন, এবং
-        প্রধান বিভাগটি ঠিক করে দেওয়া হয় কারণ রাউটিং প্রথমে সেখানেই প্রশ্ন পাঠায়। বিভাগগুলো সঠিকভাবে নির্ধারণ করলে
-        প্রশ্ন দ্রুত সঠিক আলেমের কাছে পৌঁছে।
+      <Callout
+        tone="success"
+        icon={BadgeCheck}
+        title={<T k="admin.scholars.routingImpactTitle" />}
+      >
+        <T k="admin.scholars.routingImpactBody" />
       </Callout>
     </div>
   );

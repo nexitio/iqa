@@ -48,6 +48,15 @@ export function bnOrdinal(n: number): string {
   return special[n] ?? `${toBnDigits(n)}তম`;
 }
 
+/** Ordinal that follows the reader: "৩য়" in Bangla, "3rd" in English. */
+export function ordinal(n: number, locale: Locale = "bn"): string {
+  if (locale === "bn") return bnOrdinal(n);
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  const suffix = ["th", "st", "nd", "rd"][n % 10] ?? "th";
+  return `${n}${suffix}`;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Dates                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -142,19 +151,26 @@ export function bdDateParts(date: Date = new Date()) {
   };
 }
 
-/** "শুক্রবার, ৬ অক্টোবর ২০২৬" */
-export function gregorianDateBn(date: Date = new Date(), locale: Locale = "bn"): string {
+/**
+ * "শুক্রবার, ৬ অক্টোবর ২০২৬"
+ *
+ * Dense meta lines drop the weekday so the date stays on one line: they pass
+ * `weekday = false` and get "৬ অক্টোবর ২০২৬" / "6 October 2026".
+ */
+export function gregorianDateBn(date: Date = new Date(), locale: Locale = "bn", weekday = true): string {
   const p = bdDateParts(date);
   if (locale === "en") {
-    return new Intl.DateTimeFormat("en-GB", {
-      weekday: "long",
+    const options: Intl.DateTimeFormatOptions = {
       day: "numeric",
       month: "long",
       year: "numeric",
       timeZone: BD_TIMEZONE,
-    }).format(date);
+    };
+    if (weekday) options.weekday = "long";
+    return new Intl.DateTimeFormat("en-GB", options).format(date);
   }
-  return `${WEEKDAYS_BN[p.weekdayIndex]}, ${toBnDigits(p.day)} ${GREGORIAN_MONTHS_BN[p.month - 1]} ${toBnDigits(p.year)}`;
+  const day = `${toBnDigits(p.day)} ${GREGORIAN_MONTHS_BN[p.month - 1]} ${toBnDigits(p.year)}`;
+  return weekday ? `${WEEKDAYS_BN[p.weekdayIndex]}, ${day}` : day;
 }
 
 export function weekdayBn(date: Date, short = false): string {
@@ -375,13 +391,14 @@ export function countdownBn(minutes: number, locale: Locale = "bn"): string {
   return `${toBnDigits(h)} ঘন্টা ${toBnDigits(rest)} মিনিট বাকি`;
 }
 
-/** Clock countdown "০২:১৪:০৯" for the next-prayer widget. */
-export function countdownClock(minutes: number): string {
+/** Clock countdown "০২:১৪:০৯" for the next-prayer widget, in the reader's digits. */
+export function countdownClock(minutes: number, locale: Locale = "bn"): string {
   const total = Math.max(0, Math.round(minutes * 60));
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
   const s = total % 60;
-  return toBnDigits(`${pad(h)}:${pad(m)}:${pad(s)}`);
+  const clock = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  return locale === "bn" ? toBnDigits(clock) : clock;
 }
 
 /* -------------------------------------------------------------------------- */

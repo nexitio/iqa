@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, Input } from "@/components/ui";
+import { useI18n } from "@/lib/i18n";
 import type { AdminSocialProvider, ProviderInput } from "@/lib/social-client";
 
 /**
@@ -28,6 +29,11 @@ export function draftFrom(provider: AdminSocialProvider): Draft {
   return { clientId: provider.clientId, clientSecret: "" };
 }
 
+/**
+ * `error` is a dictionary key rather than a finished sentence: this function has
+ * no locale, and the console that shows the message does — so the wording stays
+ * with the copy it belongs to.
+ */
 export type DraftResult = { ok: true; input: ProviderInput } | { ok: false; error: string };
 
 /**
@@ -39,7 +45,7 @@ export type DraftResult = { ok: true; input: ProviderInput } | { ok: false; erro
 export function draftToInput(draft: Draft): DraftResult {
   const clientId = draft.clientId.trim();
   if (!clientId) {
-    return { ok: false, error: "Client ID ছাড়া এই প্রোভাইডার দিয়ে সাইন-ইন শুরু করা যায় না।" };
+    return { ok: false, error: "admin.social.clientIdRequired" };
   }
 
   return {
@@ -64,6 +70,7 @@ export function ProviderForm({
   idPrefix: string;
   disabled?: boolean;
 }) {
+  const { t } = useI18n();
   const id = (field: string) => `${idPrefix}-${field}`;
 
   return (
@@ -72,7 +79,7 @@ export function ProviderForm({
         label="Client ID"
         htmlFor={id("client-id")}
         required
-        hint="প্রোভাইডারের ড্যাশবোর্ড থেকে পাওয়া অ্যাপ আইডি"
+        hint={t("admin.social.clientIdHint")}
       >
         <Input
           id={id("client-id")}
@@ -86,7 +93,7 @@ export function ProviderForm({
       <Field
         label="Client secret"
         htmlFor={id("client-secret")}
-        hint="শুধু সংরক্ষিত হয় — পরে আর পড়া যায় না। খালি রাখলে আগেরটি অপরিবর্তিত থাকবে।"
+        hint={t("admin.social.clientSecretHint")}
       >
         <Input
           id={id("client-secret")}

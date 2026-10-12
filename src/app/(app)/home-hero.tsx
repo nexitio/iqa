@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Flame, PenLine, Plus } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { bdDateParts, toBnDigits } from "@/lib/bn";
+import { bdDateParts } from "@/lib/bn";
 import { CURRENT_USER, USER_STREAK_DAYS } from "@/lib/data/personal";
+import { Digits } from "@/components/i18n-text";
 import { Avatar, Button } from "@/components/ui";
 import { NextPrayerChip, TodayStrip } from "@/components/personal";
 
@@ -81,7 +82,7 @@ export function HomeHero() {
                 ·
               </span>
               <Flame className="size-3.5" aria-hidden />
-              {toBnDigits(USER_STREAK_DAYS)} দিন
+              <Digits value={USER_STREAK_DAYS} /> দিন
             </Link>
           </div>
         </div>

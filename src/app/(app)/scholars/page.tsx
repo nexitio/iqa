@@ -10,7 +10,6 @@ import {
   Zap,
 } from "@/components/icons";
 import { fetchDepartments, fetchDistricts, fetchScholars, MAX_LIMIT } from "@/lib/content-api";
-import { formatNumber } from "@/lib/bn";
 import {
   Button,
   Card,
@@ -23,7 +22,7 @@ import {
   StatTile,
 } from "@/components/ui";
 import { ScholarRow, departmentIcon } from "@/components/people";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, Num, T, Pick } from "@/components/i18n-text";
 import { ScholarDirectory } from "./scholar-directory";
 
 export const metadata: Metadata = {
@@ -109,28 +108,28 @@ export default async function ScholarsPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile
             label={<T k="label.total" />}
-            value={formatNumber(scholarsResult.data.total, "bn")}
+            value={<Num value={scholarsResult.data.total} />}
             hint="সক্রিয় আলেম ও মুফতি"
             icon={Users}
             tone="primary"
           />
           <StatTile
             label={<T k="label.verifiedScholar" />}
-            value={formatNumber(verified, "bn")}
+            value={<Num value={verified} />}
             hint="যোগ্যতা যাচাই করা হয়েছে"
             icon={BadgeCheck}
             tone="success"
           />
           <StatTile
             label={<T k="label.answers" />}
-            value={formatNumber(totalAnswers, "bn")}
+            value={<Num value={totalAnswers} />}
             hint="মোট প্রদত্ত উত্তর"
             icon={MessageCircleQuestion}
             tone="info"
           />
           <StatTile
             label={<T k="label.fatwas" />}
-            value={formatNumber(totalFatwas, "bn")}
+            value={<Num value={totalFatwas} />}
             hint="প্রকাশিত ফতোয়া"
             icon={Scale}
             tone="accent"
@@ -208,7 +207,7 @@ export default async function ScholarsPage() {
                   href={`/departments/${department.slug}`}
                   tone={department.tone}
                   icon={departmentIcon(department.icon)}
-                  count={department.scholarIds.length}
+                  count={<Digits value={department.scholarIds.length} />}
                 >
                   <Pick value={department.shortName} />
                 </Chip>

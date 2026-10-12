@@ -199,6 +199,15 @@ export async function fetchArticle(slug: string): Promise<ApiResult<ArticleDetai
 export interface FatwaQuery {
   /** A department slug. */
   department?: string;
+  /**
+   * A topic slug.
+   *
+   * A fatwa carries department links rather than topic tags, so this resolves to
+   * "filed under one of the topic's departments" — the whole of what a fatwa's
+   * subject membership can be. There is no `includeRelated` here: a topic filter
+   * is already the related tier for rulings.
+   */
+  topic?: string;
   fiqh?: "hanafi" | "comparative";
   mufti?: string;
   pinned?: boolean;

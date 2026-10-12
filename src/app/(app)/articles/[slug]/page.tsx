@@ -25,7 +25,7 @@ import {
   fetchScholars,
   indexBy,
 } from "@/lib/content-api";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, GregDate, Num, Pick, T } from "@/components/i18n-text";
 import {
   Avatar,
   Badge,
@@ -53,7 +53,6 @@ import {
   QuestionRow,
   ReferenceList,
 } from "@/components/knowledge";
-import { toBnDigits } from "@/lib/bn";
 import { extractHeadings } from "../../_content/outline";
 import { SaveShareBar, TableOfContents } from "../../_content/reader-tools";
 
@@ -206,7 +205,7 @@ export default async function ArticleDetailPage({
             <Pick value={primaryDepartment?.name} fallback="প্রবন্ধ" />
           </Badge>
           <Badge tone="neutral" size="sm" className="bg-white/20 text-white backdrop-blur-sm">
-            {toBnDigits(article.readingMinutes)} মিনিট পাঠ
+            <Digits value={article.readingMinutes} /> মিনিট পাঠ
           </Badge>
         </div>
       </div>
@@ -230,28 +229,36 @@ export default async function ArticleDetailPage({
                     label: (
                       <>
                         <T k="label.publishedOn" />{" "}
-                        {new Date(article.publishedAt).toLocaleDateString("bn-BD", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
+                        <GregDate day={new Date(article.publishedAt)} weekday={false} />
                       </>
                     ),
                   },
                   {
                     key: "views",
                     icon: Eye,
-                    label: `${toBnDigits(article.viewCount.toLocaleString("en-IN"))} বার পঠিত`,
+                    label: (
+                      <>
+                        <Num value={article.viewCount} /> বার পঠিত
+                      </>
+                    ),
                   },
                   {
                     key: "saved",
                     icon: BookMarked,
-                    label: `${toBnDigits(article.bookmarkCount)} বার সংরক্ষিত`,
+                    label: (
+                      <>
+                        <Digits value={article.bookmarkCount} /> বার সংরক্ষিত
+                      </>
+                    ),
                   },
                   {
                     key: "refs",
                     icon: Scale,
-                    label: `${toBnDigits(article.referenceCount)} টি দলিল`,
+                    label: (
+                      <>
+                        <Digits value={article.referenceCount} /> টি দলিল
+                      </>
+                    ),
                   },
                 ]}
               />
@@ -359,13 +366,13 @@ export default async function ArticleDetailPage({
                 <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border pt-4 text-center">
                   <div>
                     <p className="font-display text-lg font-bold tabular text-foreground">
-                      {toBnDigits(writtenBy.stats.articles)}
+                      <Digits value={writtenBy.stats.articles} />
                     </p>
                     <p className="text-[0.6875rem] text-subtle-foreground">প্রবন্ধ</p>
                   </div>
                   <div>
                     <p className="font-display text-lg font-bold tabular text-foreground">
-                      {toBnDigits(writtenBy.stats.fatwas)}
+                      <Digits value={writtenBy.stats.fatwas} />
                     </p>
                     <p className="text-[0.6875rem] text-subtle-foreground">ফতোয়া</p>
                   </div>
@@ -388,7 +395,7 @@ export default async function ArticleDetailPage({
                       <Pick value={credential.title} />
                     </p>
                     <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted-foreground">
-                      <Pick value={credential.institution} /> · {toBnDigits(credential.year)}
+                      <Pick value={credential.institution} /> · <Digits value={credential.year} />
                     </p>
                   </div>
                 ))}

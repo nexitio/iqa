@@ -26,7 +26,7 @@ import {
   KpiGrid,
   TrendPanel,
 } from "@/components/console";
-import { T } from "@/components/i18n-text";
+import { Digits, T, TimeAgo } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -38,8 +38,6 @@ import {
   SectionHeader,
   StatTile,
 } from "@/components/ui";
-import { toBnDigits } from "@/lib/bn";
-import { relativeTime } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "সারসংক্ষেপ" };
 
@@ -56,8 +54,8 @@ function ActionQueues() {
     {
       href: "/admin/scholars",
       icon: UserPlus,
-      title: "আলেম আবেদন",
-      description: "যোগ্যতা যাচাই করে প্রোফাইল অনুমোদন করুন — বিভাগ নির্ধারণ প্রশ্ন রাউটিং ঠিক করে।",
+      title: <T k="admin.home.queueScholars" />,
+      description: <T k="admin.home.queueScholarsHelp" />,
       count: pendingApplications.length,
       tone: "warning" as const,
       items: pendingApplications.slice(0, 3).map((a) => a.nameBn),
@@ -66,19 +64,23 @@ function ActionQueues() {
     {
       href: "/admin/review",
       icon: ClipboardCheck,
-      title: "পর্যালোচনা সারি",
-      description: "প্রকাশের আগে প্রবন্ধ ও ফতোয়ার দলিল যাচাই করুন।",
+      title: <T k="admin.reviewQueue" />,
+      description: <T k="admin.home.queueReviewHelp" />,
       count: pendingReview.length,
       tone: "primary" as const,
       items: pendingReview.slice(0, 3).map((i) => i.titleBn),
       more: pendingReview.length > 3 ? pendingReview.length - 3 : 0,
-      note: oldestReview ? `সবচেয়ে পুরনো জমা ${relativeTime(oldestReview.submittedAt, "bn")}` : undefined,
+      note: oldestReview ? (
+        <>
+          <T k="admin.home.oldestSubmission" /> <TimeAgo iso={oldestReview.submittedAt} />
+        </>
+      ) : undefined,
     },
     {
       href: "/admin/reports",
       icon: Flag,
-      title: "মডারেশন রিপোর্ট",
-      description: "ভুল তথ্য, দলাদলি ও আদববিরোধী আচরণের অভিযোগ নিষ্পত্তি করুন।",
+      title: <T k="admin.home.queueReports" />,
+      description: <T k="admin.home.queueReportsHelp" />,
       count: openReports.length,
       tone: "danger" as const,
       items: openReports.slice(0, 3).map((r) => r.reasonLabelBn),
@@ -90,8 +92,8 @@ function ActionQueues() {
     <section className="space-y-4">
       <SectionHeader
         icon={ShieldCheck}
-        title="আজকের কাজ"
-        description="যেসব বিষয়ে অ্যাডমিনের সিদ্ধান্ত প্রয়োজন"
+        title={<T k="admin.home.todaysWork" />}
+        description={<T k="admin.home.todaysWorkHelp" />}
       />
       <div className="grid gap-4 lg:grid-cols-3">
         {queues.map((queue) => (
@@ -102,7 +104,7 @@ function ActionQueues() {
               title={
                 <span className="flex items-center gap-2">
                   {queue.title}
-                  <CountPill value={toBnDigits(queue.count)} tone={queue.tone} />
+                  <CountPill value={<Digits value={queue.count} />} tone={queue.tone} />
                 </span>
               }
               subtitle={queue.description}
@@ -118,7 +120,7 @@ function ActionQueues() {
               ))}
               {queue.more > 0 ? (
                 <li className="px-3 text-[0.6875rem] text-subtle-foreground">
-                  আরও {toBnDigits(queue.more)}টি অপেক্ষমাণ
+                  <T k="admin.home.morePending" vars={{ count: queue.more }} />
                 </li>
               ) : null}
             </ul>
@@ -133,7 +135,7 @@ function ActionQueues() {
                 href={queue.href}
                 className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-primary transition-colors hover:text-primary-hover"
               >
-                দেখুন ও সিদ্ধান্ত নিন
+                <T k="admin.home.reviewAndDecide" />
                 <ArrowRight className="size-3.5" aria-hidden />
               </Link>
             </div>
@@ -152,7 +154,7 @@ export default function AdminOverviewPage() {
       <PageHeader
         eyebrow={<T k="admin.title" />}
         title={<T k="admin.overview" />}
-        description="প্ল্যাটফর্মের ব্যবহার, প্রশ্নপ্রবাহ, বিভাগভিত্তিক চাহিদা ও মডারেশন অবস্থা এক জায়গায়। এই সংখ্যাগুলোই ঠিক করে কোথায় নতুন আলেম দরকার।"
+        description={<T k="admin.home.description" />}
         icon={LayoutDashboard}
         tone="admin"
         patterned
@@ -172,13 +174,14 @@ export default function AdminOverviewPage() {
         <Callout
           tone={ADMIN_OVERVIEW.flaggedContent > 0 ? "danger" : "warning"}
           icon={Flag}
-          title="দ্রুত মনোযোগ প্রয়োজন"
+          title={<T k="admin.home.needsAttention" />}
         >
-          {toBnDigits(ADMIN_OVERVIEW.unansweredOver24h)}টি প্রশ্ন ২৪ ঘণ্টার বেশি উত্তরহীন — সংশ্লিষ্ট বিভাগে হয়তো
-          আলেমের ঘাটতি আছে, রাউটিং পুনর্বিবেচনা করুন।{" "}
-          {ADMIN_OVERVIEW.flaggedContent > 0
-            ? `${toBnDigits(ADMIN_OVERVIEW.flaggedContent)}টি কনটেন্ট মডারেশনের অপেক্ষায় আছে।`
-            : ""}
+          <T k="admin.home.unansweredCallout" vars={{ count: ADMIN_OVERVIEW.unansweredOver24h }} />{" "}
+          {ADMIN_OVERVIEW.flaggedContent > 0 ? (
+            <T k="admin.home.flaggedContent" vars={{ count: ADMIN_OVERVIEW.flaggedContent }} />
+          ) : (
+            ""
+          )}
         </Callout>
       ) : null}
 
@@ -186,15 +189,15 @@ export default function AdminOverviewPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <TrendPanel
-          title="দৈনিক সক্রিয় ব্যবহারকারী"
-          subtitle="গত ১৪ দিন — সন্ধ্যার পর সর্বোচ্চ সক্রিয়তা"
+          title={<T k="admin.home.activeUsersTrend" />}
+          subtitle={<T k="admin.home.activeUsersTrendHelp" />}
           data={ADMIN_OVERVIEW.dailyActiveTrend}
           tone="primary"
           chart="bar"
         />
         <TrendPanel
-          title="দৈনিক নতুন প্রশ্ন"
-          subtitle="গত ১৪ দিন — ধীরে ধীরে বাড়ছে চাহিদা"
+          title={<T k="admin.home.questionsTrend" />}
+          subtitle={<T k="admin.home.questionsTrendHelp" />}
           data={ADMIN_OVERVIEW.questionsTrend}
           tone="accent"
           chart="sparkline"
@@ -216,52 +219,52 @@ export default function AdminOverviewPage() {
             <CardHeader
               icon={Route}
               tone="primary"
-              title="বিভাগ কভারেজ"
-              subtitle="প্রতিটি বিভাগে অন্তত একজন আলেম থাকা রাউটিংয়ের জন্য জরুরি"
+              title={<T k="admin.home.departmentCoverage" />}
+              subtitle={<T k="admin.home.departmentCoverageHelp" />}
             />
             <div className="mt-4 grid grid-cols-2 gap-3">
               <StatTile
                 size="sm"
-                label="কভার করা বিভাগ"
-                value={toBnDigits(departmentCoverage)}
+                label={<T k="admin.home.coveredDepartments" />}
+                value={<Digits value={departmentCoverage} />}
                 icon={ShieldCheck}
                 tone={departmentCoverage === DEPARTMENTS.length ? "success" : "warning"}
               />
               <StatTile
                 size="sm"
-                label="মোট বিভাগ"
-                value={toBnDigits(DEPARTMENTS.length)}
+                label={<T k="admin.home.totalDepartments" />}
+                value={<Digits value={DEPARTMENTS.length} />}
                 icon={Users}
                 tone="info"
               />
             </div>
             <p className="mt-3 text-[0.6875rem] leading-relaxed text-subtle-foreground">
-              প্রতিটি বিভাগে কমপক্ষে একজন আলেম থাকলে সংশ্লিষ্ট বিভাগের প্রশ্ন কখনো অনাদায়ী থাকে না।
+              <T k="admin.home.coverageNote" />
             </p>
           </Card>
 
           <Card>
-            <CardHeader icon={Clock} tone="info" title="সংক্ষিপ্ত নির্দেশিকা" />
+            <CardHeader icon={Clock} tone="info" title={<T k="admin.home.quickGuide" />} />
             <ul className="mt-3 space-y-2.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                নতুন আলেম যোগ করলে অবশ্যই বিভাগ নির্ধারণ করুন — এটিই রাউটিংয়ের ভিত্তি।
+                <T k="admin.home.guideAddScholar" />
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                দলিলবিহীন বা শর্তহীন রায় পর্যালোচনায় আটকে দিন।
+                <T k="admin.home.guideHoldRulings" />
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                প্রতিটি ফতোয়ার পেছনে মুফতির যোগ্যতা ও স্বাক্ষর প্রকাশ্য রাখুন।
+                <T k="admin.home.guideMuftiCredentials" />
               </li>
             </ul>
             <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
               <Badge tone="admin" size="xs" dot>
-                শুধুমাত্র অ্যাডমিন
+                <T k="admin.home.adminOnly" />
               </Badge>
               <Badge tone="neutral" size="xs">
-                অডিট লগ চালু
+                <T k="admin.home.auditLogOn" />
               </Badge>
             </div>
           </Card>

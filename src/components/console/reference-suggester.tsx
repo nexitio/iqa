@@ -58,12 +58,12 @@ const KIND_META = {
 
 /** Relevance chip built from the 0–1 score. */
 export function MatchChip({ score, className }: { score: number; className?: string }) {
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const value = Math.round(score * 100);
   const tone = value >= 90 ? "success" : value >= 75 ? "primary" : "info";
   return (
     <Badge tone={tone} size="xs" className={className}>
-      {formatNumber(value, locale)}% মিল
+      {t("console.matchPercent", { percent: value })}
     </Badge>
   );
 }
@@ -151,7 +151,9 @@ export function ReferenceSuggestionCard({
 
       {suggestion.matchedTerms.length > 0 ? (
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
-          <span className="text-[0.6875rem] font-medium text-subtle-foreground">মিলে গেছে:</span>
+          <span className="text-[0.6875rem] font-medium text-subtle-foreground">
+            {t("console.matchedTerms")}
+          </span>
           {suggestion.matchedTerms.map((term) => (
             <span
               key={term}
@@ -167,7 +169,7 @@ export function ReferenceSuggestionCard({
 
       <footer className="mt-3.5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5">
         <span className="text-[0.6875rem] tabular text-subtle-foreground">
-          {formatNumber(Math.round(suggestion.score * 100), locale)}/১০০
+          {formatNumber(Math.round(suggestion.score * 100), locale)}/{locale === "bn" ? "১০০" : "100"}
         </span>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <Button
@@ -201,7 +203,7 @@ export function ReferenceSuggester({
   onInsert?: (suggestion: ReferenceSuggestion, asQuote?: boolean) => void;
   className?: string;
 }) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const [deepSearch, setDeepSearch] = useState(false);
 
   const trimmed = draftText.trim();
@@ -247,23 +249,23 @@ export function ReferenceSuggester({
           compact
           icon={Lightbulb}
           tone="accent"
-          title="লেখা শুরু করুন"
-          description="আপনি লিখতে শুরু করলে বিষয়ের সাথে মিলে যাওয়া আয়াত ও হাদীস এখানে প্রস্তাব হিসেবে দেখা যাবে।"
+          title={t("console.startWriting")}
+          description={t("console.startWritingHelp")}
         />
       ) : suggestions.length === 0 ? (
         <EmptyState
           compact
           icon={Library}
-          title="কোনো রেফারেন্স মেলেনি"
-          description="আপনার লেখার বিষয়ে সরাসরি মিলে যাওয়া কোনো আয়াত বা হাদীস পাওয়া যায়নি। বিষয়ভিত্তিক শব্দ যোগ করে দেখুন, যেমন ‘সুদ’, ‘যাকাত’, ‘মা-বাবা’।"
+          title={t("console.noRefsFound")}
+          description={t("console.noRefsFoundHelp")}
         />
       ) : (
         <>
           <p className="mb-3 flex items-center gap-1.5 text-[0.75rem] text-muted-foreground">
             <Info className="size-3.5 shrink-0" aria-hidden />
             {deepSearch
-              ? "সবচেয়ে প্রাসঙ্গিক রেফারেন্সগুলো দেখানো হচ্ছে"
-              : `${formatNumber(keywordHitCount, locale)}টি রেফারেন্স আপনার লেখার সাথে মিলে গেছে`}
+              ? t("console.showingMostRelevant")
+              : t("console.keywordMatches", { count: keywordHitCount })}
           </p>
           <div className="space-y-3">
             {suggestions.map((suggestion) => (
@@ -345,7 +347,7 @@ function AttachedReferenceRow({
         <button
           type="button"
           onClick={() => onRemove(reference.id)}
-          aria-label={`${reference.refBn} সরান`}
+          aria-label={t("console.removeReference", { reference: reference.refBn })}
           className="grid size-8 shrink-0 place-items-center rounded-lg text-subtle-foreground transition-colors hover:bg-danger-soft hover:text-danger"
         >
           <Trash2 className="size-4" aria-hidden />
@@ -425,7 +427,7 @@ export function SmartReferenceCounter({
   suggested: number;
   className?: string;
 }) {
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const coverage = suggested > 0 ? Math.min(100, (attached / suggested) * 100) : 0;
 
   return (
@@ -436,14 +438,14 @@ export function SmartReferenceCounter({
       )}
     >
       <div className="min-w-0 flex-1">
-        <p className="text-[0.75rem] font-semibold text-foreground">দলিলের ভারসাম্য</p>
+        <p className="text-[0.75rem] font-semibold text-foreground">{t("console.evidenceBalance")}</p>
         <p className="mt-0.5 text-[0.6875rem] text-muted-foreground">
-          {formatNumber(attached, locale)}টি যুক্ত · {formatNumber(suggested, locale)}টি প্রস্তাবিত
+          {t("console.evidenceCounts", { attached, suggested })}
         </p>
         <Progress value={coverage} size="xs" tone="accent" className="mt-2" />
       </div>
       <Badge tone={coverage >= 50 ? "success" : "warning"} size="sm">
-        {coverage >= 50 ? "ভালো" : "আরও দলিল দিন"}
+        {coverage >= 50 ? t("console.good") : t("console.addMoreEvidence")}
       </Badge>
     </div>
   );

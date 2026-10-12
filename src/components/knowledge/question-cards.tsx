@@ -23,6 +23,7 @@ import { getUser } from "@/lib/data/personal";
 import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime, toParagraphs } from "@/lib/utils";
 import { findDistrict, formatNumber } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import {
   Avatar,
   Badge,
@@ -253,7 +254,7 @@ export function QuestionRow({ question }: { question: Question }) {
           <span>{relativeTime(question.createdAt, locale)}</span>
           <span aria-hidden>·</span>
           <span>
-            {question.answerCount} {question.answerCount === 1 ? "answer" : "answers"}
+            <Digits value={question.answerCount} /> {question.answerCount === 1 ? "answer" : "answers"}
           </span>
         </span>
       </span>

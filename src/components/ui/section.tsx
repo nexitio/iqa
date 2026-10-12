@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight, ChevronLeft, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { T } from "@/components/i18n-text";
 import { softTone, solidTone, textTone, type Tone } from "./tone";
 
 /* --------------------------------------------------------------- breadcrumbs */
@@ -128,7 +129,8 @@ export function SectionHeader({
   action?: ReactNode;
   /** Convenience: renders a "view all" link when given. */
   href?: string;
-  actionLabel?: string;
+  /** ReactNode so callers can pass a `<T k="…" />` bridge (see `Callout.title`). */
+  actionLabel?: ReactNode;
   tone?: Tone;
   className?: string;
   size?: "sm" | "md";
@@ -161,7 +163,7 @@ export function SectionHeader({
             href={href}
             className="inline-flex shrink-0 items-center gap-1 text-[0.8125rem] font-medium text-primary transition-colors hover:text-primary-hover"
           >
-            {actionLabel ?? "সব দেখুন"}
+            {actionLabel ?? <T k="action.viewAll" />}
             <ArrowRight className="size-3.5" />
           </Link>
         ) : null)}

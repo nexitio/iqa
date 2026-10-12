@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import type { ScholarApplication } from "@/lib/data/admin";
 import { getDepartment } from "@/lib/data/departments";
-import { formatNumber, findDistrict } from "@/lib/bn";
+import { findDistrict } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import { relativeTime } from "@/lib/utils";
 import {
@@ -32,10 +32,11 @@ import {
 
 type Decision = "pending" | "approved" | "rejected";
 
-const DECISION_LABEL: Record<Decision, string> = {
-  pending: "অপেক্ষমাণ",
-  approved: "অনুমোদিত",
-  rejected: "প্রত্যাখ্যাত",
+/** Each decision is shown with the shared `status.*` wording. */
+const DECISION_KEY: Record<Decision, string> = {
+  pending: "status.pending",
+  approved: "status.approved",
+  rejected: "status.rejected",
 };
 
 /**
@@ -53,7 +54,7 @@ export function ApplicationBoard({
   applications: ScholarApplication[];
   className?: string;
 }) {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale } = useI18n();
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [verifying, setVerifying] = useState(true);
   const [notifyApplicant, setNotifyApplicant] = useState(true);
@@ -86,21 +87,23 @@ export function ApplicationBoard({
             <UserPlus className="size-4" aria-hidden />
           </span>
           <div>
-            <h2 className="font-display text-lg font-semibold text-foreground">আলেম আবেদন যাচাই</h2>
+            <h2 className="font-display text-lg font-semibold text-foreground">
+              {t("admin.scholars.board.title")}
+            </h2>
             <p className="mt-0.5 text-[0.75rem] text-muted-foreground">
-              যোগ্যতা যাচাই করে অনুমোদন দিন — অনুমোদনের আগে বিভাগ ঠিক করে নিন, কারণ এটিই প্রশ্ন রাউটিং নির্ধারণ করে।
+              {t("admin.scholars.board.intro")}
             </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="warning" size="sm">
-            অপেক্ষমাণ {formatNumber(pending.length, locale)}
+            {t("admin.scholars.board.pendingBadge", { count: pending.length })}
           </Badge>
           <Badge tone="success" size="sm">
-            অনুমোদিত {formatNumber(approved, locale)}
+            {t("admin.scholars.board.approvedBadge", { count: approved })}
           </Badge>
           <Badge tone="danger" size="sm">
-            প্রত্যাখ্যাত {formatNumber(rejected, locale)}
+            {t("admin.scholars.board.rejectedBadge", { count: rejected })}
           </Badge>
         </div>
       </div>
@@ -111,15 +114,15 @@ export function ApplicationBoard({
             id="verify-profile"
             checked={verifying}
             onChange={setVerifying}
-            label="প্রোফাইল যাচাই করে প্রকাশ করুন"
-            description="যাচাইকৃত প্রোফাইলে যাচাইকৃত আলেম চিহ্ন দেখা যাবে এবং প্রশ্ন রাউটিংয়ে অগ্রাধিকার পাবেন।"
+            label={t("admin.scholars.board.verifyPublish")}
+            description={t("admin.scholars.board.verifyPublishHelp")}
           />
           <Switch
             id="notify-applicant"
             checked={notifyApplicant}
             onChange={setNotifyApplicant}
-            label="সিদ্ধান্তের বিজ্ঞপ্তি পাঠান"
-            description="অনুমোদন বা প্রত্যাখ্যানের তথ্য আবেদনকারীর ইমেইলে পাঠানো হবে।"
+            label={t("admin.scholars.board.notifyDecision")}
+            description={t("admin.scholars.board.notifyDecisionHelp")}
           />
         </div>
       </Card>
@@ -128,8 +131,8 @@ export function ApplicationBoard({
         <EmptyState
           icon={Check}
           tone="success"
-          title="সব আবেদন নিষ্পত্তি হয়েছে"
-          description="এই মুহূর্তে কোনো অপেক্ষমাণ আলেম আবেদন নেই। নতুন আবেদন এলে এখানেই যাচাই করা যাবে।"
+          title={t("admin.scholars.board.emptyTitle")}
+          description={t("admin.scholars.board.emptyBody")}
           className="rounded-panel border border-border bg-surface"
         />
       ) : (
@@ -151,18 +154,18 @@ export function ApplicationBoard({
                           <MapPin className="size-3" aria-hidden />
                           {pick(district.name)}
                           <span aria-hidden>·</span>
-                          {formatNumber(application.experienceYears, locale)} বছরের অভিজ্ঞতা
+                          {t("admin.scholars.board.experience", { count: application.experienceYears })}
                         </p>
                       </div>
                     </div>
-                    <StatusBadge status="pending" label={DECISION_LABEL.pending} />
+                    <StatusBadge status="pending" label={t(DECISION_KEY.pending)} />
                   </header>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <div>
                       <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
                         <Building2 className="size-3.5" aria-hidden />
-                        মাদরাসা
+                        {t("label.madrasah")}
                       </p>
                       <p className="mt-1 text-[0.8125rem] leading-snug text-foreground">
                         {application.madrasahBn}
@@ -175,7 +178,7 @@ export function ApplicationBoard({
                     <div>
                       <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
                         <GraduationCap className="size-3.5" aria-hidden />
-                        যোগ্যতা
+                        {t("admin.scholars.credentials")}
                       </p>
                       <ul className="mt-1.5 space-y-1">
                         {application.credentialsBn.map((credential) => (
@@ -194,7 +197,7 @@ export function ApplicationBoard({
                   <div className="mt-4">
                     <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
                       <Users className="size-3.5" aria-hidden />
-                      প্রস্তাবিত বিভাগ
+                      {t("admin.scholars.board.proposedDepartments")}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {application.departments.map((slug) => {
@@ -209,8 +212,9 @@ export function ApplicationBoard({
                     </div>
                     {application.departments.length < 2 ? (
                       <p className="mt-2 text-[0.6875rem] text-warning">
-                        বিভাগ মাত্র {formatNumber(application.departments.length, locale)}টি — যোগ্যতা অনুযায়ী আরও বিভাগ
-                        যোগ করার কথা ভাবুন।
+                        {t("admin.scholars.board.fewDepartments", {
+                          count: application.departments.length,
+                        })}
                       </p>
                     ) : null}
                   </div>
@@ -218,15 +222,17 @@ export function ApplicationBoard({
                   <footer className="mt-auto flex flex-wrap items-center gap-2 border-t border-border pt-4">
                     <span className="mr-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-subtle-foreground">
                       <Clock className="size-3" aria-hidden />
-                      জমা দিয়েছেন {relativeTime(application.submittedAt, locale)}
+                      {t("admin.scholars.board.submitted", {
+                        time: relativeTime(application.submittedAt, locale),
+                      })}
                     </span>
                     <Button
                       size="sm"
                       icon={Check}
                       onClick={() => decide(application.id, "approved")}
-                      title={verifying ? "যাচাই করে অনুমোদন" : "অনুমোদন"}
+                      title={verifying ? t("admin.scholars.board.approveVerified") : t("action.approve")}
                     >
-                      অনুমোদন
+                      {t("action.approve")}
                     </Button>
                     <Button
                       size="sm"
@@ -235,7 +241,7 @@ export function ApplicationBoard({
                       onClick={() => decide(application.id, "pending")}
                       disabled
                     >
-                      পর্যালোচনায়
+                      {t("admin.scholars.board.backToReview")}
                     </Button>
                     <Button
                       size="sm"
@@ -243,7 +249,7 @@ export function ApplicationBoard({
                       icon={X}
                       onClick={() => decide(application.id, "rejected")}
                     >
-                      প্রত্যাখ্যান
+                      {t("action.reject")}
                     </Button>
                   </footer>
                 </Card>
@@ -256,7 +262,9 @@ export function ApplicationBoard({
       {decided.length > 0 ? (
         <div className="mt-5">
           <Button variant="ghost" size="sm" onClick={() => setShowDecided((v) => !v)}>
-            {showDecided ? "নিষ্পত্তিকৃত লুকান" : `নিষ্পত্তিকৃত দেখুন (${formatNumber(decided.length, locale)})`}
+            {showDecided
+              ? t("admin.scholars.board.hideDecided")
+              : t("admin.scholars.board.showDecided", { count: decided.length })}
           </Button>
           {showDecided ? (
             <ul className="mt-3 space-y-2">
@@ -273,7 +281,7 @@ export function ApplicationBoard({
                     </span>
                     <StatusBadge
                       status={decision === "approved" ? "approved" : "rejected"}
-                      label={DECISION_LABEL[decision]}
+                      label={t(DECISION_KEY[decision])}
                       size="xs"
                     />
                     <Button
@@ -281,7 +289,7 @@ export function ApplicationBoard({
                       variant="ghost"
                       onClick={() => decide(application.id, "pending")}
                     >
-                      ফিরিয়ে নিন
+                      {t("admin.scholars.board.undo")}
                     </Button>
                   </li>
                 );
@@ -292,8 +300,7 @@ export function ApplicationBoard({
       ) : null}
 
       <Callout tone="info" className="mt-5">
-        অনুমোদনের আগে দেখে নিন আবেদনকারীর যোগ্যতা যাচাই করা হয়েছে কি না। অনুমোদনের সাথে সাথে তিনি সংশ্লিষ্ট বিভাগের
-        প্রশ্ন পেতে শুরু করবেন, তাই ভুল বিভাগে যোগ দিলে রাউটিং অকার্যকর হয়ে পড়বে।
+        {t("admin.scholars.board.note")}
       </Callout>
     </section>
   );

@@ -7,7 +7,7 @@ import {
   TrendingUp,
   Users,
 } from "@/components/icons";
-import { T } from "@/components/i18n-text";
+import { Digits, T } from "@/components/i18n-text";
 import { DiscussionRow } from "@/components/knowledge";
 import { ScholarMiniCard } from "@/components/people";
 import {
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui";
 import { DISCUSSIONS, DISCUSSION_REPLIES, getTrendingDiscussions } from "@/lib/data/community";
 import { SCHOLARS } from "@/lib/data/scholars";
-import { toBnDigits } from "@/lib/bn";
 import { DiscussionBrowser } from "./discussion-browser";
 import { GuidelinesPanel } from "./guidelines-panel";
 
@@ -60,23 +59,23 @@ export default function DiscussionsPage() {
       </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label="মোট আলোচনা" value={toBnDigits(DISCUSSIONS.length)} icon={MessagesSquare} />
+        <StatTile label="মোট আলোচনা" value={<Digits value={DISCUSSIONS.length} />} icon={MessagesSquare} />
         <StatTile
           label="মোট উত্তর"
-          value={toBnDigits(DISCUSSION_REPLIES.length)}
+          value={<Digits value={DISCUSSION_REPLIES.length} />}
           icon={Users}
           tone="info"
         />
         <StatTile
           label="আলেমের উত্তর"
-          value={toBnDigits(scholarReplies)}
+          value={<Digits value={scholarReplies} />}
           icon={Sparkles}
           tone="success"
           hint="আলেমদের অংশগ্রহণই আলোচনার মান রক্ষা করে"
         />
         <StatTile
           label="মডারেশনে"
-          value={toBnDigits(underReview)}
+          value={<Digits value={underReview} />}
           icon={ShieldCheck}
           tone="warning"
           hint="পর্যালোচনাধীন আলোচনা স্পষ্টভাবে চিহ্নিত"

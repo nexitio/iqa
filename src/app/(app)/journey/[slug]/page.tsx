@@ -16,7 +16,7 @@ import {
   Sparkles,
   Users,
 } from "@/components/icons";
-import { Num, T } from "@/components/i18n-text";
+import { Digits, Num, Ord, T } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -31,7 +31,6 @@ import {
   type Tone,
 } from "@/components/ui";
 import { JOURNEYS } from "@/lib/data/personal";
-import { bnOrdinal, toBnDigits } from "@/lib/bn";
 import { cn } from "@/lib/utils";
 import type { JourneyDay } from "@/lib/types";
 
@@ -101,7 +100,7 @@ export default async function JourneyDetailPage({ params }: JourneyPageProps) {
         actions={
           nextDay ? (
             <Button href={nextDay.href} icon={Sparkles}>
-              চালিয়ে যান — {bnOrdinal(nextDay.day)} দিন
+              চালিয়ে যান — <Ord value={nextDay.day} /> দিন
             </Button>
           ) : (
             <Badge tone="success" size="md" icon={CheckCircle2}>
@@ -114,7 +113,7 @@ export default async function JourneyDetailPage({ params }: JourneyPageProps) {
           <Ring value={percent} size={76} thickness={7} tone={finished ? "success" : "accent"}>
             <div className="text-center">
               <p className="text-[0.75rem] font-bold tabular leading-none text-foreground">
-                {toBnDigits(Math.round(percent))}%
+                <Digits value={Math.round(percent)} />%
               </p>
               <p className="mt-0.5 text-[0.5625rem] text-subtle-foreground">সম্পন্ন</p>
             </div>
@@ -176,7 +175,11 @@ export default async function JourneyDetailPage({ params }: JourneyPageProps) {
         <section className="min-w-0">
           <SectionHeader
             title="দিন অনুযায়ী পরিকল্পনা"
-            description={`${bnOrdinal(journey.totalDays)} পর্যন্ত ধাপে ধাপে সাজানো`}
+            description={
+              <>
+                <Ord value={journey.totalDays} /> পর্যন্ত ধাপে ধাপে সাজানো
+              </>
+            }
             icon={CalendarDays}
           />
 
@@ -203,7 +206,7 @@ export default async function JourneyDetailPage({ params }: JourneyPageProps) {
                       {day.completed ? (
                         <CheckCircle2 className="size-4" aria-hidden />
                       ) : (
-                        toBnDigits(day.day)
+                        <Digits value={day.day} />
                       )}
                     </span>
                     {!isLast ? (
@@ -229,7 +232,7 @@ export default async function JourneyDetailPage({ params }: JourneyPageProps) {
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-                            {bnOrdinal(day.day)} দিন
+                            <Ord value={day.day} /> দিন
                           </span>
                           <Badge tone={meta.tone} size="xs" icon={meta.icon}>
                             {meta.label}

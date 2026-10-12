@@ -9,9 +9,24 @@ import { cn } from "@/lib/utils";
 /**
  * Bangla ⇄ English switch. The control is a single pill so it stays discoverable
  * without taking up room in a crowded header.
+ *
+ * `collapseLabels` drops the বাং/EN lettering below `sm`, leaving the globe as a
+ * 36px round control. The two labels plus the icon are 91px wide, which is more
+ * than the app bar can spare on a phone: measured at 320px the row overflowed by
+ * 3px and pushed the avatar off its own edge. Hosts with room (the settings
+ * panel, the console header) keep the labels at every width.
  */
-export function LocaleToggle({ className, compact = false }: { className?: string; compact?: boolean }) {
+export function LocaleToggle({
+  className,
+  compact = false,
+  collapseLabels = false,
+}: {
+  className?: string;
+  compact?: boolean;
+  collapseLabels?: boolean;
+}) {
   const { locale, toggleLocale, t } = useI18n();
+  const label = collapseLabels ? "hidden sm:inline" : undefined;
   return (
     <button
       type="button"
@@ -25,9 +40,9 @@ export function LocaleToggle({ className, compact = false }: { className?: strin
       )}
     >
       <Languages className="size-3.5" aria-hidden />
-      <span className={locale === "bn" ? "text-primary" : undefined}>বাং</span>
-      <span className="text-border-strong">/</span>
-      <span className={locale === "en" ? "text-primary" : undefined}>EN</span>
+      <span className={cn(label, locale === "bn" ? "text-primary" : undefined)}>বাং</span>
+      <span className={cn(label, "text-border-strong")}>/</span>
+      <span className={cn(label, locale === "en" ? "text-primary" : undefined)}>EN</span>
     </button>
   );
 }

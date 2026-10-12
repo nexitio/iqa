@@ -7,6 +7,7 @@ import type { Article, Department, Fatwa, Scholar } from "@/lib/types";
 import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
 import { getDepartment } from "@/lib/data/departments";
 import { useI18n } from "@/lib/i18n";
+import { Digits } from "@/components/i18n-text";
 import { cn, relativeTime } from "@/lib/utils";
 import { formatNumber } from "@/lib/bn";
 import {
@@ -148,7 +149,15 @@ export function ArticleCard({
   const meta = (
     <ContentMetaBar
       items={[
-        { key: "read", icon: Clock, label: `${article.readingMinutes} ${t("label.minutes")}` },
+        {
+          key: "read",
+          icon: Clock,
+          label: (
+            <>
+              <Digits value={article.readingMinutes} /> {t("label.minutes")}
+            </>
+          ),
+        },
         { key: "views", icon: Eye, label: formatNumber(article.viewCount, locale) },
         { key: "saved", icon: BookmarkCheck, label: formatNumber(article.bookmarkCount, locale) },
       ]}
@@ -294,7 +303,7 @@ export function ArticleRow({ article }: { article: Article }) {
         </span>
         <span className="mt-1 flex items-center gap-2 text-[0.6875rem] text-subtle-foreground">
           <Clock className="size-3" aria-hidden />
-          {article.readingMinutes} {t("label.minutes")}
+          <Digits value={article.readingMinutes} /> {t("label.minutes")}
           <span aria-hidden>·</span>
           {formatNumber(article.viewCount, locale)} {t("label.views")}
         </span>

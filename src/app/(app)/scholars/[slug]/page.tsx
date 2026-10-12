@@ -25,7 +25,7 @@ import {
   fetchScholar,
   fetchScholars,
 } from "@/lib/content-api";
-import { formatNumber, gregorianDateBn } from "@/lib/bn";
+
 import {
   Badge,
   Button,
@@ -47,7 +47,7 @@ import {
   ScholarStatBar,
   departmentIcon,
 } from "@/components/people";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, GregDate, Num, T, Pick } from "@/components/i18n-text";
 import { FollowButton } from "../follow-button";
 import { BioProse, ProfileSections, ScholarBiographySection } from "./profile-sections";
 
@@ -182,21 +182,21 @@ export default async function ScholarProfilePage({
       label: "প্রবন্ধ",
       href: `/scholars/${scholar.slug}?tab=articles`,
       icon: FileText,
-      count: articles.length,
+      count: <Digits value={articles.length} />,
     },
     {
       id: "fatwas",
       label: "ফতোয়া",
       href: `/scholars/${scholar.slug}?tab=fatwas`,
       icon: Scale,
-      count: fatwas.length,
+      count: <Digits value={fatwas.length} />,
     },
     {
       id: "answers",
       label: "উত্তর",
       href: `/scholars/${scholar.slug}?tab=answers`,
       icon: MessageCircleQuestion,
-      count: answers.length,
+      count: <Digits value={answers.length} />,
     },
   ];
 
@@ -247,7 +247,7 @@ export default async function ScholarProfilePage({
             <Pick value={district?.name} fallback={scholar.district} />
           </Badge>
           <Badge tone="neutral" size="sm" icon={CalendarDays}>
-            {gregorianDateBn(new Date(scholar.joinedAt), "bn")}
+            <GregDate day={new Date(scholar.joinedAt)} />
           </Badge>
         </div>
 
@@ -352,7 +352,7 @@ export default async function ScholarProfilePage({
             />
             <div className="mt-4 flex items-baseline gap-2">
               <span className="font-display text-3xl font-bold tabular text-foreground">
-                {formatNumber(scholar.responseTimeHours, "bn")}
+                <Num value={scholar.responseTimeHours} />
               </span>
               <span className="text-[0.8125rem] text-muted-foreground">
                 <T k="console.hours" /> — সাধারণত
@@ -427,7 +427,7 @@ export default async function ScholarProfilePage({
                   <T k="label.helpful" />
                 </span>
                 <span className="font-display text-lg font-bold tabular text-foreground">
-                  {formatNumber(scholar.stats.helpfulVotes, "bn")}
+                  <Num value={scholar.stats.helpfulVotes} />
                 </span>
               </div>
               <div className="flex items-baseline justify-between gap-3">
@@ -435,7 +435,7 @@ export default async function ScholarProfilePage({
                   <T k="label.followers" />
                 </span>
                 <span className="font-display text-lg font-bold tabular text-foreground">
-                  {formatNumber(scholar.stats.followers, "bn")}
+                  <Num value={scholar.stats.followers} />
                 </span>
               </div>
             </div>

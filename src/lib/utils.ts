@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { toBnDigits } from "./bn";
+import type { Locale } from "./types";
 
 /** Merge Tailwind classes with conflict resolution. */
 export function cn(...inputs: ClassValue[]) {
@@ -32,7 +34,25 @@ export function compact(n: number) {
   return `${(n / 10000000).toFixed(1)}Cr`;
 }
 
-/** "৩ ঘন্টা আগে" style relative time from an ISO string. */
+/**
+ * The same compaction in the reader's numerals — "১.২K" in Bangla, "1.2K" in
+ * English.
+ *
+ * `compact` is deliberately Latin (it is also used for machine-ish labels);
+ * anything a reader sees goes through this instead, because a Bangla card that
+ * says "812" while the rest of the page says "৮১২" reads as two languages in one
+ * line.
+ */
+export function formatCount(n: number, locale: Locale = "bn") {
+  return locale === "bn" ? toBnDigits(compact(n)) : compact(n);
+}
+
+/**
+ * "৩ ঘন্টা আগে" style relative time from an ISO string.
+ *
+ * The Bangla branch converts its own digits: a locale that changes the words but
+ * leaves the number in ASCII produces "3 ঘন্টা আগে", which is neither language.
+ */
 export function relativeTime(
   iso: string,
   locale: "bn" | "en" = "bn",
@@ -55,12 +75,12 @@ export function relativeTime(
   }
 
   if (min < 1) return "এইমাত্র";
-  if (min < 60) return `${min} মিনিট আগে`;
-  if (hour < 24) return `${hour} ঘন্টা আগে`;
-  if (day < 7) return `${day} দিন আগে`;
-  if (day < 30) return `${Math.floor(day / 7)} সপ্তাহ আগে`;
-  if (day < 365) return `${Math.floor(day / 30)} মাস আগে`;
-  return `${Math.floor(day / 365)} বছর আগে`;
+  if (min < 60) return `${toBnDigits(min)} মিনিট আগে`;
+  if (hour < 24) return `${toBnDigits(hour)} ঘন্টা আগে`;
+  if (day < 7) return `${toBnDigits(day)} দিন আগে`;
+  if (day < 30) return `${toBnDigits(Math.floor(day / 7))} সপ্তাহ আগে`;
+  if (day < 365) return `${toBnDigits(Math.floor(day / 30))} মাস আগে`;
+  return `${toBnDigits(Math.floor(day / 365))} বছর আগে`;
 }
 
 /** Reading-time estimate that accounts for Arabic script density. */

@@ -17,7 +17,7 @@ import {
 } from "@/components/icons";
 import { ActivityFeed, RoutingQueueCard, ScholarPerformancePanel } from "@/components/console";
 import { AvailableInline } from "./availability";
-import { Num, T } from "@/components/i18n-text";
+import { Num, Pick, T } from "@/components/i18n-text";
 import {
   Avatar,
   Badge,
@@ -80,11 +80,22 @@ export default function ScholarOverviewPage() {
                 <T k="console.welcome" />
               </p>
               <h1 className="mt-1 font-display text-xl font-bold leading-tight text-foreground sm:text-2xl">
-                {scholar ? `${scholar.honorific.bn} ${scholar.name.bn}` : "আলেম"}
+                {scholar ? (
+                  <>
+                    <Pick value={scholar.honorific} /> <Pick value={scholar.name} />
+                  </>
+                ) : (
+                  <T k="scholar.core.scholarFallback" />
+                )}
               </h1>
               <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
-                {scholar?.madrasah.bn}
-                {district ? ` · ${district.name.bn}` : ""}
+                <Pick value={scholar?.madrasah} />
+                {district ? (
+                  <>
+                    {" · "}
+                    <Pick value={district.name} />
+                  </>
+                ) : null}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {scholar ? (
@@ -94,10 +105,11 @@ export default function ScholarOverviewPage() {
                   />
                 ) : null}
                 <Badge tone="accent" size="sm" icon={Star}>
-                  রেটিং <Num value={scholar?.rating ?? 0} />
+                  <T k="scholar.core.rating" /> <Num value={scholar?.rating ?? 0} />
                 </Badge>
                 <Badge tone="primary" size="sm" icon={Trophy}>
-                  <Num value={scholar?.stats.helpfulVotes ?? 0} /> সহায়ক ভোট
+                  <Num value={scholar?.stats.helpfulVotes ?? 0} />{" "}
+                  <T k="scholar.core.helpfulVotes" />
                 </Badge>
               </div>
             </div>
@@ -116,19 +128,19 @@ export default function ScholarOverviewPage() {
         <div className="mt-6 grid gap-4 border-t border-border pt-5 sm:grid-cols-3">
           <div>
             <p className="text-[0.6875rem] font-medium uppercase tracking-wide text-subtle-foreground">
-              আমার বিভাগসমূহ
+              <T k="console.yourDepartments" />
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {departments.map((department) => (
                 <Badge key={department.slug} tone={department.tone} size="xs">
-                  {department.shortName.bn}
+                  <Pick value={department.shortName} />
                 </Badge>
               ))}
             </div>
           </div>
           <div>
             <p className="text-[0.6875rem] font-medium uppercase tracking-wide text-subtle-foreground">
-              উত্তর দেওয়ার হার
+              <T k="scholar.core.answerRate" />
             </p>
             <p className="mt-1.5 font-display text-xl font-bold tabular text-foreground">
               <Num value={answeredRate} />%
@@ -137,13 +149,13 @@ export default function ScholarOverviewPage() {
           </div>
           <div>
             <p className="text-[0.6875rem] font-medium uppercase tracking-wide text-subtle-foreground">
-              এখন অপেক্ষমাণ
+              <T k="scholar.core.nowPending" />
             </p>
             <p className="mt-1.5 font-display text-xl font-bold tabular text-foreground">
               <Num value={pending.length} />
             </p>
             <p className="mt-1 text-[0.6875rem] text-subtle-foreground">
-              আপনার কাছে রাউট করা মোট <Num value={queue.length} />টি প্রশ্নের মধ্যে
+              <T k="scholar.core.pendingHint" vars={{ count: queue.length }} />
             </p>
           </div>
         </div>
@@ -157,39 +169,39 @@ export default function ScholarOverviewPage() {
         <SectionHeader
           size="sm"
           icon={GraduationCap}
-          title="জ্ঞানের অবদান"
-          description="আপনার প্রোফাইলে প্রকাশিত মোট অবদান — পাঠকরা এটিই দেখেন"
+          title={<T k="scholar.core.contributions" />}
+          description={<T k="scholar.core.contributionsHint" />}
         />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatTile
-            label="প্রশ্নের উত্তর"
+            label={<T k="scholar.core.statAnswers" />}
             value={<Num value={scholar?.stats.answers ?? 0} />}
             icon={MessageCircleQuestion}
             tone="primary"
-            hint="সর্বকাল"
+            hint={<T k="scholar.core.hintAllTime" />}
           />
           <StatTile
-            label="প্রকাশিত ফতোয়া"
+            label={<T k="scholar.core.statFatwas" />}
             value={<Num value={scholar?.stats.fatwas ?? 0} />}
             icon={Scale}
             tone="accent"
-            hint="আনুষ্ঠানিক রায়"
+            hint={<T k="scholar.core.hintFormalRulings" />}
             href="/scholar/fatwas"
           />
           <StatTile
-            label="প্রবন্ধ"
+            label={<T k="scholar.core.statArticles" />}
             value={<Num value={scholar?.stats.articles ?? 0} />}
             icon={BookOpen}
             tone="info"
-            hint="প্রকাশিত ও খসড়া মিলিয়ে"
+            hint={<T k="scholar.core.hintPublishedAndDrafts" />}
             href="/scholar/articles"
           />
           <StatTile
-            label="অনুসারী"
+            label={<T k="scholar.core.statFollowers" />}
             value={<Num value={scholar?.stats.followers ?? 0} />}
             icon={Eye}
             tone="scholar"
-            hint="আপনার প্রোফাইল ফলো করেন"
+            hint={<T k="scholar.core.hintFollowYou" />}
           />
         </div>
       </section>
@@ -199,10 +211,10 @@ export default function ScholarOverviewPage() {
         <SectionHeader
           icon={Sparkles}
           tone="accent"
-          title="প্রশ্ন বাক্সে অপেক্ষমাণ"
-          description="আপনার কাছে সবচেয়ে অগ্রাধিকার নিয়ে আসা প্রশ্নগুলো"
+          title={<T k="scholar.core.pendingInInbox" />}
+          description={<T k="scholar.core.pendingInInboxHint" />}
           href="/scholar/questions"
-          actionLabel="সব প্রশ্ন দেখুন"
+          actionLabel={<T k="scholar.core.allQuestions" />}
         />
         {topThree.length > 0 ? (
           <div className="space-y-4">
@@ -220,8 +232,8 @@ export default function ScholarOverviewPage() {
             <CardHeader
               icon={Trophy}
               tone="success"
-              title="সব প্রশ্নের উত্তর দেওয়া হয়েছে"
-              subtitle="এখন অপেক্ষমাণ কোনো প্রশ্ন নেই — নতুন প্রশ্ন এলে এখানে দেখা যাবে।"
+              title={<T k="scholar.core.allAnswered" />}
+              subtitle={<T k="scholar.core.allAnsweredHint" />}
             />
           </Card>
         )}
@@ -232,7 +244,7 @@ export default function ScholarOverviewPage() {
 
         <div className="space-y-4">
           <Card>
-            <CardHeader icon={Clock} title="সাড়া দেওয়ার গড় সময়" />
+            <CardHeader icon={Clock} title={<T k="scholar.core.avgResponseTime" />} />
             <p className="mt-3 font-display text-3xl font-bold leading-none text-foreground">
               <Num value={dashboard.avgResponseHours} />
               <span className="ml-1.5 font-bangla text-sm font-medium text-muted-foreground">
@@ -240,8 +252,7 @@ export default function ScholarOverviewPage() {
               </span>
             </p>
             <p className="mt-2 text-[0.75rem] leading-relaxed text-muted-foreground">
-              দ্রুত সাড়া দিলে প্রশ্ন রাউটিংয়ে আপনার অগ্রাধিকার বাড়ে — ব্যবহারকারীর
-              অপেক্ষার সময় কমলে প্ল্যাটফর্মের ওপর আস্থাও বাড়ে।
+              <T k="scholar.core.avgResponseHint" />
             </p>
           </Card>
 
@@ -249,39 +260,41 @@ export default function ScholarOverviewPage() {
             <CardHeader
               icon={Flame}
               tone="danger"
-              title="টানা উত্তর দেওয়ার ধারা"
-              subtitle="প্রতিদিন অন্তত একটি প্রশ্নের উত্তর দিন"
+              title={<T k="scholar.core.streakTitle" />}
+              subtitle={<T k="scholar.core.streakSubtitle" />}
             />
             <p className="mt-3 font-display text-3xl font-bold leading-none text-foreground">
               <Num value={dashboard.streakDays} />
               <span className="ml-1.5 font-bangla text-sm font-medium text-muted-foreground">
-                দিন
+                <T k="scholar.core.days" />
               </span>
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button href="/scholar/questions" size="sm" variant="soft" icon={MessageCircleQuestion}>
-                প্রশ্নের উত্তর দিন
+                <T k="console.answerQuestion" />
               </Button>
               <Link
                 href="/scholar/profile"
                 className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-primary transition-colors hover:text-primary-hover"
               >
-                পাবলিক প্রোফাইল
+                <T k="console.publicProfile" />
                 <ArrowRight className="size-3.5" />
               </Link>
             </div>
           </Card>
 
           <Card>
-            <CardHeader icon={ThumbsUp} title="কেন রাউটিং গুরুত্বপূর্ণ" />
+            <CardHeader icon={ThumbsUp} title={<T k="scholar.core.whyRouting" />} />
             <p className="mt-2 text-[0.75rem] leading-relaxed text-muted-foreground">
-              কোনো ব্যবহারকারী প্রশ্ন করলে সংশ্লিষ্ট বিভাগের আলেমরা আগে পান। আপনি
-              <span className="font-medium text-foreground"> {departments[0]?.shortName.bn ?? "ফিকহ"} </span>
-              বিভাগের প্রধান বিশেষজ্ঞ, তাই এই বিষয়ের প্রশ্নগুলো প্রথমে আপনার কাছে আসে।
+              <T k="scholar.core.whyRoutingLead" />{" "}
+              <span className="font-medium text-foreground">
+                {departments[0] ? <Pick value={departments[0].shortName} /> : <T k="label.fiqh" />}
+              </span>{" "}
+              <T k="scholar.core.whyRoutingTail" />
             </p>
             <div className="mt-4">
               <Button href="/scholar/questions" variant="outline" size="sm" full icon={Sparkles}>
-                রাউটিং ব্যাখ্যা দেখুন
+                <T k="scholar.core.explainRouting" />
               </Button>
             </div>
           </Card>

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { BookOpen, Compass, Sparkles } from "@/components/icons";
-import { T } from "@/components/i18n-text";
+import { Num, T } from "@/components/i18n-text";
 import { ContinueLearningRail } from "@/components/personal";
 import { PopularSurahChips } from "@/components/quran";
 import { POPULAR_SURAHS, QURAN_SURAHS } from "@/lib/data/quran";
 import { READING_PROGRESS } from "@/lib/data/personal";
-import { formatNumber } from "@/lib/bn";
 import { SurahExplorer } from "./surah-explorer";
 
 export const metadata: Metadata = {
@@ -49,9 +48,9 @@ export default function QuranIndexPage() {
   const totalAyahs = QURAN_SURAHS.reduce((sum, s) => sum + s.ayahCount, 0);
 
   const stats = [
-    { value: formatNumber(QURAN_SURAHS.length, "bn"), label: "সূরা" },
-    { value: formatNumber(totalAyahs, "bn"), label: "আয়াত" },
-    { value: formatNumber(surahsWithText, "bn"), label: "টির অনুবাদ প্রস্তুত" },
+    { value: <Num value={QURAN_SURAHS.length} />, label: "সূরা" },
+    { value: <Num value={totalAyahs} />, label: "আয়াত" },
+    { value: <Num value={surahsWithText} />, label: "টির অনুবাদ প্রস্তুত" },
   ];
 
   return (

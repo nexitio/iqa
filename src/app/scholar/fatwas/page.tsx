@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Eye, Pin, Plus, Scale, Sparkles } from "@/components/icons";
 import { FatwaCard } from "@/components/knowledge";
-import { Num, T } from "@/components/i18n-text";
+import { Digits, Num, T } from "@/components/i18n-text";
 import {
   Button,
   Callout,
@@ -75,42 +75,42 @@ export default async function ScholarFatwasPage({
         icon={Scale}
         eyebrow={<T k="console.title" />}
         title={<T k="console.myFatwas" />}
-        description="আপনার দেওয়া আনুষ্ঠানিক ফিকহি রায়। প্রতিটি ফতোয়ায় দলিলের সংখ্যা ও প্রকাশনার অবস্থা স্পষ্ট রাখা হয়েছে, যাতে পাঠক রায়ের ভিত্তি যাচাই করতে পারেন।"
+        description={<T k="scholar.core.fatwasDescription" />}
         actions={
           <Button href="/scholar/write" icon={Plus}>
-            নতুন ফতোয়া লিখুন
+            <T k="scholar.core.newFatwa" />
           </Button>
         }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
-          label="মোট ফতোয়া"
+          label={<T k="scholar.core.statTotalFatwas" />}
           value={<Num value={all.length} />}
           icon={Scale}
           tone="primary"
-          hint="প্রকাশিত ও খসড়া মিলিয়ে"
+          hint={<T k="scholar.core.hintPublishedAndDrafts" />}
         />
         <StatTile
-          label="প্রকাশিত"
+          label={<T k="status.published" />}
           value={<Num value={published.length} />}
           icon={Sparkles}
           tone="success"
-          hint="পাঠকের জন্য উন্মুক্ত"
+          hint={<T k="scholar.core.hintOpenToReaders" />}
         />
         <StatTile
-          label="সংযুক্ত দলিল"
+          label={<T k="scholar.core.statEvidence" />}
           value={<Num value={totalReferences} />}
           icon={Pin}
           tone="accent"
-          hint="আয়াত ও হাদীস মিলিয়ে"
+          hint={<T k="scholar.core.hintEvidenceMix" />}
         />
         <StatTile
-          label="মোট পাঠ"
+          label={<T k="scholar.core.statTotalViews" />}
           value={<Num value={totalViews} />}
           icon={Eye}
           tone="info"
-          hint={`${pinned.length}টি বিশেষভাবে চিহ্নিত`}
+          hint={<T k="scholar.core.hintPinned" vars={{ count: pinned.length }} />}
         />
       </div>
 
@@ -119,8 +119,8 @@ export default async function ScholarFatwasPage({
           <SectionHeader
             size="sm"
             icon={Scale}
-            title="অবস্থা"
-            description="ফতোয়ার প্রকাশনার অবস্থা"
+            title={<T k="scholar.core.statusTitle" />}
+            description={<T k="scholar.core.statusHint" />}
             className="mb-3"
           />
           <ChipList label="অবস্থা">
@@ -129,9 +129,9 @@ export default async function ScholarFatwasPage({
                 key={filter.id}
                 href={buildHref(filter.id, activeFiqh)}
                 active={activeStatus === filter.id}
-                count={countForStatus(filter.id)}
+                count={<Digits value={countForStatus(filter.id)} />}
               >
-                {filter.key ? <T k={filter.key} /> : "সব"}
+                {filter.key ? <T k={filter.key} /> : <T k="scholar.core.all" />}
               </Chip>
             ))}
           </ChipList>
@@ -141,8 +141,8 @@ export default async function ScholarFatwasPage({
           <SectionHeader
             size="sm"
             icon={Sparkles}
-            title="মাযহাবভিত্তিক"
-            description="রায় কোন পদ্ধতিতে দেওয়া হয়েছে"
+            title={<T k="scholar.core.madhabTitle" />}
+            description={<T k="scholar.core.madhabHint" />}
             className="mb-3"
           />
           <ChipList label="মাযহাব">
@@ -152,7 +152,7 @@ export default async function ScholarFatwasPage({
                 href={buildHref(activeStatus, filter.id)}
                 active={activeFiqh === filter.id}
               >
-                {filter.key ? <T k={filter.key} /> : "সব"}
+                {filter.key ? <T k={filter.key} /> : <T k="scholar.core.all" />}
               </Chip>
             ))}
           </ChipList>
@@ -164,11 +164,11 @@ export default async function ScholarFatwasPage({
           <EmptyState
             icon={Scale}
             tone="accent"
-            title="এখনো কোনো ফতোয়া লেখা হয়নি"
-            description="আপনার প্রথম আনুষ্ঠানিক রায়টি লিখুন — প্রশ্ন, সংক্ষিপ্ত জবাব এবং দলিলসহ।"
+            title={<T k="scholar.core.noFatwas" />}
+            description={<T k="scholar.core.noFatwasHint" />}
             action={
               <Button href="/scholar/write" icon={Plus}>
-                নতুন ফতোয়া লিখুন
+                <T k="scholar.core.newFatwa" />
               </Button>
             }
           />
@@ -178,11 +178,11 @@ export default async function ScholarFatwasPage({
           <EmptyState
             icon={Scale}
             tone="accent"
-            title="এই ফিল্টারে কোনো ফতোয়া নেই"
-            description="অন্য অবস্থা বা মাযহাব বেছে নিন, অথবা সব ফতোয়া দেখুন।"
+            title={<T k="scholar.core.noFatwasInFilter" />}
+            description={<T k="scholar.core.noFatwasInFilterHint" />}
             action={
               <Button href="/scholar/fatwas" variant="outline">
-                সব ফতোয়া দেখুন
+                <T k="scholar.core.seeAllFatwas" />
               </Button>
             }
           />
@@ -195,13 +195,14 @@ export default async function ScholarFatwasPage({
         </div>
       )}
 
-      <ContentPending message="ফতোয়া প্রকাশের আগে একজন পর্যালোচকের অনুমোদন প্রয়োজন হবে — সেই ওয়ার্কফ্লো ব্যাকএন্ড যুক্ত হলে সক্রিয় হবে। এখন ফতোয়াগুলো শুধু এই প্যানেলে দেখা যাচ্ছে।" />
+      <ContentPending message={<T k="scholar.core.reviewPending" />} />
 
       <Callout tone="info">
         <p className="text-[0.8125rem] leading-relaxed">
-          <span className="font-semibold text-foreground">মনে রাখবেন:</span> ফতোয়া হলো
-          আনুষ্ঠানিক রায়, আর সাধারণ উত্তর হলো পথনির্দেশ। ব্যক্তিগত ও জটিল বিষয়ে
-          প্রশ্নকারীকে সরাসরি স্থানীয় আলেমের সঙ্গে পরামর্শ করতে বলুন।
+          <span className="font-semibold text-foreground">
+            <T k="scholar.core.rememberLabel" />
+          </span>{" "}
+          <T k="scholar.core.rememberBody" />
         </p>
       </Callout>
     </div>

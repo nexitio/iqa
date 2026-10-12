@@ -7,13 +7,19 @@ import type { Scholar } from "@/lib/types";
  * `./departments.ts`, and `primaryDepartmentId` is always one of them. The
  * question-routing engine scores candidates from these two facts, so they must
  * stay consistent.
+ *
+ * A `name` is the person's name and nothing else; the title is `honorific`, and
+ * every screen that shows a scholar composes the two. The dataset used to repeat
+ * the title inside `name` as well, so composing printed it twice — "মুফতি মুফতি
+ * আব্দুর রহমান" / "Mufti Mufti Abdur Rahman" — and the avatars drew their
+ * initials from the title rather than from the name.
  */
 
 export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-1",
     slug: "mufti-abdur-rahman",
-    name: { bn: "মুফতি আব্দুর রহমান", en: "Mufti Abdur Rahman" },
+    name: { bn: "আব্দুর রহমান", en: "Abdur Rahman" },
     honorific: { bn: "মুফতি", en: "Mufti" },
     avatarColor: "#0d6b4f",
     shortBio: {
@@ -34,9 +40,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "ইংরেজি"],
     credentials: [
-      { id: "cred-1-1", title: { bn: "দাওরায়ে হাদীস (মাস্টার্স সমমান)", en: "Dawra-e-Hadith (Masters equivalent)" }, institution: { bn: "জামিয়া আহলিয়া দারুল উলূম মুঈনুল ইসলাম, হাটহাজারী", en: "Jamia Ahlia Darul Ulum Moinul Islam, Hathazari" }, year: "২০০৫" },
-      { id: "cred-1-2", title: { bn: "ইফতা কোর্স (দারুল ইফতা)", en: "Ifta course (Darul Ifta)" }, institution: { bn: "দারুল ইফতা, হাটহাজারী, চট্টগ্রাম", en: "Darul Ifta, Hathazari, Chattogram" }, year: "২০১২" },
-      { id: "cred-1-3", title: { bn: "উসুলুল ফিকহ প্রশিক্ষণ", en: "Training in Usul al-Fiqh" }, institution: { bn: "আল-আজহার বিশ্ববিদ্যালয়, কায়রো", en: "Al-Azhar University, Cairo" }, year: "২০১৫" },
+      { id: "cred-1-1", title: { bn: "দাওরায়ে হাদীস (মাস্টার্স সমমান)", en: "Dawra-e-Hadith (Masters equivalent)" }, institution: { bn: "জামিয়া আহলিয়া দারুল উলূম মুঈনুল ইসলাম, হাটহাজারী", en: "Jamia Ahlia Darul Ulum Moinul Islam, Hathazari" }, year: "2005" },
+      { id: "cred-1-2", title: { bn: "ইফতা কোর্স (দারুল ইফতা)", en: "Ifta course (Darul Ifta)" }, institution: { bn: "দারুল ইফতা, হাটহাজারী, চট্টগ্রাম", en: "Darul Ifta, Hathazari, Chattogram" }, year: "2012" },
+      { id: "cred-1-3", title: { bn: "উসুলুল ফিকহ প্রশিক্ষণ", en: "Training in Usul al-Fiqh" }, institution: { bn: "আল-আজহার বিশ্ববিদ্যালয়, কায়রো", en: "Al-Azhar University, Cairo" }, year: "2015" },
     ],
     madrasah: { bn: "জামিয়া রাহমানিয়া আরাবিয়া, ঢাকা", en: "Jamia Rahmania Arabia, Dhaka" },
     district: "dhaka",
@@ -51,7 +57,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-2",
     slug: "dr-imran-hossain",
-    name: { bn: "ড. ইমরান হোসেন", en: "Dr. Imran Hossain" },
+    name: { bn: "ইমরান হোসেন", en: "Imran Hossain" },
     honorific: { bn: "অধ্যাপক ড.", en: "Prof. Dr." },
     avatarColor: "#1f6f9e",
     shortBio: {
@@ -72,9 +78,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "ইংরেজি", "আরবি"],
     credentials: [
-      { id: "cred-2-1", title: { bn: "ইসলামিক স্টাডিজে পিএইচডি", en: "PhD in Islamic Studies" }, institution: { bn: "ঢাকা বিশ্ববিদ্যালয়", en: "University of Dhaka" }, year: "২০১৪" },
-      { id: "cred-2-2", title: { bn: "এমএ, ইসলামিক স্টাডিজ", en: "MA in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "২০০৭" },
-      { id: "cred-2-3", title: { bn: "হাদীস গবেষণা ডিপ্লোমা", en: "Diploma in Hadith research" }, institution: { bn: "ইসলামিক ইউনিভার্সিটি অব মদীনা", en: "Islamic University of Madinah" }, year: "২০১১" },
+      { id: "cred-2-1", title: { bn: "ইসলামিক স্টাডিজে পিএইচডি", en: "PhD in Islamic Studies" }, institution: { bn: "ঢাকা বিশ্ববিদ্যালয়", en: "University of Dhaka" }, year: "2014" },
+      { id: "cred-2-2", title: { bn: "এমএ, ইসলামিক স্টাডিজ", en: "MA in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "2007" },
+      { id: "cred-2-3", title: { bn: "হাদীস গবেষণা ডিপ্লোমা", en: "Diploma in Hadith research" }, institution: { bn: "ইসলামিক ইউনিভার্সিটি অব মদীনা", en: "Islamic University of Madinah" }, year: "2011" },
     ],
     madrasah: { bn: "ঢাকা বিশ্ববিদ্যালয়, ইসলামিক স্টাডিজ বিভাগ", en: "University of Dhaka, Department of Islamic Studies" },
     district: "dhaka",
@@ -89,7 +95,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-3",
     slug: "mufti-saiful-islam",
-    name: { bn: "মুফতি সাইফুল ইসলাম", en: "Mufti Saiful Islam" },
+    name: { bn: "সাইফুল ইসলাম", en: "Saiful Islam" },
     honorific: { bn: "মুফতি", en: "Mufti" },
     avatarColor: "#a97a1f",
     shortBio: {
@@ -110,9 +116,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "ইংরেজি"],
     credentials: [
-      { id: "cred-3-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া আহলিয়া দারুল উলূম মুঈনুল ইসলাম, হাটহাজারী", en: "Jamia Ahlia Darul Ulum Moinul Islam, Hathazari" }, year: "২০০৮" },
-      { id: "cred-3-2", title: { bn: "ইসলামিক ফাইন্যান্সে এমবিএ", en: "MBA in Islamic Finance" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "২০১৬" },
-      { id: "cred-3-3", title: { bn: "শরীয়াহ অ্যাডভাইজরি সার্টিফিকেট", en: "Shariah advisory certificate" }, institution: { bn: "দারুল ইফতা, ঢাকা", en: "Darul Ifta, Dhaka" }, year: "২০১৯" },
+      { id: "cred-3-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া আহলিয়া দারুল উলূম মুঈনুল ইসলাম, হাটহাজারী", en: "Jamia Ahlia Darul Ulum Moinul Islam, Hathazari" }, year: "2008" },
+      { id: "cred-3-2", title: { bn: "ইসলামিক ফাইন্যান্সে এমবিএ", en: "MBA in Islamic Finance" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "2016" },
+      { id: "cred-3-3", title: { bn: "শরীয়াহ অ্যাডভাইজরি সার্টিফিকেট", en: "Shariah advisory certificate" }, institution: { bn: "দারুল ইফতা, ঢাকা", en: "Darul Ifta, Dhaka" }, year: "2019" },
     ],
     madrasah: { bn: "ইসলামিক রিসার্চ সেন্টার, ঢাকা", en: "Islamic Research Centre, Dhaka" },
     district: "dhaka",
@@ -127,7 +133,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-4",
     slug: "shaykh-ataur-rahman",
-    name: { bn: "শায়খ আতাউর রহমান", en: "Shaykh Ataur Rahman" },
+    name: { bn: "আতাউর রহমান", en: "Ataur Rahman" },
     honorific: { bn: "মুহাদ্দিস", en: "Muhaddith" },
     avatarColor: "#6b7f3a",
     shortBio: {
@@ -148,9 +154,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "উর্দু"],
     credentials: [
-      { id: "cred-4-1", title: { bn: "দাওরায়ে হাদীস", en: "Dawra-e-Hadith" }, institution: { bn: "জামিয়া ইসলামিয়া পটিয়া, চট্টগ্রাম", en: "Jamia Islamia Patiya, Chattogram" }, year: "১৯৯৬" },
-      { id: "cred-4-2", title: { bn: "হাদীসে উচ্চতর গবেষণা (তাখাসসুস)", en: "Advanced specialisation in Hadith (Takhassus)" }, institution: { bn: "মাদানী কারখানা, দারুল উলূম দেওবন্দ ধারা", en: "Madani Markaz, Darul Uloom Deoband tradition" }, year: "২০০১" },
-      { id: "cred-4-3", title: { bn: "তাহকীকুল হাদীস কোর্স", en: "Tahqiq al-Hadith course" }, institution: { bn: "বেফাকুল মাদারিসিল আরাবিয়া, বাংলাদেশ", en: "Befaqul Madarisil Arabia, Bangladesh" }, year: "২০০৪" },
+      { id: "cred-4-1", title: { bn: "দাওরায়ে হাদীস", en: "Dawra-e-Hadith" }, institution: { bn: "জামিয়া ইসলামিয়া পটিয়া, চট্টগ্রাম", en: "Jamia Islamia Patiya, Chattogram" }, year: "1996" },
+      { id: "cred-4-2", title: { bn: "হাদীসে উচ্চতর গবেষণা (তাখাসসুস)", en: "Advanced specialisation in Hadith (Takhassus)" }, institution: { bn: "মাদানী কারখানা, দারুল উলূম দেওবন্দ ধারা", en: "Madani Markaz, Darul Uloom Deoband tradition" }, year: "2001" },
+      { id: "cred-4-3", title: { bn: "তাহকীকুল হাদীস কোর্স", en: "Tahqiq al-Hadith course" }, institution: { bn: "বেফাকুল মাদারিসিল আরাবিয়া, বাংলাদেশ", en: "Befaqul Madarisil Arabia, Bangladesh" }, year: "2004" },
     ],
     madrasah: { bn: "জামিয়া ইসলামিয়া পটিয়া, চট্টগ্রাম", en: "Jamia Islamia Patiya, Chattogram" },
     district: "chattogram",
@@ -165,7 +171,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-5",
     slug: "dr-faridah-yasmin",
-    name: { bn: "ড. ফরিদা ইয়াসমিন", en: "Dr. Faridah Yasmin" },
+    name: { bn: "ফরিদা ইয়াসমিন", en: "Faridah Yasmin" },
     honorific: { bn: "ড.", en: "Dr." },
     avatarColor: "#a3405f",
     shortBio: {
@@ -186,9 +192,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "ইংরেজি", "আরবি"],
     credentials: [
-      { id: "cred-5-1", title: { bn: "ইসলামিক স্টাডিজে পিএইচডি", en: "PhD in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "২০১৫" },
-      { id: "cred-5-2", title: { bn: "ইফতা ও নারী ফিকহ কোর্স", en: "Ifta and women's fiqh course" }, institution: { bn: "তামিরুল মিল্লাত কামিল মাদ্রাসা, টঙ্গী", en: "Tamirul Millat Kamil Madrasah, Tongi" }, year: "২০১০" },
-      { id: "cred-5-3", title: { bn: "ফ্যামিলি কাউন্সেলিং সনদ", en: "Family counselling certificate" }, institution: { bn: "বাংলাদেশ ইনস্টিটিউট অব ইসলামিক স্টাডিজ", en: "Bangladesh Institute of Islamic Studies" }, year: "২০১৮" },
+      { id: "cred-5-1", title: { bn: "ইসলামিক স্টাডিজে পিএইচডি", en: "PhD in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "2015" },
+      { id: "cred-5-2", title: { bn: "ইফতা ও নারী ফিকহ কোর্স", en: "Ifta and women's fiqh course" }, institution: { bn: "তামিরুল মিল্লাত কামিল মাদ্রাসা, টঙ্গী", en: "Tamirul Millat Kamil Madrasah, Tongi" }, year: "2010" },
+      { id: "cred-5-3", title: { bn: "ফ্যামিলি কাউন্সেলিং সনদ", en: "Family counselling certificate" }, institution: { bn: "বাংলাদেশ ইনস্টিটিউট অব ইসলামিক স্টাডিজ", en: "Bangladesh Institute of Islamic Studies" }, year: "2018" },
     ],
     madrasah: { bn: "মহিলা মাদ্রাসা ও ফতোয়া কেন্দ্র, ঢাকা", en: "Women's Madrasah and Fatwa Centre, Dhaka" },
     district: "dhaka",
@@ -203,7 +209,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-6",
     slug: "mufti-nurul-amin",
-    name: { bn: "মুফতি নুরুল আমিন", en: "Mufti Nurul Amin" },
+    name: { bn: "নুরুল আমিন", en: "Nurul Amin" },
     honorific: { bn: "মুফতি", en: "Mufti" },
     avatarColor: "#0f7a4a",
     shortBio: {
@@ -224,8 +230,8 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি"],
     credentials: [
-      { id: "cred-6-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া রাহমানিয়া আরাবিয়া, ঢাকা", en: "Jamia Rahmania Arabia, Dhaka" }, year: "২০০৩" },
-      { id: "cred-6-2", title: { bn: "ফিকহুল ইবাদাত তাখাসসুস", en: "Takhassus in Fiqh al-Ibadat" }, institution: { bn: "দারুল ইফতা, হাটহাজারী", en: "Darul Ifta, Hathazari" }, year: "২০০৬" },
+      { id: "cred-6-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া রাহমানিয়া আরাবিয়া, ঢাকা", en: "Jamia Rahmania Arabia, Dhaka" }, year: "2003" },
+      { id: "cred-6-2", title: { bn: "ফিকহুল ইবাদাত তাখাসসুস", en: "Takhassus in Fiqh al-Ibadat" }, institution: { bn: "দারুল ইফতা, হাটহাজারী", en: "Darul Ifta, Hathazari" }, year: "2006" },
     ],
     madrasah: { bn: "জামিয়া ইসলামিয়া, কুমিল্লা", en: "Jamia Islamia, Cumilla" },
     district: "cumilla",
@@ -240,7 +246,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-7",
     slug: "ustadh-tanvir-ahmed",
-    name: { bn: "উস্তাদ তানভীর আহমেদ", en: "Ustadh Tanvir Ahmed" },
+    name: { bn: "তানভীর আহমেদ", en: "Tanvir Ahmed" },
     honorific: { bn: "উস্তাদ", en: "Ustadh" },
     avatarColor: "#256d8c",
     shortBio: {
@@ -261,9 +267,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "ইংরেজি"],
     credentials: [
-      { id: "cred-7-1", title: { bn: "ইসলামিক স্টাডিজে স্নাতকোত্তর", en: "MA in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "২০১৯" },
-      { id: "cred-7-2", title: { bn: "ইসলামিক স্টাডিজে স্নাতক", en: "BA in Islamic Studies" }, institution: { bn: "ঢাকা কলেজ", en: "Dhaka College" }, year: "২০১৭" },
-      { id: "cred-7-3", title: { bn: "ইউথ ডেভেলপমেন্ট ডিপ্লোমা", en: "Diploma in youth development" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "২০২১" },
+      { id: "cred-7-1", title: { bn: "ইসলামিক স্টাডিজে স্নাতকোত্তর", en: "MA in Islamic Studies" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "2019" },
+      { id: "cred-7-2", title: { bn: "ইসলামিক স্টাডিজে স্নাতক", en: "BA in Islamic Studies" }, institution: { bn: "ঢাকা কলেজ", en: "Dhaka College" }, year: "2017" },
+      { id: "cred-7-3", title: { bn: "ইউথ ডেভেলপমেন্ট ডিপ্লোমা", en: "Diploma in youth development" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "2021" },
     ],
     madrasah: { bn: "ইসলামিক স্টাডিজ সেন্টার, ঢাকা", en: "Islamic Studies Centre, Dhaka" },
     district: "dhaka",
@@ -278,7 +284,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-8",
     slug: "dr-habibur-rahman",
-    name: { bn: "ড. হাবিবুর রহমান", en: "Dr. Habibur Rahman" },
+    name: { bn: "হাবিবুর রহমান", en: "Habibur Rahman" },
     honorific: { bn: "ড.", en: "Dr." },
     avatarColor: "#0d6b4f",
     shortBio: {
@@ -299,9 +305,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "ইংরেজি"],
     credentials: [
-      { id: "cred-8-1", title: { bn: "তাফসীর বিভাগে পিএইচডি", en: "PhD in Tafsir" }, institution: { bn: "আল-আজহার বিশ্ববিদ্যালয়, কায়রো", en: "Al-Azhar University, Cairo" }, year: "২০১৩" },
-      { id: "cred-8-2", title: { bn: "কিরাআত সনদ (সাব'আ)", en: "Ijazah in the seven qira'at" }, institution: { bn: "মাকতাবাতুল কুরআন, কায়রো", en: "Maktabat al-Quran, Cairo" }, year: "২০১১" },
-      { id: "cred-8-3", title: { bn: "দাওরায়ে হাদীস", en: "Dawra-e-Hadith" }, institution: { bn: "তামিরুল মিল্লাত কামিল মাদ্রাসা, টঙ্গী", en: "Tamirul Millat Kamil Madrasah, Tongi" }, year: "২০০২" },
+      { id: "cred-8-1", title: { bn: "তাফসীর বিভাগে পিএইচডি", en: "PhD in Tafsir" }, institution: { bn: "আল-আজহার বিশ্ববিদ্যালয়, কায়রো", en: "Al-Azhar University, Cairo" }, year: "2013" },
+      { id: "cred-8-2", title: { bn: "কিরাআত সনদ (সাব'আ)", en: "Ijazah in the seven qira'at" }, institution: { bn: "মাকতাবাতুল কুরআন, কায়রো", en: "Maktabat al-Quran, Cairo" }, year: "2011" },
+      { id: "cred-8-3", title: { bn: "দাওরায়ে হাদীস", en: "Dawra-e-Hadith" }, institution: { bn: "তামিরুল মিল্লাত কামিল মাদ্রাসা, টঙ্গী", en: "Tamirul Millat Kamil Madrasah, Tongi" }, year: "2002" },
     ],
     madrasah: { bn: "মারকাযুল কুরআন, ঢাকা", en: "Markazul Quran, Dhaka" },
     district: "dhaka",
@@ -316,7 +322,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-9",
     slug: "mufti-ashraful-haque",
-    name: { bn: "মুফতি আশরাফুল হক", en: "Mufti Ashraful Haque" },
+    name: { bn: "আশরাফুল হক", en: "Ashraful Haque" },
     honorific: { bn: "মুফতি", en: "Mufti" },
     avatarColor: "#b06d0a",
     shortBio: {
@@ -337,8 +343,8 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "ইংরেজি"],
     credentials: [
-      { id: "cred-9-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া ইসলামিয়া পটিয়া, চট্টগ্রাম", en: "Jamia Islamia Patiya, Chattogram" }, year: "২০০৭" },
-      { id: "cred-9-2", title: { bn: "বিজ্ঞান ও ধর্মে উচ্চতর ডিপ্লোমা", en: "Advanced diploma in science and religion" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "২০১৭" },
+      { id: "cred-9-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া ইসলামিয়া পটিয়া, চট্টগ্রাম", en: "Jamia Islamia Patiya, Chattogram" }, year: "2007" },
+      { id: "cred-9-2", title: { bn: "বিজ্ঞান ও ধর্মে উচ্চতর ডিপ্লোমা", en: "Advanced diploma in science and religion" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "2017" },
     ],
     madrasah: { bn: "দারুল ইফতা ও গবেষণা কেন্দ্র, চট্টগ্রাম", en: "Darul Ifta and Research Centre, Chattogram" },
     district: "chattogram",
@@ -353,7 +359,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-10",
     slug: "ustadha-sumaiya-khanam",
-    name: { bn: "উস্তাদা সুমাইয়া খানম", en: "Ustadha Sumaiya Khanam" },
+    name: { bn: "সুমাইয়া খানম", en: "Sumaiya Khanam" },
     honorific: { bn: "উস্তাদা", en: "Ustadha" },
     avatarColor: "#a3405f",
     shortBio: {
@@ -374,9 +380,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "আরবি", "ইংরেজি"],
     credentials: [
-      { id: "cred-10-1", title: { bn: "দাওরায়ে হাদীস (মহিলা শাখা)", en: "Dawra-e-Hadith (women's section)" }, institution: { bn: "মহিলা মাদ্রাসা, ঢাকা", en: "Women's Madrasah, Dhaka" }, year: "২০১২" },
-      { id: "cred-10-2", title: { bn: "আত্মশুদ্ধি ও তাযকিয়া কোর্স", en: "Course in tazkiyah" }, institution: { bn: "আল-জামিয়া আল-ইসলামিয়া, ঢাকা", en: "Al-Jamia Al-Islamia, Dhaka" }, year: "২০১৬" },
-      { id: "cred-10-3", title: { bn: "বাংলা সাহিত্যে স্নাতক", en: "BA in Bangla Literature" }, institution: { bn: "ঢাকা বিশ্ববিদ্যালয়", en: "University of Dhaka" }, year: "২০১০" },
+      { id: "cred-10-1", title: { bn: "দাওরায়ে হাদীস (মহিলা শাখা)", en: "Dawra-e-Hadith (women's section)" }, institution: { bn: "মহিলা মাদ্রাসা, ঢাকা", en: "Women's Madrasah, Dhaka" }, year: "2012" },
+      { id: "cred-10-2", title: { bn: "আত্মশুদ্ধি ও তাযকিয়া কোর্স", en: "Course in tazkiyah" }, institution: { bn: "আল-জামিয়া আল-ইসলামিয়া, ঢাকা", en: "Al-Jamia Al-Islamia, Dhaka" }, year: "2016" },
+      { id: "cred-10-3", title: { bn: "বাংলা সাহিত্যে স্নাতক", en: "BA in Bangla Literature" }, institution: { bn: "ঢাকা বিশ্ববিদ্যালয়", en: "University of Dhaka" }, year: "2010" },
     ],
     madrasah: { bn: "নূরানী মহিলা মাদ্রাসা, ঢাকা", en: "Nurani Women's Madrasah, Dhaka" },
     district: "dhaka",
@@ -391,7 +397,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-11",
     slug: "dr-mahmudul-hasan",
-    name: { bn: "ড. মাহমুদুল হাসান", en: "Dr. Mahmudul Hasan" },
+    name: { bn: "মাহমুদুল হাসান", en: "Mahmudul Hasan" },
     honorific: { bn: "ড.", en: "Dr." },
     avatarColor: "#6b7f3a",
     shortBio: {
@@ -412,9 +418,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "ইংরেজি", "আরবি", "উর্দু"],
     credentials: [
-      { id: "cred-11-1", title: { bn: "সীরাত ও ইসলামের ইতিহাসে পিএইচডি", en: "PhD in Seerah and Islamic History" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "২০১২" },
-      { id: "cred-11-2", title: { bn: "ইসলামের ইতিহাসে এমএ", en: "MA in Islamic History" }, institution: { bn: "রাজশাহী বিশ্ববিদ্যালয়", en: "University of Rajshahi" }, year: "২০০৬" },
-      { id: "cred-11-3", title: { bn: "দাওয়াহ প্রশিক্ষণ সনদ", en: "Dawah training certificate" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "২০১৪" },
+      { id: "cred-11-1", title: { bn: "সীরাত ও ইসলামের ইতিহাসে পিএইচডি", en: "PhD in Seerah and Islamic History" }, institution: { bn: "ইসলামী বিশ্ববিদ্যালয়, কুষ্টিয়া", en: "Islamic University, Kushtia" }, year: "2012" },
+      { id: "cred-11-2", title: { bn: "ইসলামের ইতিহাসে এমএ", en: "MA in Islamic History" }, institution: { bn: "রাজশাহী বিশ্ববিদ্যালয়", en: "University of Rajshahi" }, year: "2006" },
+      { id: "cred-11-3", title: { bn: "দাওয়াহ প্রশিক্ষণ সনদ", en: "Dawah training certificate" }, institution: { bn: "ইসলামিক ফাউন্ডেশন বাংলাদেশ", en: "Islamic Foundation Bangladesh" }, year: "2014" },
     ],
     madrasah: { bn: "সীরাত গবেষণা একাডেমি, রাজশাহী", en: "Seerah Research Academy, Rajshahi" },
     district: "rajshahi",
@@ -429,7 +435,7 @@ export const SCHOLARS: Scholar[] = [
   {
     id: "scholar-12",
     slug: "mufti-rahimullah",
-    name: { bn: "মুফতি রহিমুল্লাহ", en: "Mufti Rahimullah" },
+    name: { bn: "রহিমুল্লাহ", en: "Rahimullah" },
     honorific: { bn: "মুফতি", en: "Mufti" },
     avatarColor: "#256d8c",
     shortBio: {
@@ -450,9 +456,9 @@ export const SCHOLARS: Scholar[] = [
     ],
     languages: ["বাংলা", "ইংরেজি", "আরবি"],
     credentials: [
-      { id: "cred-12-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া রাহমানিয়া আরাবিয়া, ঢাকা", en: "Jamia Rahmania Arabia, Dhaka" }, year: "২০১০" },
-      { id: "cred-12-2", title: { bn: "কম্পিউটার সায়েন্সে স্নাতক", en: "BSc in Computer Science" }, institution: { bn: "ইউনাইটেড ইন্টারন্যাশনাল ইউনিভার্সিটি, ঢাকা", en: "United International University, Dhaka" }, year: "২০১৫" },
-      { id: "cred-12-3", title: { bn: "ইসলামি অর্থনীতি ডিপ্লোমা", en: "Diploma in Islamic economics" }, institution: { bn: "ইসলামিক ইউনিভার্সিটি অব মদীনা", en: "Islamic University of Madinah" }, year: "২০১৮" },
+      { id: "cred-12-1", title: { bn: "দাওরায়ে হাদীস ও ইফতা", en: "Dawra-e-Hadith and Ifta" }, institution: { bn: "জামিয়া রাহমানিয়া আরাবিয়া, ঢাকা", en: "Jamia Rahmania Arabia, Dhaka" }, year: "2010" },
+      { id: "cred-12-2", title: { bn: "কম্পিউটার সায়েন্সে স্নাতক", en: "BSc in Computer Science" }, institution: { bn: "ইউনাইটেড ইন্টারন্যাশনাল ইউনিভার্সিটি, ঢাকা", en: "United International University, Dhaka" }, year: "2015" },
+      { id: "cred-12-3", title: { bn: "ইসলামি অর্থনীতি ডিপ্লোমা", en: "Diploma in Islamic economics" }, institution: { bn: "ইসলামিক ইউনিভার্সিটি অব মদীনা", en: "Islamic University of Madinah" }, year: "2018" },
     ],
     madrasah: { bn: "সেন্টার ফর ইসলামিক টেকনোলজি, ঢাকা", en: "Centre for Islamic Technology, Dhaka" },
     district: "dhaka",

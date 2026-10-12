@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { Digits } from "@/components/i18n-text";
 import { Button } from "@/components/ui";
 import { PostCard, PostCardSkeleton, type ResolvedPost } from "@/components/social";
-import { toBnDigits } from "@/lib/bn";
 import { cn } from "@/lib/utils";
 
 /**
@@ -254,7 +254,7 @@ export function FeedStream({
               className="inline-flex h-9 items-center gap-2 rounded-full bg-primary px-3.5 text-[0.8125rem] font-semibold text-primary-foreground shadow-overlay transition-all hover:bg-primary-hover active:translate-y-px"
             >
               <ArrowUp className="size-4" strokeWidth={2.5} aria-hidden />
-              {toBnDigits(queued.length)} টি নতুন পোস্ট
+              <Digits value={queued.length} /> টি নতুন পোস্ট
             </button>
           </div>
         ) : null}

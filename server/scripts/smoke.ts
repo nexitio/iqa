@@ -14,6 +14,10 @@
  *     SMOKE_BASE_URL=http://127.0.0.1:8787 pnpm --filter @ilm/server smoke
  */
 
+// Loads `server/.env` before any of the constants below read it. Without it the
+// seeded password silently fell back to the placeholder, so every sign-in this
+// suite makes was refused even though the seed had hashed the configured one.
+import "../src/env.ts";
 import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
@@ -311,6 +315,31 @@ check(
 check(
   "?pinned=true narrows the list",
   rows(await call("/api/v1/fatwas?pinned=true")).length < 8,
+);
+// A fatwa is filed under departments and never tagged with a topic key, so a
+// topic filter is the department tier: every row it returns sits in one of the
+// topic's departments, and it is a strict subset of the archive.
+const dowry = TOPICS.find((row) => row.slug === "dowry")!;
+const dowryDepartmentIds = DEPARTMENTS.filter((department) =>
+  dowry.departmentSlugs.includes(department.slug),
+).map((department) => department.id);
+const rulingsByTopic = rows(await call("/api/v1/fatwas?topic=dowry&limit=100"));
+check(
+  "GET /fatwas?topic=dowry returns the rulings filed under its departments",
+  rulingsByTopic.length > 0 &&
+    rulingsByTopic.every((row) =>
+      row.departmentIds.some((id: string) => dowryDepartmentIds.includes(id)),
+    ),
+  rulingsByTopic.length,
+);
+check(
+  "the fatwa topic filter narrows the archive",
+  rulingsByTopic.length < rows(await call("/api/v1/fatwas?limit=100")).length,
+  rulingsByTopic.length,
+);
+check(
+  "GET /fatwas?topic=nope is 400",
+  (await call("/api/v1/fatwas?topic=nope")).status === 400,
 );
 const fatwaSlug = rows(fatwas)[0]!.slug;
 const fatwa = await call(`/api/v1/fatwas/${fatwaSlug}`);

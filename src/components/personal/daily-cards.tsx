@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Bookmark, BookmarkCheck, Flame, ScrollText, Target, Volume2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { bnOrdinal, formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber, toBnDigits } from "@/lib/bn";
 import { cn } from "@/lib/utils";
 import { AYAH_OF_THE_DAY, getAyah } from "@/lib/data/quran";
 import { HADITH_OF_THE_DAY, getHadith } from "@/lib/data/hadith";
@@ -14,6 +14,7 @@ import {
   USER_STREAK_DAYS,
   WEEKLY_LEARNING_MINUTES,
 } from "@/lib/data/personal";
+import { Digits, Ord } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -194,7 +195,9 @@ export function DailyHadithCard({
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
         <p className="text-[0.75rem] text-muted-foreground">
-          <span className="font-medium text-foreground">{hadith.refBn}</span>
+          <span className="font-medium text-foreground">
+            {isBn ? hadith.refBn : hadith.refEn}
+          </span>
           <span className="mx-1.5 text-border-strong">·</span>
           {t("label.narrator")}: {pick(hadith.narrator)}
         </p>
@@ -244,7 +247,7 @@ export function DhikrCard({ dhikr, className }: { dhikr?: DhikrItem; className?:
         </div>
         <Ring value={progress} size={52} thickness={5} tone={done ? "success" : "primary"}>
           <span className="text-[0.6875rem] font-bold tabular text-foreground">
-            {toBnDigits(taps)}
+            <Digits value={taps} />
           </span>
         </Ring>
       </div>
@@ -315,18 +318,18 @@ export function LearningGoalCard({
           </p>
           <p className="mt-2 flex items-center gap-1.5 text-[0.75rem] text-muted-foreground">
             <Flame className={cn("size-3.5", streakDays > 0 ? "text-warning" : "text-subtle-foreground")} />
-            {toBnDigits(streakDays)} {t("label.days")} {t("label.streak")}
+            <Digits value={streakDays} /> {t("label.days")} {t("label.streak")}
           </p>
         </div>
         <Ring value={progress} size={68} thickness={7} tone={met ? "success" : "primary"}>
           <span className="text-[0.75rem] font-bold tabular text-foreground">
-            {toBnDigits(Math.round(progress))}%
+            <Digits value={Math.round(progress)} />%
           </span>
         </Ring>
       </div>
 
       <p className="mt-4 rounded-card bg-primary-soft/55 p-3 text-[0.8125rem] leading-relaxed text-primary-soft-foreground">
-        {t("home.streakMessage", { n: toBnDigits(streakDays) })}
+        {t("home.streakMessage", { n: streakDays })}
       </p>
 
       <div className="mt-4 border-t border-border pt-4">
@@ -348,7 +351,7 @@ export function LearningGoalCard({
         <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
           <DayDots total={7} completed={Math.min(7, streakDays)} />
           <span className="ml-auto text-[0.6875rem] text-subtle-foreground">
-            {bnOrdinal(Math.min(7, streakDays))} দিন
+            <Ord value={Math.min(7, streakDays)} /> দিন
           </span>
         </div>
       ) : null}

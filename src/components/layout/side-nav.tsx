@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { CountPill } from "@/components/ui";
+import { Digits } from "@/components/i18n-text";
 import { SIDEBAR_GROUPS, SIDEBAR_TOP, type NavLink } from "./nav-config";
 
 export function SideNav({
@@ -42,7 +43,9 @@ export function SideNav({
             aria-hidden
           />
           <span className="truncate">{pick(link.label)}</span>
-          {link.badge ? <CountPill value={link.badge} tone="primary" className="ml-auto" /> : null}
+          {link.badge ? (
+            <CountPill value={<Digits value={link.badge} />} tone="primary" className="ml-auto" />
+          ) : null}
         </Link>
       </li>
     );

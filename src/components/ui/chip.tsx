@@ -38,7 +38,7 @@ export function Chip({
   variant?: "soft" | "outline";
   /** Selected state for filter rails. */
   active?: boolean;
-  count?: string | number;
+  count?: ReactNode;
   className?: string;
   onRemove?: () => void;
   /**

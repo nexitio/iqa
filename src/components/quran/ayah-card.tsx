@@ -19,6 +19,7 @@ import { useI18n } from "@/lib/i18n";
 import type { ContentReference, QuranAyah } from "@/lib/types";
 import { cn, truncate } from "@/lib/utils";
 import { Badge, Button, Callout, Card, Chip } from "@/components/ui";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * Arabic size ladder.
@@ -136,7 +137,7 @@ export function AyahCard({
   const [shared, setShared] = useState(false);
 
   const surah = getSurah(ayah.surah);
-  const heading = surahName ?? (surah ? pick(surah.name) : `${ayah.surah}`);
+  const heading = surahName ?? (surah ? pick(surah.name) : formatNumber(ayah.surah, locale));
   const position = index ?? ayah.number;
   const translation = locale === "bn" ? ayah.translationBn : ayah.translationEn;
 
@@ -169,7 +170,7 @@ export function AyahCard({
             className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary text-[0.9375rem] font-bold text-primary-foreground shadow-card"
             aria-hidden
           >
-            {toBnDigits(position)}
+            <Digits value={position} />
           </span>
           <div className="min-w-0">
             <p className="truncate font-display text-[0.9375rem] font-semibold text-foreground">
@@ -207,7 +208,7 @@ export function AyahCard({
             <Minus className="size-3.5" />
           </button>
           <span className="w-6 text-center text-[0.6875rem] font-semibold tabular text-subtle-foreground">
-            {toBnDigits(size + 1)}
+            <Digits value={size + 1} />
           </span>
           <button
             type="button"

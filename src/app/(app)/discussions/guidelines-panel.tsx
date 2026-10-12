@@ -2,7 +2,7 @@
 
 import { ShieldCheck } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { toBnDigits } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import { Card, CardHeader } from "@/components/ui";
 
 /**
@@ -33,7 +33,7 @@ export function GuidelinesPanel() {
         {rules.map((rule, index) => (
           <li key={rule} className="flex gap-3 rounded-card border border-border bg-surface p-3.5">
             <span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-soft text-[0.6875rem] font-bold tabular text-accent-soft-foreground">
-              {toBnDigits(index + 1)}
+              <Digits value={index + 1} />
             </span>
             <span className="text-[0.8125rem] leading-relaxed text-muted-foreground">{rule}</span>
           </li>

@@ -27,6 +27,7 @@ import {
 import { useHydrated } from "@/lib/use-now";
 import { cn } from "@/lib/utils";
 import { LocaleToggle, ThemeToggle } from "@/components/layout";
+import { Digits } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -376,7 +377,7 @@ export function SettingsPanels() {
           tone="user"
           action={
             <Badge tone="primary" size="sm">
-              {interests.length}টি নির্বাচিত
+              {t("settings.selectedCount", { count: interests.length })}
             </Badge>
           }
         />
@@ -394,7 +395,7 @@ export function SettingsPanels() {
           ))}
         </div>
         <p className="mt-4 text-[0.75rem] leading-relaxed text-muted-foreground">
-          আপনি {interests.length}টি বিভাগ বেছে নিয়েছেন। এই বিভাগগুলোর নতুন প্রশ্ন, প্রবন্ধ ও ফতোয়া আপনার ফিডে
+          আপনি <Digits value={interests.length} />টি বিভাগ বেছে নিয়েছেন। এই বিভাগগুলোর নতুন প্রশ্ন, প্রবন্ধ ও ফতোয়া আপনার ফিডে
           আগে দেখা যাবে।
         </p>
       </Card>

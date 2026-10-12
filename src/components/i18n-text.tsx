@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n";
-import { formatNumber, formatRef, gregorianDateBn, hijriDate, toBnDigits } from "@/lib/bn";
+import { formatNumber, formatRef, gregorianDateBn, hijriDate, ordinal, toBnDigits } from "@/lib/bn";
 import { relativeTime } from "@/lib/utils";
 import type { Localized } from "@/lib/types";
 
@@ -19,8 +19,11 @@ import type { Localized } from "@/lib/types";
  *   <Pick value={department.name} />      — a bilingual data field
  *   <Num value={1234} />                  — ১,২৩৪ or 1,234
  *   <Ref value="2:255" />                 — ২:২৫৫ or 2:255
+ *   <Digits value={12} />                 — ১২ or 12
+ *   <Ord value={3} />                     — ৩য় or 3rd
  *   <TimeAgo iso={iso} />                 — "৩ ঘন্টা আগে" or "3h ago"
  *   <HijriDate /> / <GregDate />          — localized dates
+ *   <GregDate weekday={false} />         — the same, without the weekday
  */
 
 export function T({
@@ -73,6 +76,12 @@ export function Digits({ value, className }: { value: string | number; className
   return <span className={className}>{isBn ? toBnDigits(value) : String(value)}</span>;
 }
 
+/** Ordinal in the reader's language, e.g. ৩য় / 3rd. */
+export function Ord({ value, className }: { value: number; className?: string }) {
+  const { locale } = useI18n();
+  return <span className={className}>{ordinal(value, locale)}</span>;
+}
+
 export function TimeAgo({ iso, className }: { iso: string; className?: string }) {
   const { locale } = useI18n();
   return <span className={className}>{relativeTime(iso, locale)}</span>;
@@ -83,9 +92,18 @@ export function HijriDate({ className, day }: { className?: string; day?: Date }
   return <span className={className}>{hijriDate(day ?? new Date(), locale)}</span>;
 }
 
-export function GregDate({ className, day }: { className?: string; day?: Date }) {
+export function GregDate({
+  className,
+  day,
+  weekday = true,
+}: {
+  className?: string;
+  day?: Date;
+  /** `false` drops the weekday for dense meta lines. */
+  weekday?: boolean;
+}) {
   const { locale } = useI18n();
-  return <span className={className}>{gregorianDateBn(day ?? new Date(), locale)}</span>;
+  return <span className={className}>{gregorianDateBn(day ?? new Date(), locale, weekday)}</span>;
 }
 
 /** Exposes the active locale's *name* — used by language pickers. */

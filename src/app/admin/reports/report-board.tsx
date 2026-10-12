@@ -31,22 +31,24 @@ import {
 type Decision = "pending" | "resolved" | "dismissed";
 type FilterId = "pending" | "high" | "all";
 
+/* Both tables hold dictionary keys rather than wording: they sit at module scope,
+ * where no hook can translate them, so the label is resolved at render time. */
 const SEVERITY_META: Record<
   ContentReport["severity"],
-  { label: string; tone: "danger" | "warning" | "neutral" }
+  { labelKey: string; tone: "danger" | "warning" | "neutral" }
 > = {
-  high: { label: "উচ্চ", tone: "danger" },
-  medium: { label: "মধ্যম", tone: "warning" },
-  low: { label: "নিম্ন", tone: "neutral" },
+  high: { labelKey: "admin.queue.severityHigh", tone: "danger" },
+  medium: { labelKey: "admin.queue.severityMedium", tone: "warning" },
+  low: { labelKey: "admin.queue.severityLow", tone: "neutral" },
 };
 
-const CONTENT_TYPE_LABEL: Record<ContentReport["contentType"], string> = {
-  question: "প্রশ্ন",
-  answer: "উত্তর",
-  article: "প্রবন্ধ",
-  fatwa: "ফতোয়া",
-  discussion: "আলোচনা",
-  comment: "মন্তব্য",
+const CONTENT_TYPE_KEY: Record<ContentReport["contentType"], string> = {
+  question: "label.question",
+  answer: "label.answer",
+  article: "label.article",
+  fatwa: "label.fatwa",
+  discussion: "label.discussion",
+  comment: "admin.queue.typeComment",
 };
 
 /**
@@ -63,7 +65,7 @@ export function ReportBoard({
   reports: ContentReport[];
   className?: string;
 }) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [filter, setFilter] = useState<FilterId>("pending");
   const [hidden, setHidden] = useState<string[]>([]);
@@ -98,13 +100,33 @@ export function ReportBoard({
     <div className={cn("space-y-4", className)}>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "অপেক্ষমাণ", value: counts.pending, tone: "warning" as const, icon: Flag },
-          { label: "উচ্চ গুরুত্ব", value: counts.high, tone: "danger" as const, icon: ShieldAlert },
-          { label: "নিষ্পত্তি", value: counts.resolved, tone: "success" as const, icon: Check },
-          { label: "খারিজ", value: counts.dismissed, tone: "neutral" as const, icon: X },
+          {
+            labelKey: "status.pending",
+            value: counts.pending,
+            tone: "warning" as const,
+            icon: Flag,
+          },
+          {
+            labelKey: "admin.queue.statHighSeverity",
+            value: counts.high,
+            tone: "danger" as const,
+            icon: ShieldAlert,
+          },
+          {
+            labelKey: "admin.queue.resolved",
+            value: counts.resolved,
+            tone: "success" as const,
+            icon: Check,
+          },
+          {
+            labelKey: "admin.queue.dismissed",
+            value: counts.dismissed,
+            tone: "neutral" as const,
+            icon: X,
+          },
         ].map((stat) => (
           <div
-            key={stat.label}
+            key={stat.labelKey}
             className="flex items-center gap-3 rounded-panel border border-border bg-surface p-4 shadow-card"
           >
             <span
@@ -119,7 +141,7 @@ export function ReportBoard({
               <stat.icon className="size-5" />
             </span>
             <div>
-              <p className="text-[0.6875rem] text-subtle-foreground">{stat.label}</p>
+              <p className="text-[0.6875rem] text-subtle-foreground">{t(stat.labelKey)}</p>
               <p className="font-display text-xl font-bold tabular leading-none text-foreground">
                 {formatNumber(stat.value, locale)}
               </p>
@@ -131,9 +153,9 @@ export function ReportBoard({
       <div className="flex flex-wrap items-center gap-2">
         {(
           [
-            { id: "pending" as const, label: "অপেক্ষমাণ রিপোর্ট" },
-            { id: "high" as const, label: "উচ্চ গুরুত্ব" },
-            { id: "all" as const, label: "সব রিপোর্ট" },
+            { id: "pending" as const, labelKey: "admin.queue.filterPendingReports" },
+            { id: "high" as const, labelKey: "admin.queue.statHighSeverity" },
+            { id: "all" as const, labelKey: "admin.queue.filterAllReports" },
           ]
         ).map((option) => (
           <Button
@@ -143,7 +165,7 @@ export function ReportBoard({
             onClick={() => setFilter(option.id)}
             aria-pressed={filter === option.id}
           >
-            {option.label}
+            {t(option.labelKey)}
           </Button>
         ))}
       </div>
@@ -152,8 +174,8 @@ export function ReportBoard({
         <EmptyState
           icon={Check}
           tone="success"
-          title="এই তালিকা খালি"
-          description="কোনো অপেক্ষমাণ রিপোর্ট নেই। মডারেশন সারি পরিষ্কার।"
+          title={t("admin.queue.listEmpty")}
+          description={t("admin.queue.emptyReportsBody")}
           className="rounded-panel border border-border bg-surface"
         />
       ) : (
@@ -171,30 +193,30 @@ export function ReportBoard({
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge tone={severity.tone} size="xs" icon={AlertTriangle}>
-                          {severity.label} গুরুত্ব
+                          {t("admin.queue.severityLabel", { level: t(severity.labelKey) })}
                         </Badge>
                         <Badge tone="neutral" size="xs">
-                          {CONTENT_TYPE_LABEL[report.contentType]}
+                          {t(CONTENT_TYPE_KEY[report.contentType])}
                         </Badge>
                         <StatusBadge
                           status={decision}
                           label={
                             decision === "pending"
-                              ? "অপেক্ষমাণ"
+                              ? t("status.pending")
                               : decision === "resolved"
-                                ? "নিষ্পত্তি"
-                                : "খারিজ"
+                                ? t("admin.queue.resolved")
+                                : t("admin.queue.dismissed")
                           }
                           size="xs"
                         />
                         {isHidden ? (
                           <Badge tone="danger" size="xs" icon={Ban}>
-                            কনটেন্ট লুকানো
+                            {t("admin.queue.contentHidden")}
                           </Badge>
                         ) : null}
                         {isLocked ? (
                           <Badge tone="neutral" size="xs" icon={Lock}>
-                            থ্রেড বন্ধ
+                            {t("admin.queue.threadLocked")}
                           </Badge>
                         ) : null}
                       </div>
@@ -206,18 +228,20 @@ export function ReportBoard({
                         {report.reasonLabelBn}
                       </p>
                       <p className="mt-2 flex flex-wrap items-center gap-x-2 text-[0.6875rem] text-subtle-foreground">
-                        <span>রিপোর্ট করেছেন {report.reportedByBn}</span>
+                        <span>{t("admin.queue.reportedBy", { name: report.reportedByBn })}</span>
                         <span aria-hidden>·</span>
                         <span>{relativeTime(report.reportedAt, locale)}</span>
                         {report.assignedToBn ? (
                           <>
                             <span aria-hidden>·</span>
-                            <span>দায়িত্বে {report.assignedToBn}</span>
+                            <span>
+                              {t("admin.queue.assignedTo", { name: report.assignedToBn })}
+                            </span>
                           </>
                         ) : (
                           <>
                             <span aria-hidden>·</span>
-                            <span className="text-warning">কেউ দায়িত্বে নেই</span>
+                            <span className="text-warning">{t("admin.queue.noAssignee")}</span>
                           </>
                         )}
                       </p>
@@ -230,7 +254,7 @@ export function ReportBoard({
                       iconRight={ExternalLink}
                       className="shrink-0"
                     >
-                      কনটেন্ট দেখুন
+                      {t("admin.queue.viewContent")}
                     </Button>
                   </div>
 
@@ -241,7 +265,7 @@ export function ReportBoard({
                       disabled={decision === "resolved"}
                       onClick={() => decide(report.id, "resolved")}
                     >
-                      নিষ্পত্তি করুন
+                      {t("admin.queue.resolveReport")}
                     </Button>
                     <Button
                       size="sm"
@@ -256,7 +280,7 @@ export function ReportBoard({
                         decide(report.id, "resolved");
                       }}
                     >
-                      {isHidden ? "আবার দেখান" : "কনটেন্ট লুকান"}
+                      {isHidden ? t("admin.queue.unhideContent") : t("admin.queue.hideContent")}
                     </Button>
                     {report.contentType === "discussion" ? (
                       <Button
@@ -271,7 +295,7 @@ export function ReportBoard({
                           );
                         }}
                       >
-                        {isLocked ? "থ্রেড খুলুন" : "থ্রেড বন্ধ করুন"}
+                        {isLocked ? t("admin.queue.unlockThread") : t("admin.queue.lockThread")}
                       </Button>
                     ) : null}
                     <Button
@@ -281,7 +305,7 @@ export function ReportBoard({
                       disabled={decision === "dismissed"}
                       onClick={() => decide(report.id, "dismissed")}
                     >
-                      খারিজ করুন
+                      {t("admin.queue.dismissReport")}
                     </Button>
                     {decision !== (report.status as Decision) ? (
                       <Button
@@ -297,7 +321,7 @@ export function ReportBoard({
                           })
                         }
                       >
-                        আগের অবস্থায় ফেরান
+                        {t("admin.queue.revert")}
                       </Button>
                     ) : null}
                   </footer>
@@ -313,8 +337,8 @@ export function ReportBoard({
           <CardHeader
             icon={ShieldAlert}
             tone="warning"
-            title="পর্যালোচনাধীন আলোচনা থ্রেড"
-            subtitle="যেসব থ্রেডে মডারেটরের হস্তক্ষেপ প্রয়োজন"
+            title={t("admin.queue.flaggedThreads")}
+            subtitle={t("admin.queue.flaggedThreadsHelp")}
           />
           <ul className="mt-4 space-y-1">
             {flaggedThreads.map((discussion) => (
@@ -324,8 +348,7 @@ export function ReportBoard({
             ))}
           </ul>
           <Callout tone="info" className="mt-4">
-            পর্যালোচনাধীন থ্রেড লেখকের কাছে দৃশ্যমান থাকে কিন্তু নতুন উত্তর যোগ করা যায় না, যতক্ষণ না মডারেটর সিদ্ধান্ত
-            দেন।
+            {t("admin.queue.flaggedThreadsNote")}
           </Callout>
         </Card>
       ) : null}

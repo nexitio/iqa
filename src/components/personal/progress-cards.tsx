@@ -17,7 +17,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import { cn, relativeTime } from "@/lib/utils";
 import type { Bookmark as BookmarkRecord, BookmarkCollection, Journey, ReadingProgress } from "@/lib/types";
 import {
@@ -88,7 +89,7 @@ export function ContinueLearningCard({
           <p className="mt-0.5 truncate text-[0.75rem] text-muted-foreground">{item.subtitleBn}</p>
         </div>
         <Badge tone="neutral" size="xs">
-          {toBnDigits(item.progress)}%
+          <Digits value={item.progress} />%
         </Badge>
       </div>
 
@@ -154,7 +155,7 @@ export function JourneyCard({ journey, className }: { journey: Journey; classNam
         </div>
         <Ring value={percent} size={54} thickness={5} tone={finished ? "success" : tone}>
           <span className="text-[0.625rem] font-bold tabular text-foreground">
-            {toBnDigits(journey.completedDays)}/{toBnDigits(journey.totalDays)}
+            <Digits value={journey.completedDays} />/<Digits value={journey.totalDays} />
           </span>
         </Ring>
       </div>
@@ -204,7 +205,7 @@ export function JourneyRow({ journey, className }: { journey: Journey; className
     >
       <Ring value={percent} size={48} thickness={5} tone={tone}>
         <span className="text-[0.5625rem] font-bold tabular text-foreground">
-          {toBnDigits(journey.completedDays)}/{toBnDigits(journey.totalDays)}
+          <Digits value={journey.completedDays} />/<Digits value={journey.totalDays} />
         </span>
       </Ring>
       <div className="min-w-0 flex-1">
@@ -264,8 +265,20 @@ export function BookmarkCard({ bookmark, className }: { bookmark: BookmarkRecord
         <p className="truncate text-[0.6875rem] font-medium text-accent">{bookmark.refBn}</p>
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
-        <Button href={bookmark.href} size="xs" variant="soft" full>
+      {/* A zero basis instead of `full`. `full` is `w-full` and `Button` is
+          `shrink-0`, so a full-width action beside the save button asked for
+          more than the card had: on a phone the icon was pushed past the card's
+          right edge and dragged the whole page into a horizontal scroll. A zero
+          basis reserves nothing, so wrapping is never decided against the
+          action's own width — it simply takes the room the save button leaves,
+          and the pair only stacks once two labels genuinely cannot fit. */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <Button
+          href={bookmark.href}
+          size="xs"
+          variant="soft"
+          className="min-w-0 grow basis-0"
+        >
           {t("action.readMore")}
         </Button>
         <Button size="icon-sm" variant="ghost" aria-label={t("action.save")}>
@@ -300,7 +313,7 @@ export function BookmarkCollectionCard({
           {collection.nameBn}
         </span>
         <span className="mt-0.5 block text-[0.6875rem] text-subtle-foreground">
-          {toBnDigits(collection.count)} টি সংরক্ষিত
+          <Digits value={collection.count} /> টি সংরক্ষিত
         </span>
       </span>
     </Link>
@@ -327,7 +340,7 @@ export function StreakCard({
           {t("label.streak")}
         </p>
         <p className="font-display text-lg font-bold leading-tight tabular text-foreground">
-          {toBnDigits(streakDays)} {t("label.days")}
+          <Digits value={streakDays} /> {t("label.days")}
         </p>
       </div>
       <Sparkles className="size-4 shrink-0 text-warning" aria-hidden />

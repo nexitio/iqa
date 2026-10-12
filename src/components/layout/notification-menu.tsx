@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime } from "@/lib/utils";
 import { CountPill } from "@/components/ui";
 import { NotificationKindIcon } from "@/components/personal/notification-item";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * The bell's dropdown.
@@ -60,7 +61,7 @@ export function NotificationMenu({
           <p className="truncate text-[0.875rem] font-semibold text-foreground">
             {t("nav.notifications")}
           </p>
-          {unread > 0 ? <CountPill value={unread} tone="danger" /> : null}
+          {unread > 0 ? <CountPill value={<Digits value={unread} />} tone="danger" /> : null}
         </div>
         <button
           type="button"

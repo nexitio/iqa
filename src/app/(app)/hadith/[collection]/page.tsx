@@ -1,5 +1,5 @@
 import { BookRow } from "@/components/hadith";
-import { Pick, T } from "@/components/i18n-text";
+import { Num, Pick, T } from "@/components/i18n-text";
 import {
   ArrowLeft,
   ArrowRight,
@@ -22,7 +22,6 @@ import {
   PageHeader,
   SectionHeader
 } from "@/components/ui";
-import { formatNumber } from "@/lib/bn";
 import {
   HADITH_COLLECTIONS,
   getBooksForCollection,
@@ -111,7 +110,7 @@ export default async function CollectionPage({
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Layers className="size-3.5" aria-hidden />
-              {formatNumber(collection.bookCount, "bn")} অধ্যায়
+              <Num value={collection.bookCount} /> অধ্যায়
             </span>
             {collection.authentic ? (
               <Badge tone="success" size="sm" icon={BadgeCheck}>
@@ -130,7 +129,13 @@ export default async function CollectionPage({
         <div className="min-w-0 space-y-6">
           {incomplete ? (
             <ContentPending
-              message={`আসল সংকলনে মোট ${formatNumber(collection.hadithCount, "bn")} টি হাদীস রয়েছে। এই সংস্করণে এখন পর্যন্ত ${formatNumber(hadiths.length, "bn")} টি যুক্ত করা হয়েছে — বাকিগুলো ধাপে ধাপে যোগ করা হচ্ছে ইনশাআল্লাহ।`}
+              message={
+                <>
+                  আসল সংকলনে মোট <Num value={collection.hadithCount} /> টি হাদীস রয়েছে। এই সংস্করণে
+                  এখন পর্যন্ত <Num value={hadiths.length} /> টি যুক্ত করা হয়েছে — বাকিগুলো ধাপে ধাপে যোগ
+                  করা হচ্ছে ইনশাআল্লাহ।
+                </>
+              }
             />
           ) : null}
 
@@ -142,7 +147,7 @@ export default async function CollectionPage({
               size="sm"
               action={
                 <span className="text-[0.75rem] text-subtle-foreground">
-                  {formatNumber(loadedBooks.length, "bn")} / {formatNumber(books.length, "bn")}
+                  <Num value={loadedBooks.length} /> / <Num value={books.length} />
                 </span>
               }
             />
@@ -206,17 +211,29 @@ export default async function CollectionPage({
                   { label: "সংকলক", value: collection.author.bn, icon: UserRound },
                   {
                     label: "মোট হাদীস",
-                    value: `${formatNumber(collection.hadithCount, "bn")} টি`,
+                    value: (
+                      <>
+                        <Num value={collection.hadithCount} /> টি
+                      </>
+                    ),
                     icon: ScrollText,
                   },
                   {
                     label: "অধ্যায়",
-                    value: `${formatNumber(collection.bookCount, "bn")} টি`,
+                    value: (
+                      <>
+                        <Num value={collection.bookCount} /> টি
+                      </>
+                    ),
                     icon: Layers,
                   },
                   {
                     label: "এখন পড়া যাবে",
-                    value: `${formatNumber(hadiths.length, "bn")} টি`,
+                    value: (
+                      <>
+                        <Num value={hadiths.length} /> টি
+                      </>
+                    ),
                     icon: BookMarked,
                   },
                 ]}
@@ -238,7 +255,7 @@ export default async function CollectionPage({
                         {other.name.bn}
                       </span>
                       <span className="shrink-0 text-[0.6875rem] tabular text-subtle-foreground">
-                        {formatNumber(getHadithsForCollection(other.slug).length, "bn")}
+                        <Num value={getHadithsForCollection(other.slug).length} />
                       </span>
                     </Link>
                   </li>

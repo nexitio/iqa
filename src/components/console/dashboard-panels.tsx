@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -55,8 +56,10 @@ export function TrendPanel({
   chart = "bar",
   className,
 }: {
-  title: string;
-  subtitle?: string;
+  // ReactNode so a console page can pass a `<T k="…" />` bridge rather than a
+  // hardcoded Bangla title.
+  title: ReactNode;
+  subtitle?: ReactNode;
   data: TimeSeriesPoint[];
   tone?: Tone;
   formatter?: (value: number) => string;
@@ -149,7 +152,7 @@ export function DepartmentBreakdown({
   points: StatPoint[];
   className?: string;
 }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const data = points.map((point) => ({ label: point.labelBn, value: point.value }));
 
   return (
@@ -157,8 +160,8 @@ export function DepartmentBreakdown({
       <SectionHeader
         size="sm"
         icon={Scale}
-        title="শীর্ষ বিভাগসমূহ"
-        description="প্রশ্নের পরিমাণ অনুসারে"
+        title={t("console.topDepartments")}
+        description={t("console.byQuestionVolume")}
         className="mb-4"
       />
       <HorizontalBars
@@ -167,7 +170,7 @@ export function DepartmentBreakdown({
         formatValue={(value) => formatNumber(value, locale)}
       />
       <p className="mt-4 border-t border-border pt-3 text-[0.6875rem] text-subtle-foreground">
-        সাপ্তাহিক হিসাব — মোট প্রশ্নের পরিমাণ অনুসারে সাজানো
+        {t("console.weeklyNote")}
       </p>
     </Card>
   );
@@ -194,7 +197,7 @@ export function DistrictBreakdown({
       value: point.value,
       tone: tones[index % tones.length],
     })),
-    ...(restTotal > 0 ? [{ label: "অন্যান্য", value: restTotal, tone: "neutral" as Tone }] : []),
+    ...(restTotal > 0 ? [{ label: t("console.others"), value: restTotal, tone: "neutral" as Tone }] : []),
   ];
 
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
@@ -205,7 +208,7 @@ export function DistrictBreakdown({
         size="sm"
         icon={Users}
         title={t("admin.districtBreakdown")}
-        description={`${formatNumber(points.length, locale)}টি জেলা`}
+        description={t("console.districtCount", { count: points.length })}
         className="mb-4"
       />
       <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
@@ -214,7 +217,7 @@ export function DistrictBreakdown({
           size={160}
           thickness={20}
           centerValue={formatNumber(total, locale)}
-          centerLabel="মোট ব্যবহারকারী"
+          centerLabel={t("admin.totalUsers")}
           className="shrink-0"
         />
         <div className="w-full min-w-0 flex-1">
@@ -239,7 +242,7 @@ export function DistrictBreakdown({
                   {formatNumber(segment.value, locale)}
                 </span>
                 <span className="w-10 shrink-0 text-right text-[0.6875rem] tabular text-subtle-foreground">
-                  {total > 0 ? formatNumber(Math.round((segment.value / total) * 100), locale) : toBnDigits(0)}%
+                  {total > 0 ? formatNumber(Math.round((segment.value / total) * 100), locale) : formatNumber(0, locale)}%
                 </span>
               </li>
             ))}
@@ -365,7 +368,7 @@ export function KpiGrid({
         value={n(overview.openQuestions)}
         icon={Sparkles}
         tone="info"
-        hint={`${n(overview.unansweredOver24h)} উত্তরহীন ২৪ ঘন্টার বেশি`}
+        hint={t("console.unansweredOver24h", { count: overview.unansweredOver24h })}
         href="/admin/questions"
       />
       <StatTile
@@ -373,14 +376,14 @@ export function KpiGrid({
         value={n(overview.unansweredOver24h)}
         icon={AlertTriangle}
         tone={overview.unansweredOver24h > 20 ? "warning" : "success"}
-        hint="রাউটিং পুনর্বিবেচনা প্রয়োজন"
+        hint={t("console.routingNeedsReview")}
       />
       <StatTile
         label={t("admin.pendingReview")}
         value={n(overview.pendingReview)}
         icon={ClipboardCheck}
         tone="warning"
-        hint={`${n(overview.publishedFatwas)} ফতোয়া প্রকাশিত`}
+        hint={t("console.publishedFatwasNote", { count: overview.publishedFatwas })}
         href="/admin/review"
       />
       <StatTile
@@ -388,7 +391,7 @@ export function KpiGrid({
         value={n(overview.flaggedContent)}
         icon={Flag}
         tone={overview.flaggedContent > 0 ? "danger" : "success"}
-        hint="মডারেশনের অপেক্ষায়"
+        hint={t("console.awaitingModeration")}
         href="/admin/reports"
       />
     </div>
@@ -406,7 +409,11 @@ export function ScholarPerformancePanel({
 }) {
   const { t, locale } = useI18n();
   const n = (value: number, digits = 0) =>
-    digits > 0 ? toBnDigits(value.toFixed(digits)) : formatNumber(value, locale);
+    digits > 0
+      ? locale === "bn"
+        ? toBnDigits(value.toFixed(digits))
+        : value.toFixed(digits)
+      : formatNumber(value, locale);
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -431,14 +438,14 @@ export function ScholarPerformancePanel({
           value={`${n(dashboard.avgResponseHours, 1)} ${t("console.hours")}`}
           icon={Clock}
           tone="info"
-          hint="রাউটেড প্রশ্নে গড়"
+          hint={t("console.avgAcrossRouted")}
         />
         <StatTile
           label={t("console.helpfulRate")}
           value={`${n(dashboard.helpfulRate)}%`}
           icon={Trophy}
           tone="accent"
-          hint="ব্যবহারকারীর মতামত অনুসারে"
+          hint={t("console.fromUserFeedback")}
         />
         <StatTile
           label={t("label.views")}
@@ -458,7 +465,7 @@ export function ScholarPerformancePanel({
           value={n(dashboard.pendingDrafts)}
           icon={PenLine}
           tone={dashboard.pendingDrafts > 0 ? "warning" : "success"}
-          hint="প্রকাশের অপেক্ষায়"
+          hint={t("console.awaitingPublish")}
           href="/scholar/articles"
         />
         <StatTile
@@ -466,14 +473,14 @@ export function ScholarPerformancePanel({
           value={`${n(dashboard.streakDays)} ${t("label.days")}`}
           icon={Flame}
           tone="danger"
-          hint="টানা উত্তর দেওয়ার ধারা"
+          hint={t("console.streakNote")}
         />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <TrendPanel
-          title="সাপ্তাহিক উত্তর"
-          subtitle="গত ৭ দিনে প্রদত্ত উত্তর"
+          title={t("console.weeklyAnswers")}
+          subtitle={t("console.weeklyAnswersHelp")}
           data={dashboard.weeklyAnswers}
           tone="primary"
           chart="bar"
@@ -483,7 +490,7 @@ export function ScholarPerformancePanel({
             size="sm"
             icon={Scale}
             title={t("console.yourDepartments")}
-            description="আপনার উত্তরসমূহের বিভাগভিত্তিক ভাগ"
+            description={t("console.yourDeptSplit")}
             className="mb-4"
           />
           <HorizontalBars
@@ -497,17 +504,17 @@ export function ScholarPerformancePanel({
           <div className="mt-4 border-t border-border pt-3">
             <Legend
               items={[
-                { label: "এই সপ্তাহ", tone: "accent", value: formatNumber(dashboard.answeredThisWeek, locale) },
-                { label: "রাউটেড", tone: "primary", value: formatNumber(dashboard.routedQuestions, locale) },
+                { label: t("label.thisWeek"), tone: "accent", value: formatNumber(dashboard.answeredThisWeek, locale) },
+                { label: t("console.routed"), tone: "primary", value: formatNumber(dashboard.routedQuestions, locale) },
               ]}
             />
           </div>
           <div className="mt-3 flex items-center gap-2">
             <Badge tone="success" size="xs">
-              সক্রিয়
+              {t("console.statusActive")}
             </Badge>
             <span className="text-[0.6875rem] text-subtle-foreground">
-              আপনি এই সপ্তাহে {formatNumber(dashboard.answeredThisWeek, locale)}টি প্রশ্নের উত্তর দিয়েছেন
+              {t("console.answeredThisWeekNote", { count: dashboard.answeredThisWeek })}
             </span>
           </div>
         </Card>

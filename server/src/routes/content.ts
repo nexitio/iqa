@@ -5,6 +5,10 @@
  * status, full-text-ish `q` — and return the paginated envelope. `?topic=` and
  * `?department=` resolve through the shared filter helpers, so a topic page and
  * a topic-filtered list agree on what belongs to the topic.
+ *
+ * Articles carry authored topic tags, so `?topic=` matches those first. Fatwas do
+ * not — they are filed under departments — so for them the topic filter is the
+ * departments the topic covers (see the note on `/fatwas`).
  */
 
 import { and, desc, eq, inArray, or, sql, type SQL } from "drizzle-orm";
@@ -180,6 +184,29 @@ contentRoutes.get("/fatwas", async (c) => {
           .select({ id: schema.fatwaDepartments.fatwaId })
           .from(schema.fatwaDepartments)
           .where(eq(schema.fatwaDepartments.departmentId, resolved.id)),
+      ),
+    );
+  }
+
+  /**
+   * A fatwa is filed under departments, not tagged with topic keys, so a topic
+   * filter here means the departments the topic covers — which is what the topic
+   * page means by "rulings on this subject". It is deliberately the same tier
+   * `?includeRelated=true` reaches for articles and questions, because that is the
+   * only tier a fatwa has; a topic that covers no department matches nothing,
+   * which is `inArray(col, [])`: drizzle renders it as `false`, not an empty set
+   * of bounds.
+   */
+  const topic = c.req.query("topic");
+  if (topic) {
+    const filter = await resolveTopic(db, topic);
+    conditions.push(
+      inArray(
+        schema.fatwas.id,
+        db
+          .select({ id: schema.fatwaDepartments.fatwaId })
+          .from(schema.fatwaDepartments)
+          .where(inArray(schema.fatwaDepartments.departmentId, filter.departmentIds)),
       ),
     );
   }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink, GraduationCap, MapPin, ShieldCheck } from "@/components/icons";
 import { CredentialList, ScholarStatBar } from "@/components/people";
-import { GregDate, T } from "@/components/i18n-text";
+import { Digits, GregDate, Pick, T } from "@/components/i18n-text";
 import {
   Avatar,
   Badge,
@@ -35,7 +35,9 @@ export default function ScholarProfilePage() {
   if (!scholar) {
     return (
       <Card>
-        <p className="text-[0.875rem] text-muted-foreground">আলেমের তথ্য পাওয়া যায়নি।</p>
+        <p className="text-[0.875rem] text-muted-foreground">
+          <T k="scholar.tools.profile.notFound" />
+        </p>
       </Card>
     );
   }
@@ -51,10 +53,10 @@ export default function ScholarProfilePage() {
         icon={GraduationCap}
         eyebrow={<T k="console.title" />}
         title={<T k="console.publicProfile" />}
-        description="পাঠকরা আপনার প্রোফাইলে ঠিক যা দেখেন, তা এখানে হুবহু দেখানো হচ্ছে। নিচের সম্পাদনা প্যানেল থেকে পরিচয়, বিশেষজ্ঞতা ও ভাষা হালনাগাদ করতে পারেন।"
+        description={<T k="scholar.tools.profile.description" />}
         actions={
           <Button href={`/scholars/${scholar.slug}`} variant="outline" icon={ExternalLink}>
-            লাইভ প্রোফাইল দেখুন
+            <T k="scholar.tools.profile.viewLive" />
           </Button>
         }
       />
@@ -62,10 +64,10 @@ export default function ScholarProfilePage() {
       {!scholar.verified ? (
         <Callout tone="warning">
           <p className="text-[0.8125rem] leading-relaxed">
-            <span className="font-semibold text-foreground">আপনার প্রোফাইল এখনো যাচাই হয়নি।</span>{" "}
-            যাচাই ছাড়া প্রোফাইলে যাচাইকৃত চিহ্ন দেখানো হয় না এবং প্রশ্ন রাউটিংয়ে
-            অগ্রাধিকার কম থাকে। অ্যাডমিন আপনার যোগ্যতা যাচাই করলে এটি স্বয়ংক্রিয়ভাবে
-            হালনাগাদ হবে।
+            <span className="font-semibold text-foreground">
+              <T k="scholar.tools.profile.unverifiedLead" />
+            </span>{" "}
+            <T k="scholar.tools.profile.unverifiedBody" />
           </p>
         </Callout>
       ) : null}
@@ -91,22 +93,22 @@ export default function ScholarProfilePage() {
               />
             </div>
             <h1 className="mt-2.5 font-display text-2xl font-bold leading-tight text-foreground">
-              {scholar.honorific.bn} {scholar.name.bn}
+              <Pick value={scholar.honorific} /> <Pick value={scholar.name} />
             </h1>
             <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
                 <GraduationCap className="size-3.5" aria-hidden />
-                {scholar.madrasah.bn}
+                <Pick value={scholar.madrasah} />
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-3.5" aria-hidden />
-                {district.name.bn}
+                <Pick value={district.name} />
               </span>
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {departments.map((department) => (
                 <Badge key={department.slug} tone={department.tone} size="xs">
-                  {department.shortName.bn}
+                  <Pick value={department.shortName} />
                 </Badge>
               ))}
             </div>
@@ -115,7 +117,7 @@ export default function ScholarProfilePage() {
                 href={`/scholars/${scholar.slug}`}
                 className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-primary transition-colors hover:text-primary-hover"
               >
-                পাঠকরা যেভাবে দেখেন
+                <T k="scholar.tools.profile.asReadersSee" />
                 <ExternalLink className="size-3.5" aria-hidden />
               </Link>
             </div>
@@ -130,7 +132,12 @@ export default function ScholarProfilePage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
         <div className="min-w-0 space-y-6">
           <Card>
-            <SectionHeader size="sm" icon={GraduationCap} title="পরিচিতি" className="mb-4" />
+            <SectionHeader
+              size="sm"
+              icon={GraduationCap}
+              title={<T k="scholar.tools.profile.bioTitle" />}
+              className="mb-4"
+            />
             <BioProse bio={scholar.bio} />
           </Card>
 
@@ -138,8 +145,8 @@ export default function ScholarProfilePage() {
             <SectionHeader
               size="sm"
               icon={GraduationCap}
-              title="শিক্ষাগত যোগ্যতা"
-              description="এই তথ্য যাচাইকৃত — পরিবর্তনের জন্য অ্যাডমিনের অনুমোদন প্রয়োজন"
+              title={<T k="scholar.tools.profile.credentialsTitle" />}
+              description={<T k="scholar.tools.profile.credentialsDescription" />}
               className="mb-4"
             />
             <CredentialList credentials={scholar.credentials} />
@@ -150,20 +157,33 @@ export default function ScholarProfilePage() {
 
         <aside className="space-y-4">
           <Card>
-            <CardHeader icon={GraduationCap} title="প্রোফাইলের তথ্য" />
+            <CardHeader icon={GraduationCap} title={<T k="scholar.tools.profile.factsTitle" />} />
             <div className="mt-4">
               <FactList
                 columns={1}
                 items={[
-                  { label: "যোগদান", value: <GregDate day={new Date(scholar.joinedAt)} /> },
+                  { label: <T k="scholar.tools.profile.joined" />, value: <GregDate day={new Date(scholar.joinedAt)} /> },
                   {
-                    label: "সাড়া দেওয়ার সময়",
-                    value: `${scholar.responseTimeHours} ঘণ্টা`,
+                    label: <T k="scholar.tools.profile.responseTime" />,
+                    value: (
+                      <>
+                        <Digits value={scholar.responseTimeHours} /> <T k="console.hours" />
+                      </>
+                    ),
                   },
-                  { label: "রেটিং", value: `${scholar.rating} / ৫` },
                   {
-                    label: "যাচাই",
-                    value: scholar.verified ? "যাচাইকৃত" : "যাচাই বাকি",
+                    label: <T k="scholar.tools.profile.rating" />,
+                    value: (
+                      <T k="scholar.tools.profile.ratingValue" vars={{ rating: scholar.rating }} />
+                    ),
+                  },
+                  {
+                    label: <T k="scholar.tools.profile.verification" />,
+                    value: (
+                      <T
+                        k={scholar.verified ? "label.verified" : "scholar.tools.profile.unverified"}
+                      />
+                    ),
                   },
                 ]}
               />
@@ -171,17 +191,17 @@ export default function ScholarProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader icon={GraduationCap} title="বিশেষজ্ঞতা" />
+            <CardHeader icon={GraduationCap} title={<T k="scholar.tools.profile.specializationTitle" />} />
             <ul className="mt-3 space-y-2">
               {scholar.specialization.map((item) => (
                 <li key={item.bn} className="text-[0.8125rem] leading-relaxed text-muted-foreground">
-                  {item.bn}
+                  <Pick value={item} />
                 </li>
               ))}
             </ul>
             <div className="mt-4 border-t border-border pt-3">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-                ভাষা
+                <T k="label.languages" />
               </p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {scholar.languages.map((language) => (
@@ -197,20 +217,20 @@ export default function ScholarProfilePage() {
             <CardHeader
               icon={GraduationCap}
               tone="accent"
-              title="আপনার বিভাগসমূহ"
-              subtitle="রাউটিং এই বিভাগগুলোর ওপর নির্ভর করে"
+              title={<T k="console.yourDepartments" />}
+              subtitle={<T k="scholar.tools.profile.departmentsSubtitle" />}
             />
             <div className="mt-3 flex flex-wrap gap-1.5">
               {departments.map((department) => (
                 <Badge key={department.slug} tone={department.tone} size="xs">
-                  {department.name.bn}
+                  <Pick value={department.name} />
                 </Badge>
               ))}
             </div>
             <p className="mt-3 text-[0.75rem] leading-relaxed text-muted-foreground">
-              প্রধান বিভাগ:{" "}
+              <T k="scholar.tools.profile.primaryDepartment" />{" "}
               <span className="font-medium text-foreground">
-                {getDepartment(scholar.primaryDepartmentId)?.name.bn ?? "—"}
+                <Pick value={getDepartment(scholar.primaryDepartmentId)?.name} fallback="—" />
               </span>
             </p>
           </Card>

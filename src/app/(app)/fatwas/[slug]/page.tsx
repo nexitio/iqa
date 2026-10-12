@@ -25,8 +25,7 @@ import {
   fetchScholars,
   indexBy,
 } from "@/lib/content-api";
-import { toBnDigits } from "@/lib/bn";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, GregDate, Num, Pick, T } from "@/components/i18n-text";
 import {
   Avatar,
   AvatarStack,
@@ -221,19 +220,15 @@ export default async function FatwaDetailPage({
               <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-primary/20 pt-4 text-[0.6875rem] text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
                   <CalendarDays className="size-3.5" aria-hidden />
-                  {new Date(fatwa.publishedAt).toLocaleDateString("bn-BD", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  <GregDate day={new Date(fatwa.publishedAt)} weekday={false} />
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Eye className="size-3.5" aria-hidden />
-                  {toBnDigits(fatwa.viewCount.toLocaleString("en-IN"))} বার পঠিত
+                  <Num value={fatwa.viewCount} /> বার পঠিত
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <BookMarked className="size-3.5" aria-hidden />
-                  {toBnDigits(fatwa.bookmarkCount)} বার সংরক্ষিত
+                  <Digits value={fatwa.bookmarkCount} /> বার সংরক্ষিত
                 </span>
               </div>
             </div>
@@ -278,11 +273,7 @@ export default async function FatwaDetailPage({
             <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
               <p className="text-[0.75rem] text-subtle-foreground">
                 <T k="label.updatedOn" />{" "}
-                {new Date(fatwa.publishedAt).toLocaleDateString("bn-BD", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+                <GregDate day={new Date(fatwa.publishedAt)} weekday={false} />
               </p>
               <SaveShareBar id={fatwa.slug} title={fatwa.rulingBn} compact />
             </div>
@@ -342,7 +333,7 @@ export default async function FatwaDetailPage({
                             <Pick value={credential.title} />
                           </p>
                           <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted-foreground">
-                            <Pick value={credential.institution} /> · {toBnDigits(credential.year)}
+                            <Pick value={credential.institution} /> · <Digits value={credential.year} />
                           </p>
                         </li>
                       ))}
@@ -354,17 +345,29 @@ export default async function FatwaDetailPage({
                     items={[
                       {
                         label: "মোট ফতোয়া",
-                        value: `${toBnDigits(mufti.stats.fatwas)} টি`,
+                        value: (
+                          <>
+                            <Digits value={mufti.stats.fatwas} /> টি
+                          </>
+                        ),
                         icon: Scale,
                       },
                       {
                         label: "মোট উত্তর",
-                        value: `${toBnDigits(mufti.stats.answers)} টি`,
+                        value: (
+                          <>
+                            <Digits value={mufti.stats.answers} /> টি
+                          </>
+                        ),
                         icon: Users,
                       },
                       {
                         label: "সাধারণত উত্তর দেন",
-                        value: `${toBnDigits(mufti.responseTimeHours)} ঘণ্টায়`,
+                        value: (
+                          <>
+                            <Digits value={mufti.responseTimeHours} /> ঘণ্টায়
+                          </>
+                        ),
                         icon: BookMarked,
                       },
                       {
@@ -478,7 +481,11 @@ export default async function FatwaDetailPage({
                   },
                   {
                     label: "দলিলের সংখ্যা",
-                    value: `${toBnDigits(fatwa.referenceCount)} টি`,
+                    value: (
+                      <>
+                        <Digits value={fatwa.referenceCount} /> টি
+                      </>
+                    ),
                     icon: BookMarked,
                   },
                   {

@@ -31,12 +31,6 @@ interface StoryNode {
   isNew: boolean;
 }
 
-/** Drops the honorific so a narrow column shows a name, not a title fragment. */
-function nameWithoutHonorific(name: string) {
-  const parts = name.split(/\s+/).filter(Boolean);
-  return parts.length > 1 ? parts.slice(1).join(" ") : (parts[0] ?? name);
-}
-
 export function KnowledgeStories({
   className,
   composer = false,
@@ -53,7 +47,10 @@ export function KnowledgeStories({
       if (!scholar) return null;
       return {
         id: `scholar-${id}`,
-        label: nameWithoutHonorific(pick(scholar.name)),
+        // Just the name: a narrow column under a circular avatar has room for a
+        // name or a title, not both, and the title is not what the reader is
+        // scanning for.
+        label: pick(scholar.name),
         href: `/scholars/${scholar.slug}`,
         color: scholar.avatarColor,
         name: scholar.name.bn,

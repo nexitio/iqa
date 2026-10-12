@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useDismissable } from "@/lib/use-dismissable";
 import { NotificationMenu } from "./notification-menu";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * The header bell: its trigger, its dropdown, and the read state behind both.
@@ -52,7 +53,7 @@ function UnreadBadge({ unread }: { unread: number }) {
   if (unread === 0) return null;
   return (
     <span className="absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-danger text-[0.5625rem] font-bold text-white ring-2 ring-surface">
-      {unread}
+      <Digits value={unread} />
     </span>
   );
 }

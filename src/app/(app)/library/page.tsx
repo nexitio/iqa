@@ -22,7 +22,7 @@ import {
 } from "@/lib/data/personal";
 import type { BookmarkKind } from "@/lib/types";
 import { BookmarkCard, BookmarkCollectionCard, ContinueLearningRail, StreakCard } from "@/components/personal";
-import { Num, T } from "@/components/i18n-text";
+import { Digits, Num, T } from "@/components/i18n-text";
 import {
   Badge,
   Callout,
@@ -163,7 +163,7 @@ export default async function LibraryPage({
           <section>
             <SectionHeader
               title="ধরন অনুসারে"
-              description={`${counts.length}টি ধরনের কনটেন্ট সংরক্ষিত আছে`}
+              description={<T k="library.savedKinds" vars={{ count: counts.length }} />}
               icon={Bookmark}
               size="sm"
             />
@@ -182,7 +182,7 @@ export default async function LibraryPage({
                     active={activeKind?.kind === item.kind}
                     size="sm"
                     icon={item.icon}
-                    count={item.count}
+                    count={<Digits value={item.count} />}
                   >
                     {item.labelBn}
                   </Chip>
@@ -203,9 +203,14 @@ export default async function LibraryPage({
             <SectionHeader
               title={activeKind ? `${activeKind.labelBn} — সংরক্ষিত` : "সব সংরক্ষিত"}
               description={
-                activeCollection
-                  ? `সংগ্রহ "${activeCollection.nameBn}" থেকে ${items.length}টি আইটেম`
-                  : `${items.length}টি আইটেম দেখানো হচ্ছে`
+                activeCollection ? (
+                  <T
+                    k="library.collectionItems"
+                    vars={{ name: activeCollection.nameBn, count: items.length }}
+                  />
+                ) : (
+                  <T k="library.showingItems" vars={{ count: items.length }} />
+                )
               }
               icon={Bookmark}
             />

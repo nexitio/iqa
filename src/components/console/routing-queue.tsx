@@ -41,18 +41,18 @@ import {
 
 /** Position badge, e.g. "অগ্রাধিকার ১". */
 export function PriorityBadge({ priority, className }: { priority: number; className?: string }) {
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const tone = priority === 1 ? "danger" : priority === 2 ? "warning" : "neutral";
   return (
     <Badge tone={tone} size="sm" icon={Zap} className={className}>
-      অগ্রাধিকার {formatNumber(priority, locale)}
+      {t("console.priorityRank", { priority })}
     </Badge>
   );
 }
 
 /** 0–100 routing score rendered as a labelled bar. */
 export function MatchScoreBar({ score, className }: { score: number; className?: string }) {
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const clamped = Math.min(100, Math.max(0, score));
   const tone = clamped >= 85 ? "success" : clamped >= 65 ? "primary" : "info";
 
@@ -60,7 +60,7 @@ export function MatchScoreBar({ score, className }: { score: number; className?:
     <div className={cn("flex items-center gap-3", className)}>
       <Progress value={clamped} tone={tone} size="sm" className="min-w-24 flex-1" />
       <span className="shrink-0 text-[0.75rem] font-semibold tabular text-foreground">
-        মিল {formatNumber(clamped, locale)}%
+        {t("console.matchPercent", { percent: clamped })}
       </span>
     </div>
   );
@@ -193,7 +193,7 @@ export function RoutingQueueCard({
           </span>
         ) : (
           <Badge tone="warning" size="xs" icon={Flag}>
-            উত্তর হয়নি
+            {t("console.filter.unanswered")}
           </Badge>
         )}
       </div>
@@ -218,7 +218,7 @@ export function RoutingQueueCard({
           {t("action.save")}
         </Button>
         <Button variant="ghost" size="sm" icon={ThumbsDown} onClick={() => onDecline?.(question)}>
-          আমার জন্য নয়
+          {t("console.notForMe")}
         </Button>
         <Button variant="link" size="sm" href={`/questions/${question.slug}`} className="ml-auto">
           {t("action.readMore")}
@@ -262,7 +262,7 @@ export function RoutingPreview({
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-[0.75rem] text-subtle-foreground">কোনো বিভাগ নির্বাচন করা হয়নি</p>
+        <p className="mt-3 text-[0.75rem] text-subtle-foreground">{t("console.noDepartmentsChosen")}</p>
       )}
 
       {topScholars.length > 0 ? (
@@ -286,12 +286,12 @@ export function RoutingPreview({
 
 type InboxFilterId = "all" | "urgent" | "fatwa" | "today" | "unanswered";
 
-const INBOX_FILTERS: { id: InboxFilterId; labelBn: string; labelEn: string }[] = [
-  { id: "all", labelBn: "সব প্রশ্ন", labelEn: "All" },
-  { id: "urgent", labelBn: "জরুরি", labelEn: "Urgent" },
-  { id: "fatwa", labelBn: "ফতোয়া চাওয়া", labelEn: "Fatwa requested" },
-  { id: "today", labelBn: "আজ এসেছে", labelEn: "New today" },
-  { id: "unanswered", labelBn: "উত্তর হয়নি", labelEn: "Unanswered" },
+const INBOX_FILTERS: { id: InboxFilterId; labelKey: string }[] = [
+  { id: "all", labelKey: "console.filter.all" },
+  { id: "urgent", labelKey: "console.filter.urgent" },
+  { id: "fatwa", labelKey: "console.filter.fatwa" },
+  { id: "today", labelKey: "console.filter.today" },
+  { id: "unanswered", labelKey: "console.filter.unanswered" },
 ];
 
 function isToday(iso: string) {
@@ -316,7 +316,7 @@ export function QuestionInboxFilters({
   active?: InboxFilterId;
   onChange?: (filter: InboxFilterId) => void;
 }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const [internal, setInternal] = useState<InboxFilterId>("all");
   const current = active ?? internal;
 
@@ -352,7 +352,7 @@ export function QuestionInboxFilters({
                 : "border-border bg-surface text-muted-foreground hover:border-primary/40 hover:text-foreground",
             )}
           >
-            {locale === "bn" ? filter.labelBn : filter.labelEn}
+            {t(filter.labelKey)}
             {count !== undefined ? (
               <CountPill value={formatNumber(count, locale)} tone={selected ? "primary" : "neutral"} />
             ) : null}

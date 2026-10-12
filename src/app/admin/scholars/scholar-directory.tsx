@@ -6,6 +6,7 @@ import type { Scholar } from "@/lib/types";
 import { DEPARTMENTS } from "@/lib/data/departments";
 import { districtOptions } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
+import { Digits } from "@/components/i18n-text";
 import { ScholarTable } from "@/components/console";
 import { Badge, Button, Chip, ChipList, SearchInput, Select } from "@/components/ui";
 
@@ -25,7 +26,7 @@ export function ScholarDirectory({
   scholars: Scholar[];
   className?: string;
 }) {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [deptFilter, setDeptFilter] = useState<string[]>([]);
   // Several districts at once: an admin comparing coverage across a division
@@ -92,9 +93,11 @@ export function ScholarDirectory({
           <SlidersHorizontal className="size-4" aria-hidden />
         </span>
         <div>
-          <h2 className="font-display text-lg font-semibold text-foreground">আলেম তালিকা</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">
+            {t("admin.scholarsTable")}
+          </h2>
           <p className="mt-0.5 text-[0.75rem] text-muted-foreground">
-            বিভাগ, জেলা ও যাচাই অবস্থা অনুযায়ী খুঁজুন — কার কোন বিভাগে দায়িত্ব আছে তা এখানেই নির্ধারিত হয়।
+            {t("admin.scholars.dir.intro")}
           </p>
         </div>
       </div>
@@ -105,26 +108,26 @@ export function ScholarDirectory({
             icon={Search}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="নাম, মাদরাসা বা বিশেষজ্ঞতা দিয়ে খুঁজুন…"
-            aria-label="আলেম খুঁজুন"
+            placeholder={t("admin.scholars.dir.searchPlaceholder")}
+            aria-label={t("admin.scholars.dir.searchLabel")}
           />
           <Select
             multiple
             value={districts}
             onChange={setDistricts}
-            aria-label="জেলা নির্বাচন"
-            placeholder="সব জেলা"
+            aria-label={t("admin.scholars.dir.districtFilter")}
+            placeholder={t("admin.scholars.dir.allDistricts")}
             options={districtOptions(locale)}
           />
           <Select
             value={sort}
             onChange={(value) => setSort(value as SortKey)}
-            aria-label="সাজানোর ধরন"
+            aria-label={t("admin.scholars.dir.sortBy")}
             options={[
-              { value: "contribution", label: "অবদান অনুসারে" },
-              { value: "followers", label: "অনুসারী অনুসারে" },
-              { value: "response", label: "দ্রুত উত্তরদাতা" },
-              { value: "name", label: "নাম অনুসারে" },
+              { value: "contribution", label: t("scholars.sortRank") },
+              { value: "followers", label: t("scholars.sortFollowers") },
+              { value: "response", label: t("scholars.sortResponse") },
+              { value: "name", label: t("admin.scholars.dir.sortName") },
             ]}
           />
           <div className="flex items-center gap-2">
@@ -135,10 +138,15 @@ export function ScholarDirectory({
               onClick={() => setVerifiedOnly((v) => !v)}
               aria-pressed={verifiedOnly}
             >
-              শুধু যাচাইকৃত
+              {t("admin.scholars.dir.verifiedOnly")}
             </Button>
             {activeFilters > 0 || query ? (
-              <Button variant="ghost" size="icon" onClick={reset} aria-label="ফিল্টার মুছুন">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={reset}
+                aria-label={t("admin.scholars.dir.clearFilters")}
+              >
                 <X className="size-4" />
               </Button>
             ) : null}
@@ -147,16 +155,16 @@ export function ScholarDirectory({
 
         <div className="mt-4 border-t border-border pt-3">
           <p className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-            বিভাগ অনুসারে
+            {t("admin.scholars.dir.byDepartment")}
           </p>
-          <ChipList label="বিভাগ ফিল্টার">
+          <ChipList label={t("admin.scholars.dir.departmentFilter")}>
             {DEPARTMENTS.map((department) => (
               <Chip
                 key={department.slug}
                 tone={department.tone}
                 active={deptFilter.includes(department.slug)}
                 onClick={() => toggleDept(department.slug)}
-                count={department.scholarIds.length}
+                count={<Digits value={department.scholarIds.length} />}
               >
                 {pick(department.shortName)}
               </Chip>
@@ -166,10 +174,10 @@ export function ScholarDirectory({
 
         <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
           <Badge tone="primary" size="sm">
-            {results.length} জন দেখানো হচ্ছে
+            {t("admin.scholars.dir.showing", { count: results.length })}
           </Badge>
           <span className="text-[0.75rem] text-subtle-foreground">
-            মোট {scholars.length} জনের মধ্যে
+            {t("admin.scholars.dir.ofTotal", { count: scholars.length })}
           </span>
           {deptFilter.map((slug) => {
             const department = DEPARTMENTS.find((d) => d.slug === slug);
@@ -186,12 +194,14 @@ export function ScholarDirectory({
       <div className="mt-4">
         {results.length === 0 ? (
           <div className="rounded-panel border border-dashed border-border-strong bg-surface-2 p-10 text-center">
-            <p className="text-[0.875rem] font-medium text-foreground">কোনো আলেম পাওয়া যায়নি</p>
+            <p className="text-[0.875rem] font-medium text-foreground">
+              {t("admin.scholars.dir.noResults")}
+            </p>
             <p className="mt-1 text-[0.8125rem] text-muted-foreground">
-              ফিল্টার বদলে আবার চেষ্টা করুন বা নতুন আলেম যোগ করুন।
+              {t("admin.scholars.dir.noResultsHelp")}
             </p>
             <Button variant="outline" size="sm" className="mt-4" onClick={reset}>
-              ফিল্টার মুছুন
+              {t("admin.scholars.dir.clearFilters")}
             </Button>
           </div>
         ) : (

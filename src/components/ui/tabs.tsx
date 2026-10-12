@@ -11,7 +11,9 @@ export interface TabItem {
   // ReactNode so labels can carry the <T k="..." /> localization bridge.
   label: ReactNode;
   icon?: LucideIcon;
-  count?: number | string;
+  // ReactNode too: a numeric count has to be rendered through <Digits /> so it
+  // follows the reader's numerals instead of always printing Latin ones.
+  count?: ReactNode;
   /** Optional content rendered under the tab strip when this tab is active. */
   content?: ReactNode;
   disabled?: boolean;
@@ -111,7 +113,7 @@ export function TabLinks({
   className,
   variant = "underline",
 }: {
-  items: { id: string; label: ReactNode; href: string; icon?: LucideIcon; count?: number | string }[];
+  items: { id: string; label: ReactNode; href: string; icon?: LucideIcon; count?: ReactNode }[];
   active: string;
   className?: string;
   variant?: "underline" | "pill";

@@ -30,9 +30,11 @@ export default async function ScholarWritePage({
   const departmentNames = (scholar?.departmentIds ?? [])
     .map((slug) => getDepartment(slug))
     .filter((d): d is NonNullable<typeof d> => Boolean(d))
-    .map((d) => d.name.bn);
+    .map((d) => d.name);
 
-  const scholarName = scholar ? `${scholar.honorific.bn} ${scholar.name.bn}` : "আলেম";
+  const scholarName = scholar
+    ? { bn: `${scholar.honorific.bn} ${scholar.name.bn}`, en: `${scholar.honorific.en} ${scholar.name.en}` }
+    : undefined;
 
   return (
     <div className="space-y-6">

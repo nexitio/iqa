@@ -18,7 +18,7 @@ import {
   indexBy,
   MAX_LIMIT,
 } from "@/lib/content-api";
-import { T } from "@/components/i18n-text";
+import { Digits, T, TimeAgo } from "@/components/i18n-text";
 import { AskCtaCard } from "@/components/knowledge";
 import { ScholarMiniCard } from "@/components/people";
 import {
@@ -31,8 +31,6 @@ import {
   PageHeader,
   SectionHeader,
 } from "@/components/ui";
-import { toBnDigits } from "@/lib/bn";
-import { relativeTime } from "@/lib/utils";
 import { QuestionBrowser } from "./question-browser";
 
 export const metadata: Metadata = {
@@ -250,7 +248,7 @@ export default async function QuestionsPage() {
                       উত্তর পাওয়া গেছে
                     </span>
                     <span className="text-[0.6875rem] text-subtle-foreground">
-                      {relativeTime(question.answeredAt ?? question.createdAt, "bn")}
+                      <TimeAgo iso={question.answeredAt ?? question.createdAt} />
                     </span>
                   </div>
                   <a
@@ -286,7 +284,7 @@ export default async function QuestionsPage() {
                 href={`/topics/${topic.slug}`}
                 tone="accent"
                 size="md"
-                count={toBnDigits(topic.contentCount)}
+                count={<Digits value={topic.contentCount} />}
               >
                 {topic.name.bn}
               </Chip>
@@ -331,7 +329,7 @@ export default async function QuestionsPage() {
               ].map((step, index) => (
                 <li key={step} className="flex gap-3">
                   <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary-soft text-[0.6875rem] font-bold tabular text-primary">
-                    {toBnDigits(index + 1)}
+                    <Digits value={index + 1} />
                   </span>
                   <span className="text-[0.8125rem] leading-relaxed text-muted-foreground">{step}</span>
                 </li>
@@ -384,7 +382,7 @@ function Header({ counts }: { counts?: StatusCounts }) {
             <div key={item.label}>
               <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">{item.label}</dt>
               <dd className="mt-1 font-display text-xl font-bold tabular text-foreground">
-                {toBnDigits(item.value)}
+                <Digits value={item.value} />
               </dd>
             </div>
           ))}

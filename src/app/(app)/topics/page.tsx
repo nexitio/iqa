@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Compass, Flame, LayoutGrid, Layers } from "@/components/icons";
 import { fetchDepartments, fetchTopics } from "@/lib/content-api";
-import { formatNumber } from "@/lib/bn";
 import {
   Button,
   Card,
@@ -14,7 +13,7 @@ import {
   StatTile,
 } from "@/components/ui";
 import { departmentIcon } from "@/components/people";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, Num, Pick, T } from "@/components/i18n-text";
 import { TopicExplorer } from "./topic-explorer";
 
 export const metadata: Metadata = {
@@ -76,21 +75,21 @@ export default async function TopicsPage() {
         <div className="grid gap-3 sm:grid-cols-3">
           <StatTile
             label={<T k="label.topics" />}
-            value={formatNumber(topics.length, "bn")}
+            value={<Num value={topics.length} />}
             hint="মোট বিষয়"
             icon={LayoutGrid}
             tone="primary"
           />
           <StatTile
             label={<T k="label.departments" />}
-            value={formatNumber(departments.length, "bn")}
+            value={<Num value={departments.length} />}
             hint="জ্ঞানের শাখা"
             icon={Layers}
             tone="info"
           />
           <StatTile
             label={<T k="label.total" />}
-            value={formatNumber(totalContent, "bn")}
+            value={<Num value={totalContent} />}
             hint="বিষয়ভিত্তিক কনটেন্ট"
             icon={Flame}
             tone="accent"
@@ -139,7 +138,7 @@ export default async function TopicsPage() {
                       href={`/departments/${department.slug}`}
                       tone={department.tone}
                       icon={departmentIcon(department.icon)}
-                      count={department.scholarIds.length}
+                      count={<Digits value={department.scholarIds.length} />}
                     >
                       <Pick value={department.shortName} />
                     </Chip>

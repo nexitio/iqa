@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   FileText,
@@ -14,7 +15,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
 import { cn, relativeTime } from "@/lib/utils";
 import type { FeedItem, FeedKind } from "@/lib/types";
 import { getArticle, getFatwa } from "@/lib/data/content";
@@ -23,6 +24,7 @@ import { getDiscussion } from "@/lib/data/community";
 import { getScholar } from "@/lib/data/scholars";
 import { getDepartment } from "@/lib/data/departments";
 import { JOURNEYS } from "@/lib/data/personal";
+import { Digits } from "@/components/i18n-text";
 import { Badge, Card, Chip, VerifiedMark, type Tone } from "@/components/ui";
 import { DailyAyahCard, DailyHadithCard } from "./daily-cards";
 import { JourneyCard } from "./progress-cards";
@@ -87,7 +89,7 @@ function InlineRow({
   eyebrow: string;
   title: string;
   body: string;
-  meta?: string;
+  meta?: ReactNode;
   className?: string;
 }) {
   return (
@@ -159,9 +161,13 @@ export function FeedItemCard({ item, className }: { item: FeedItem; className?: 
             eyebrow={department ? pick(department.name) : t("label.article")}
             title={pick(article.title)}
             body={pick(article.excerpt)}
-            meta={`${article.readingMinutes} ${t("label.minutes")} · ${formatNumber(article.viewCount, locale)} ${t("label.views")}${
-              author ? ` · ${pick(author.honorific)} ${pick(author.name)}` : ""
-            }`}
+            meta={
+              <>
+                <Digits value={article.readingMinutes} /> {t("label.minutes")} ·{" "}
+                {formatNumber(article.viewCount, locale)} {t("label.views")}
+                {author ? ` · ${pick(author.honorific)} ${pick(author.name)}` : ""}
+              </>
+            }
           />
         );
       }
@@ -195,7 +201,12 @@ export function FeedItemCard({ item, className }: { item: FeedItem; className?: 
             eyebrow={department ? pick(department.name) : t("label.question")}
             title={question.titleBn}
             body={question.bodyBn}
-            meta={`${toBnDigits(question.answerCount)} ${t("qa.answerCount")} · ${relativeTime(question.createdAt, locale)}`}
+            meta={
+              <>
+                <Digits value={question.answerCount} /> {t("qa.answerCount")} ·{" "}
+                {relativeTime(question.createdAt, locale)}
+              </>
+            }
           />
         );
       }
@@ -211,7 +222,12 @@ export function FeedItemCard({ item, className }: { item: FeedItem; className?: 
             eyebrow={t("label.discussion")}
             title={discussion.titleBn}
             body={discussion.bodyBn}
-            meta={`${toBnDigits(discussion.replyCount)} টি উত্তর · ${formatNumber(discussion.upvotes, locale)} ভোট`}
+            meta={
+              <>
+                <Digits value={discussion.replyCount} /> টি উত্তর ·{" "}
+                {formatNumber(discussion.upvotes, locale)} ভোট
+              </>
+            }
           />
         );
       }

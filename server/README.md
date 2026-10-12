@@ -105,7 +105,7 @@ All routes are under `/api/v1`. Small fixed collections come back as
 | Duas | `GET /duas`, `/duas?category=&q=`, `/duas/:slug`, `/duas/categories` |
 | Daily | `GET /daily` — the curated ayah/hadith rotation, dhikr and focus themes |
 | Articles | `GET /articles?status=&department=&topic=&author=&q=&sort=recent\|popular`, `/articles/:slug` |
-| Fatwas | `GET /fatwas?status=&fiqh=&pinned=&department=&mufti=&q=`, `/fatwas/:slug` |
+| Fatwas | `GET /fatwas?status=&fiqh=&pinned=&department=&topic=&mufti=&q=`, `/fatwas/:slug` |
 | Citations | `GET /references?kind=&q=`, `/references/:id` |
 | Q&A | `GET /questions?status=&urgency=&department=&topic=&asker=&answeredBy=&q=`, `/questions/:slug`, `GET /answers?scholar=&question=`, `POST /questions`, `POST /questions/:slug/answers` |
 | Community | `GET /discussions?department=&topic=&author=&moderation=&q=`, `/discussions/:slug`, `POST /discussions/:slug/replies` |
@@ -124,6 +124,11 @@ is why the topic pages need a second tier. Pass `?includeRelated=true` to add
 department overlap, reproducing the two-tier rule the frontend uses in
 `src/app/(app)/topics/[slug]/page.tsx`. `GET /topics/:slug` returns the
 `tagKeys` and `departmentSlugs` a client needs to make either call.
+
+`GET /fatwas?topic=` is the department tier on its own: a fatwa is filed under
+departments and never tagged with a topic key, so there is no strict tier for it
+to fall back from, and no `includeRelated` flag to widen it. A topic that covers
+no department matches no fatwas.
 
 ## Authentication
 

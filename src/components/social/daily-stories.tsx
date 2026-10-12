@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BookOpen, ScrollText, Heart, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { toBnDigits } from "@/lib/bn";
 import { AYAH_OF_THE_DAY, getSurah } from "@/lib/data/quran";
 import { HADITH_OF_THE_DAY } from "@/lib/data/hadith";
 import { duaOfToday } from "@/lib/data/duas";
@@ -12,20 +13,25 @@ import { cn } from "@/lib/utils";
 /**
  * Daily content strip.
  *
- * Three horizontally scrollable cards — Today's Ayah, Hadith, and Dua —
- * each showing actual Arabic + Bengali text so the reader can engage without
- * navigating away. Replaces the "জ্ঞানের ধারা" scholar-avatar rail in the
- * exact same card footprint.
+ * Three cards — Today's Ayah, Hadith, and Dua — each showing actual Arabic +
+ * Bengali text so the reader can engage without navigating away.
  *
- * The strip already scrolled sideways, but only a swipe revealed that: the
- * scrollbar is hidden by design and the third card is only half visible on a
- * phone, so a reader with no reason to swipe could believe two cards were the
- * whole section. The arrow controls make the rest findable by tap, and they
- * appear only while there is something left in that direction — which is also
- * what keeps them out of the way once all three cards fit side by side.
+ * One line of whole cards. The strip is a horizontal grid whose columns are an
+ * exact fraction of the visible width — half on a phone, a third from `sm` up —
+ * so a reader always sees two cards, or three, and never two and a half. A
+ * `flex-1 min-w-*` row is what produced the fragment: it sized cards from their
+ * content minimum, which is neither half nor a third of anything, leaving the
+ * third card cut off at the boundary. Whole columns need no explaining, and the
+ * strip only scrolls at all below `sm`, where two cards cannot share one line
+ * with the third.
+ *
+ * The arrow controls come back with it: they are the only way a phone reader
+ * learns the third card exists, and they appear only while there is something
+ * left in that direction — which is why a desktop, where all three cards fit,
+ * shows none at all.
  */
 export function DailyStories({ className }: { className?: string }) {
-  const { t, pick } = useI18n();
+  const { t, pick, isBn } = useI18n();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScroll, setCanScroll] = useState({ back: false, forward: false });
 
@@ -80,7 +86,11 @@ export function DailyStories({ className }: { className?: string }) {
       tag: "আজকের আয়াত",
       icon: BookOpen,
       href: `/quran/${ayah.surah}?ayah=${ayah.number}`,
-      meta: surah ? `সূরা ${surah.name.bn} · ${ayah.ref}` : ayah.ref,
+      meta: surah
+        ? `${t("label.surah")} ${pick(surah.name)} · ${isBn ? toBnDigits(ayah.ref) : ayah.ref}`
+        : isBn
+          ? toBnDigits(ayah.ref)
+          : ayah.ref,
       arabic: ayah.arabic,
       text: ayah.translationBn,
       accent: "text-primary",
@@ -91,7 +101,7 @@ export function DailyStories({ className }: { className?: string }) {
       tag: "আজকের হাদীস",
       icon: ScrollText,
       href: "/daily",
-      meta: hadith.refBn,
+      meta: isBn ? hadith.refBn : hadith.refEn,
       arabic: hadith.arabic,
       text: hadith.translationBn,
       accent: "text-emerald-600 dark:text-emerald-400",
@@ -114,7 +124,13 @@ export function DailyStories({ className }: { className?: string }) {
   return (
     <section
       aria-label="আজকের দৈনিক বিষয়বস্তু"
-      className={cn("rounded-panel border border-border bg-surface shadow-card", className)}
+      className={cn(
+        // `overflow-hidden` is what keeps the cards' hover fill inside the panel's
+        // rounded corners: the row reaches the panel's edge, so without it the
+        // leftmost and rightmost cards paint a square corner over the curve.
+        "overflow-hidden rounded-panel border border-border bg-surface shadow-card",
+        className,
+      )}
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
@@ -129,18 +145,14 @@ export function DailyStories({ className }: { className?: string }) {
         </Link>
       </div>
 
-      {/* Scrollable content cards — three columns, horizontally scrollable on mobile */}
       <div className="relative">
-        {/*
-         * Snapping is `proximity`, not `mandatory`: with mandatory snapping the
-         * browser re-snaps a programmatic scroll past the arrow's one-card step
-         * — the last card's snap offset lies beyond the scroll range, so the
-         * nearest valid point becomes the very end of the strip. Proximity still
-         * aligns a swipe to a card boundary, it just does not overrule a tap.
-         */}
+        {/* One row, columns at a whole fraction of the visible width. From `sm`
+            up three thirds fill the strip exactly, so there is nothing to
+            scroll and the arrows below stay hidden; `lg` is where the page's
+            column has the room for it. */}
         <div
           ref={scrollerRef}
-          className="no-scrollbar flex snap-x snap-proximity divide-x divide-border overflow-x-auto overscroll-x-contain"
+          className="no-scrollbar grid snap-x snap-proximity grid-flow-col auto-cols-[50%] divide-x divide-border overflow-x-auto overscroll-x-contain sm:auto-cols-[33.3333%] lg:grid-flow-row lg:grid-cols-3"
         >
           {cards.map((card) => {
             const Icon = card.icon;
@@ -148,7 +160,7 @@ export function DailyStories({ className }: { className?: string }) {
               <Link
                 key={card.id}
                 href={card.href}
-                className="group flex min-w-[14rem] flex-1 snap-start flex-col gap-2.5 p-4 transition-colors hover:bg-surface-2"
+                className="group flex snap-start flex-col gap-2.5 p-4 transition-colors hover:bg-surface-2"
               >
                 {/* Tag row */}
                 <div className="flex items-center justify-between gap-2">
@@ -211,8 +223,8 @@ export function DailyStories({ className }: { className?: string }) {
         ) : null}
 
         {/* Edge controls. Only the direction that still has a card out of view is
-            rendered, so the strip never shows a dead arrow — and a desktop
-            layout, where all three cards fit side by side, shows none at all. */}
+            rendered, so the strip never shows a dead arrow — and a layout where
+            all three cards fit side by side shows none at all. */}
         {canScroll.back ? (
           <ScrollArrow
             direction="back"

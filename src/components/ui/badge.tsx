@@ -145,7 +145,7 @@ export function CountPill({
   tone = "neutral",
   className,
 }: {
-  value: string | number;
+  value: ReactNode;
   tone?: Tone;
   className?: string;
 }) {

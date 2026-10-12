@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { toBnDigits } from "@/lib/bn";
 import { BellRing, Bookmark, CheckCheck, X } from "lucide-react";
 import type { AppNotification } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
@@ -90,10 +91,12 @@ export function NotificationsList({ notifications }: { notifications: AppNotific
           </span>
           <div>
             <p className="text-[0.875rem] font-semibold text-foreground">
-              {unread > 0 ? `${unread}টি অপঠিত বিজ্ঞপ্তি` : "সব বিজ্ঞপ্তি পড়া হয়েছে"}
+              {unread > 0
+                ? t("notifications.unreadCount", { count: unread })
+                : t("notifications.allRead")}
             </p>
             <p className="text-[0.6875rem] text-subtle-foreground">
-              মোট {visible.length}টি বিজ্ঞপ্তি দেখানো হচ্ছে
+              {t("notifications.showingTotal", { count: visible.length })}
             </p>
           </div>
         </div>
@@ -116,7 +119,7 @@ export function NotificationsList({ notifications }: { notifications: AppNotific
             <h2 className="font-display text-[0.9375rem] font-semibold text-foreground">{day}</h2>
             <span className="h-px flex-1 bg-border" aria-hidden />
             <Badge tone="neutral" size="xs">
-              {items.length}টি
+              {locale === "bn" ? `${toBnDigits(items.length)}টি` : items.length}
             </Badge>
           </div>
 

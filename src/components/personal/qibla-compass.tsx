@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 import { Compass, Info, Navigation } from "lucide-react";
-import { distanceToMakkah, findDistrict, formatNumber, qiblaDirection, toBnDigits } from "@/lib/bn";
+import { distanceToMakkah, findDistrict, formatNumber, qiblaDirection } from "@/lib/bn";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { Digits } from "@/components/i18n-text";
 import { Badge, Callout, Card } from "@/components/ui";
 
 /**
@@ -46,7 +47,7 @@ export function QiblaCompass({
           </p>
         </div>
         <Badge tone="primary" size="sm" icon={Navigation}>
-          {toBnDigits(bearing.toFixed(1))}°
+          <Digits value={bearing.toFixed(1)} />°
         </Badge>
       </div>
 
@@ -123,7 +124,7 @@ export function QiblaCompass({
             {t("label.qibla")}
           </dt>
           <dd className="mt-0.5 font-display text-[0.9375rem] font-bold tabular text-foreground">
-            {toBnDigits(bearing.toFixed(1))}°
+            <Digits value={bearing.toFixed(1)} />°
           </dd>
         </div>
         <div>

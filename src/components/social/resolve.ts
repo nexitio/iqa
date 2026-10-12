@@ -8,7 +8,7 @@ import { getAyah, getSurah } from "@/lib/data/quran";
 import { toBnDigits } from "@/lib/bn";
 import { SCHOLAR_BY_ID, getScholar } from "@/lib/data/scholars";
 import { getUser } from "@/lib/data/personal";
-import type { FeedItem } from "@/lib/types";
+import type { FeedItem, Localized } from "@/lib/types";
 import type { Discussion } from "@/lib/types";
 import { DISCUSSIONS } from "@/lib/data/community";
 
@@ -26,6 +26,14 @@ export interface ResolvedPost {
   href: string;
   /** Bangla headline of the post. */
   titleBn: string;
+  /**
+   * The headline in English, when the source data carries one.
+   *
+   * An article's title and a surah's name do; a question, a fatwa or a community
+   * thread does not. Empty (or absent) means the card shows `titleBn`, which is
+   * the only headline those items have.
+   */
+  titleEn?: string;
   /** Bangla body preview. */
   bodyBn?: string;
   /** Qur'anic / Hadith Arabic, when the post quotes scripture. */
@@ -34,8 +42,18 @@ export interface ResolvedPost {
   translationBn?: string;
   /** "সূরা আল-বাকারা, আয়াত ২৭৫" style citation. */
   refBn?: string;
+  /**
+   * The same citation in English — "Surah Al-Baqarah · Ayah 275".
+   *
+   * Built from the English twin the source already carries: a surah's `name.en`
+   * for an ayah, the hadith's own `refEn` for a narration. A citation with no
+   * English twin leaves this empty and the card reads `refBn` instead.
+   */
+  refEn?: string;
   /** Department or topic context line. */
   contextBn?: string;
+  /** The same context line, in the department or topic's own English name. */
+  contextEn?: string;
   reasonBn: string;
   createdAt: string;
   author?: {
@@ -46,6 +64,7 @@ export interface ResolvedPost {
     honorificBn?: string;
     honorificEn?: string;
     metaBn?: string;
+    metaEn?: string;
     href?: string;
   };
   stats: { likes: number; comments: number; saves: number; views: number };
@@ -69,10 +88,17 @@ const KIND_BADGE: Record<
   journey: { labelBn: "শিক্ষা যাত্রা", labelEn: "Journey", tone: "scholar" },
 };
 
-function departmentContextBn(slugs: string[] | undefined): string | undefined {
+/**
+ * The department (or topic) a post belongs to, in both languages.
+ *
+ * Resolved whole rather than to one string: the catalog already holds the
+ * English name, so passing both lets the card pair an English citation with an
+ * English department instead of dropping a Bangla label under it.
+ */
+function departmentContext(slugs: string[] | undefined): Localized | undefined {
   const first = slugs?.[0];
   if (!first) return undefined;
-  return getDepartment(first)?.name.bn ?? TOPICS.find((t) => t.slug === first)?.name.bn;
+  return getDepartment(first)?.name ?? TOPICS.find((t) => t.slug === first)?.name;
 }
 
 function scholarAuthor(scholarId: string | undefined) {
@@ -87,6 +113,7 @@ function scholarAuthor(scholarId: string | undefined) {
     honorificBn: scholar.honorific.bn,
     honorificEn: scholar.honorific.en,
     metaBn: primary?.name.bn,
+    metaEn: primary?.name.en,
     href: `/scholars/${scholar.slug}`,
   };
 }
@@ -105,12 +132,15 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
     case "article": {
       const article = ARTICLES.find((a) => a.id === item.articleId);
       if (!article) return null;
+      const context = departmentContext(article.departmentIds);
       return {
         ...base,
         href: `/articles/${article.slug}`,
         titleBn: article.title.bn,
+        titleEn: article.title.en,
         bodyBn: article.excerpt.bn,
-        contextBn: departmentContextBn(article.departmentIds),
+        contextBn: context?.bn,
+        contextEn: context?.en,
         author: scholarAuthor(article.authorId),
         stats: {
           likes: article.likeCount,
@@ -124,13 +154,16 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
     case "fatwa": {
       const fatwa = FATWAS.find((f) => f.id === item.fatwaId);
       if (!fatwa) return null;
+      const context = departmentContext(fatwa.departmentIds);
       return {
         ...base,
         href: `/fatwas/${fatwa.slug}`,
+        // A fatwa's question and ruling are authored in Bangla only.
         titleBn: fatwa.questionBn,
         rulingBn: fatwa.rulingBn,
         bodyBn: fatwa.questionBn,
-        contextBn: departmentContextBn(fatwa.departmentIds),
+        contextBn: context?.bn,
+        contextEn: context?.en,
         author: scholarAuthor(fatwa.muftiId),
         stats: {
           likes: 0,
@@ -144,12 +177,14 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
     case "question": {
       const question = getQuestion(item.questionId ?? "");
       if (!question) return null;
+      const context = departmentContext(question.departmentIds);
       return {
         ...base,
         href: `/questions/${question.slug}`,
         titleBn: question.titleBn,
         bodyBn: question.bodyBn,
-        contextBn: departmentContextBn(question.departmentIds),
+        contextBn: context?.bn,
+        contextEn: context?.en,
         stats: {
           likes: question.followerCount,
           comments: question.answerCount,
@@ -162,12 +197,14 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
       const discussion = DISCUSSIONS.find((d) => d.id === item.discussionId) as Discussion | undefined;
       if (!discussion) return null;
       const author = getUser(discussion.authorId);
+      const context = departmentContext(discussion.departmentIds);
       return {
         ...base,
         href: `/discussions/${discussion.slug}`,
         titleBn: discussion.titleBn,
         bodyBn: discussion.bodyBn,
-        contextBn: departmentContextBn(discussion.departmentIds),
+        contextBn: context?.bn,
+        contextEn: context?.en,
         author: author
           ? {
               nameBn: author.name,
@@ -192,10 +229,13 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
         ...base,
         href: `/quran/${ayah.surah}?ayah=${ayah.number}`,
         titleBn: `সূরা ${surah?.name.bn ?? ayah.surah}`,
+        titleEn: `Surah ${surah?.name.en ?? ayah.surah}`,
         arabic: ayah.arabic,
         translationBn: ayah.translationBn,
         refBn: `সূরা ${surah?.name.bn ?? ayah.surah} · আয়াত ${toBnDigits(ayah.number)}`,
+        refEn: `Surah ${surah?.name.en ?? ayah.surah} · Ayah ${ayah.number}`,
         contextBn: "কুরআন",
+        contextEn: "Qur'an",
         stats: { likes: 0, comments: 0, saves: 0, views: 0 },
       };
     }
@@ -206,20 +246,28 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
         ...base,
         href: `/hadith/${hadith.collectionSlug}/${hadith.id}`,
         titleBn: hadith.refBn,
+        // The narration is cited by the collection's own English reference.
+        titleEn: hadith.refEn,
         arabic: hadith.arabic,
         translationBn: hadith.translationBn,
         refBn: hadith.refBn,
+        refEn: hadith.refEn,
         bodyBn: hadith.lessonBn,
         stats: { likes: 0, comments: 0, saves: 0, views: 0 },
       };
     }
     case "answer": {
       const question = item.questionId ? getQuestion(item.questionId) : undefined;
+      const context = departmentContext(question?.departmentIds);
       return {
         ...base,
         href: question ? `/questions/${question.slug}` : "/questions",
         titleBn: question?.titleBn ?? "একটি প্রশ্নের উত্তর",
-        contextBn: departmentContextBn(question?.departmentIds),
+        // The placeholder headline is the app's own copy, so it has an English
+        // twin; a real question's headline is authored content and does not.
+        titleEn: question ? undefined : "An answer to a question",
+        contextBn: context?.bn,
+        contextEn: context?.en,
         author: scholarAuthor(item.scholarId),
         stats: {
           likes: question?.followerCount ?? 0,
@@ -235,6 +283,7 @@ export function resolveFeedPost(item: FeedItem): ResolvedPost | null {
       return {
         ...base,
         href: `/journey/${journey.slug}`,
+        // Journeys are authored in Bangla only.
         titleBn: journey.titleBn,
         bodyBn: journey.descriptionBn,
         contextBn: journey.categoryBn,

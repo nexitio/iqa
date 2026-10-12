@@ -24,9 +24,7 @@ import {
   fetchTopic,
   fetchTopics,
   indexBy,
-  MAX_LIMIT,
 } from "@/lib/content-api";
-import { formatNumber } from "@/lib/bn";
 import {
   Badge,
   Button,
@@ -47,7 +45,7 @@ import {
 } from "@/components/knowledge";
 import { HadithCard } from "@/components/hadith";
 import { departmentIcon } from "@/components/people";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, Pick, T } from "@/components/i18n-text";
 
 /**
  * One topic, read from the API.
@@ -141,9 +139,10 @@ export default async function TopicPage({
     fetchDepartments(),
     fetchQuestions({ topic: topic.slug, includeRelated: true, limit: 6 }),
     fetchArticles({ topic: topic.slug, includeRelated: true, limit: 6 }),
-    // Fatwas filter by department, not by topic, so the archive is read whole and
-    // narrowed here against the departments this topic covers.
-    fetchFatwas({ limit: MAX_LIMIT }),
+    // A ruling is filed under departments rather than tagged with topic keys, so
+    // `?topic=` on the fatwa archive is that department tier — the API narrows it
+    // and counts it, instead of the whole archive being read and filtered here.
+    fetchFatwas({ topic: topic.slug, limit: 6 }),
     fetchDiscussions({ topic: topic.slug, includeRelated: true, limit: 4 }),
     // A hadith is tagged with a department, so the topic's first department is the
     // vocabulary its filter speaks.
@@ -159,9 +158,7 @@ export default async function TopicPage({
   const questions = questionsResult.ok ? questionsResult.data.items : [];
   const discussions = discussionsResult.ok ? discussionsResult.data.items : [];
   const hadiths = hadithsResult?.ok ? hadithsResult.data.items : [];
-  const fatwas = (fatwasResult.ok ? fatwasResult.data.items : []).filter((fatwa) =>
-    fatwa.departmentIds.some((id) => departmentSlugs.includes(id)),
-  );
+  const fatwas = fatwasResult.ok ? fatwasResult.data.items : [];
 
   const taggedArticles = articlesResult.ok ? articlesResult.data.items : [];
   // Nothing carries the topic's own tags, so the departments behind it are the
@@ -226,7 +223,7 @@ export default async function TopicPage({
             </Badge>
           ) : null}
           <Badge tone="neutral" size="sm">
-            {formatNumber(topic.contentCount, "bn")} টি কনটেন্ট
+            <Digits value={topic.contentCount} /> টি কনটেন্ট
           </Badge>
           {topicDepartments.map((department) => (
             <Chip
@@ -384,7 +381,7 @@ export default async function TopicPage({
                     key={other.slug}
                     href={`/topics/${other.slug}`}
                     tone={primaryTone}
-                    count={other.contentCount}
+                    count={<Digits value={other.contentCount} />}
                   >
                     <Pick value={other.name} />
                   </Chip>

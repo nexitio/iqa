@@ -15,7 +15,7 @@ import {
   Send,
   Sparkles,
 } from "lucide-react";
-import type { ContentReference, ReferenceSuggestion } from "@/lib/types";
+import type { ContentReference, Localized, ReferenceSuggestion } from "@/lib/types";
 import { getSuggestionsForKeywords } from "@/lib/data/questions";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber } from "@/lib/bn";
@@ -77,12 +77,13 @@ export function Composer({
   departmentNames,
   defaultKind = "article",
 }: {
-  scholarName: string;
-  departmentNames: string[];
+  /** The author's name, bilingual: the reader's language decides which half. */
+  scholarName?: Localized;
+  departmentNames: Localized[];
   /** The draft type the compose menu asked for, if it asked for one. */
   defaultKind?: DraftKind;
 }) {
-  const { t, locale } = useI18n();
+  const { t, tList, pick, locale } = useI18n();
 
   const editorRef = useRef<RichTextEditorHandle>(null);
 
@@ -131,7 +132,10 @@ export function Composer({
     setAttached((prev) =>
       prev.some((existing) => existing.id === reference.id) ? prev : [...prev, reference],
     );
-    setNotice({ tone: "success", text: `“${reference.refBn}” খসড়ায় যুক্ত করা হয়েছে।` });
+    setNotice({
+      tone: "success",
+      text: t("scholar.tools.composer.attachNotice", { ref: reference.refBn }),
+    });
   }
 
   /**
@@ -158,7 +162,9 @@ export function Composer({
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-surface px-4 py-3">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-[0.75rem] text-subtle-foreground">
-            {scholarName} হিসেবে লিখছেন
+            {t("scholar.tools.composer.writingAs", {
+              name: scholarName ? pick(scholarName) : t("scholar.core.scholarFallback"),
+            })}
           </span>
           <Badge tone={kind === "fatwa" ? "accent" : kind === "answer" ? "info" : "primary"} icon={PenLine}>
             {kind === "fatwa" ? t("console.fatwaType") : kind === "answer" ? t("console.answerType") : t("console.articleType")}
@@ -167,7 +173,7 @@ export function Composer({
             {dirty ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" aria-hidden />
-                সংরক্ষণ হচ্ছে…
+                {t("scholar.tools.composer.saving")}
               </>
             ) : savedAt ? (
               <>
@@ -177,13 +183,15 @@ export function Composer({
             ) : (
               <>
                 <Save className="size-3.5" aria-hidden />
-                স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে
+                {t("scholar.tools.composer.autosaveHint")}
               </>
             )}
           </span>
         </div>
         <div className="flex items-center gap-3 text-[0.75rem] text-muted-foreground">
-          <span className="tabular">{formatNumber(wordCount, locale)} শব্দ</span>
+          <span className="tabular">
+            {t("scholar.tools.composer.wordCount", { count: wordCount })}
+          </span>
           <span aria-hidden>·</span>
           <span>
             {formatNumber(minutes, locale)} {t("label.minutes")}
@@ -217,7 +225,7 @@ export function Composer({
                 onChange={(value) => setKind(value as DraftKind)}
                 icon={FileText}
                 label={t("console.articleType")}
-                description="বিস্তারিত জ্ঞানভিত্তিক লেখা"
+                description={t("scholar.tools.composer.articleTypeDescription")}
               />
               <RadioCard
                 name="draft-kind"
@@ -226,7 +234,7 @@ export function Composer({
                 onChange={(value) => setKind(value as DraftKind)}
                 icon={Scale}
                 label={t("console.fatwaType")}
-                description="দলিলসহ আনুষ্ঠানিক রায়"
+                description={t("scholar.tools.composer.fatwaTypeDescription")}
               />
               <RadioCard
                 name="draft-kind"
@@ -235,7 +243,7 @@ export function Composer({
                 onChange={(value) => setKind(value as DraftKind)}
                 icon={MessageCircleQuestion}
                 label={t("console.answerType")}
-                description="ব্যবহারকারীর প্রশ্নের উত্তর"
+                description={t("scholar.tools.composer.answerTypeDescription")}
               />
             </div>
           </Card>
@@ -244,9 +252,9 @@ export function Composer({
             <div className="space-y-4">
               {kind === "fatwa" ? (
                 <Field
-                  label="প্রশ্নকারীর প্রশ্ন"
+                  label={t("scholar.tools.composer.questionField")}
                   htmlFor="draft-question"
-                  hint="ব্যবহারকারী ঠিক যা লিখেছেন তা লিখুন — রায়ের প্রেক্ষাপট স্পষ্ট থাকবে।"
+                  hint={t("scholar.tools.composer.questionHint")}
                 >
                   <Textarea
                     id="draft-question"
@@ -255,7 +263,7 @@ export function Composer({
                       setQuestionText(event.target.value);
                       setDirty(true);
                     }}
-                    placeholder="যেমন: ব্যাংকের সুদ থেকে পাওয়া টাকা দিয়ে কি কুরবানি করা যাবে?"
+                    placeholder={t("scholar.tools.composer.questionPlaceholder")}
                     className="min-h-24"
                   />
                 </Field>
@@ -271,17 +279,17 @@ export function Composer({
                   }}
                   placeholder={
                     kind === "answer"
-                      ? "যেমন: সুদ ও হালাল উপার্জনের পার্থক্য"
-                      : "লেখার বিষয় অনুযায়ী একটি স্পষ্ট শিরোনাম লিখুন"
+                      ? t("scholar.tools.composer.titlePlaceholderAnswer")
+                      : t("scholar.tools.composer.titlePlaceholderDefault")
                   }
                 />
               </Field>
 
               {kind === "fatwa" ? (
                 <Field
-                  label="সংক্ষিপ্ত জবাব (রায়)"
+                  label={t("scholar.tools.composer.rulingField")}
                   htmlFor="draft-ruling"
-                  hint="দুই-তিন বাক্যে মূল রায় — পাঠক প্রথমেই এটি পড়বেন।"
+                  hint={t("scholar.tools.composer.rulingHint")}
                 >
                   <Textarea
                     id="draft-ruling"
@@ -290,7 +298,7 @@ export function Composer({
                       setRuling(event.target.value);
                       setDirty(true);
                     }}
-                    placeholder="সংক্ষেপে হুকুম লিখুন, তারপর নিচে দলিলসহ বিস্তারিত লিখুন।"
+                    placeholder={t("scholar.tools.composer.rulingPlaceholder")}
                     className="min-h-24"
                   />
                 </Field>
@@ -306,7 +314,7 @@ export function Composer({
                     className="inline-flex items-center gap-1.5 text-[0.75rem] font-medium text-primary transition-colors hover:text-primary-hover"
                   >
                     <Eye className="size-3.5" aria-hidden />
-                    {preview ? "সম্পাদনায় ফিরুন" : t("console.preview")}
+                    {preview ? t("scholar.tools.composer.backToEditing") : t("console.preview")}
                   </button>
                 }
               >
@@ -316,7 +324,7 @@ export function Composer({
                       <Prose paragraphs={toParagraphs(body)} />
                     ) : (
                       <p className="text-[0.8125rem] text-muted-foreground">
-                        প্রিভিউ দেখতে কিছু লিখুন।
+                        {t("scholar.tools.composer.previewEmpty")}
                       </p>
                     )}
                     {/* The evidence as a reader meets it — the same block the
@@ -346,19 +354,18 @@ export function Composer({
             <SectionHeader
               size="sm"
               icon={BookOpen}
-              title="আপনার বিভাগ ও প্রকাশের প্রভাব"
+              title={t("scholar.tools.composer.departmentsTitle")}
               className="mb-3"
             />
             <div className="flex flex-wrap gap-1.5">
               {departmentNames.map((name) => (
-                <Badge key={name} tone="primary" size="xs">
-                  {name}
+                <Badge key={name.bn} tone="primary" size="xs">
+                  {pick(name)}
                 </Badge>
               ))}
             </div>
             <p className="mt-3 text-[0.75rem] leading-relaxed text-muted-foreground">
-              এই বিভাগে প্রকাশ করলে ভবিষ্যতে একই বিষয়ের প্রশ্নগুলো প্রথমে আপনার কাছে
-              রাউট হবে, এবং লেখাটি বিভাগের পাতায় পাঠকদের কাছে দেখানো হবে।
+              {t("scholar.tools.composer.departmentsNote")}
             </p>
           </Card>
         </div>
@@ -376,7 +383,7 @@ export function Composer({
             references={attached}
             onRemove={(id) => {
               setAttached((prev) => prev.filter((reference) => reference.id !== id));
-              setNotice({ tone: "info", text: "রেফারেন্সটি সরানো হয়েছে।" });
+              setNotice({ tone: "info", text: t("scholar.tools.composer.removedNotice") });
             }}
           />
 
@@ -384,16 +391,11 @@ export function Composer({
             <CardHeader
               icon={Sparkles}
               tone="accent"
-              title="রেফারেন্স যোগ করার নিয়ম"
-              subtitle="দলিল ছাড়া রায় নয়"
+              title={t("scholar.tools.composer.rulesTitle")}
+              subtitle={t("scholar.tools.composer.rulesSubtitle")}
             />
             <ul className="mt-3 space-y-2.5">
-              {[
-                "প্রতিটি রায়ের পাশে অন্তত একটি আয়াত বা হাদীস যুক্ত করুন।",
-                "আয়াতের নম্বর ও সূরার নাম স্পষ্টভাবে উল্লেখ করুন।",
-                "হাদীস হলে সংকলন ও হাদীস নম্বর দিন, যাতে পাঠক যাচাই করতে পারেন।",
-                "মাযহাবভেদ থাকলে সেটি স্পষ্টভাবে উল্লেখ করুন এবং সূত্র দিন।",
-              ].map((rule) => (
+              {tList("scholar.tools.composer.rules").map((rule) => (
                 <li key={rule} className="flex items-start gap-2.5">
                   <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-success-soft text-success-soft-foreground">
                     <Check className="size-2.5" strokeWidth={3.4} aria-hidden />
@@ -408,7 +410,7 @@ export function Composer({
                 className="inline-flex items-center gap-1.5 text-[0.75rem] font-medium text-primary transition-colors hover:text-primary-hover"
               >
                 <MessageCircleQuestion className="size-3.5" aria-hidden />
-                প্রশ্নের উত্তর হিসেবে লিখতে চান?
+                {t("scholar.tools.composer.answerInstead")}
               </Link>
             </div>
           </Card>
@@ -420,15 +422,15 @@ export function Composer({
         <div className="flex items-center gap-2 text-[0.75rem] text-muted-foreground">
           <span className={cn("size-2 rounded-full", canSubmit ? "bg-success" : "bg-warning")} aria-hidden />
           {canSubmit
-            ? "প্রকাশের জন্য প্রস্তুত — রেফারেন্সসহ যাচাই করে নিন"
-            : "শিরোনাম ও অন্তত কয়েক প্যারাগ্রাফ লেখা প্রয়োজন"}
+            ? t("scholar.tools.composer.readyToPublish")
+            : t("scholar.tools.composer.notReady")}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             icon={Save}
-            onClick={() => setNotice({ tone: "info", text: "খসড়া সংরক্ষিত হয়েছে (ব্রাউজারে)।" })}
+            onClick={() => setNotice({ tone: "info", text: t("scholar.tools.composer.draftSavedNotice") })}
           >
             {t("action.saveDraft")}
           </Button>
@@ -438,7 +440,7 @@ export function Composer({
             icon={Send}
             disabled={!canSubmit}
             onClick={() =>
-              setNotice({ tone: "warning", text: "পর্যালোচনার জন্য পাঠানো হয়েছে — পর্যালোচক দেখবেন।" })
+              setNotice({ tone: "warning", text: t("scholar.tools.composer.reviewSentNotice") })
             }
           >
             {t("action.requestReview")}
@@ -448,7 +450,7 @@ export function Composer({
             icon={Send}
             disabled={!canSubmit}
             onClick={() =>
-              setNotice({ tone: "success", text: "প্রকাশের জন্য প্রস্তুত — ব্যাকএন্ড যুক্ত হলে এখান থেকেই প্রকাশ হবে।" })
+              setNotice({ tone: "success", text: t("scholar.tools.composer.publishNotice") })
             }
           >
             {t("console.publishNow")}

@@ -81,7 +81,7 @@ export default function JourneyIndexPage() {
 
       {COMPLETED.length > 0 ? (
         <Callout tone="success" icon={Sparkles}>
-          মাশাআল্লাহ — আপনি {COMPLETED.length}টি যাত্রা সম্পন্ন করেছেন। এখন কোনো একটি
+          মাশাআল্লাহ — আপনি <Num value={COMPLETED.length} />টি যাত্রা সম্পন্ন করেছেন। এখন কোনো একটি
           নতুন যাত্রায় যুক্ত হয়ে পরবর্তী বিষয়টি ধাপে ধাপে শিখতে পারেন।
         </Callout>
       ) : null}

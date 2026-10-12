@@ -9,7 +9,8 @@ import { departmentIcon } from "./department-icon";
 import { getDepartment } from "@/lib/data/departments";
 import { useI18n } from "@/lib/i18n";
 import { formatNumber, toBnDigits } from "@/lib/bn";
-import { cn, compact } from "@/lib/utils";
+import { Digits } from "@/components/i18n-text";
+import { cn, formatCount } from "@/lib/utils";
 import type { Credential, Scholar } from "@/lib/types";
 import { Avatar, Badge, Button, Card, Chip, VerifiedMark } from "@/components/ui";
 
@@ -72,7 +73,7 @@ export function ScholarStatBar({
       {items.map((item) => (
         <div key={item.label} className="px-2 py-2 text-center">
           <dd className="font-display text-[0.9375rem] font-bold tabular leading-none text-foreground">
-            {compactMode ? compact(item.value) : formatNumber(item.value, locale)}
+            {compactMode ? formatCount(item.value, locale) : formatNumber(item.value, locale)}
           </dd>
           <dt className="mt-1 truncate text-[0.625rem] text-subtle-foreground">{item.label}</dt>
         </div>
@@ -109,7 +110,9 @@ export function CredentialList({
               <p className="mt-0.5 text-[0.75rem] leading-relaxed text-muted-foreground">
                 {pick(credential.institution)}
                 <span className="mx-1.5 text-border-strong">·</span>
-                <span className="tabular">{toBnDigits(credential.year)}</span>
+                <span className="tabular">
+                  <Digits value={credential.year} />
+                </span>
               </p>
             </div>
           </li>
@@ -142,7 +145,9 @@ function DepartmentChips({ scholar, max = 3 }: { scholar: Scholar; max?: number 
         </Chip>
       ))}
       {extra > 0 ? (
-        <span className="text-[0.6875rem] text-subtle-foreground">+{toBnDigits(extra)}</span>
+        <span className="text-[0.6875rem] text-subtle-foreground">
+          +<Digits value={extra} />
+        </span>
       ) : null}
     </div>
   );
@@ -303,7 +308,7 @@ export function ScholarRow({
     <div className={cn("flex items-center gap-3.5 py-3", className)}>
       {rank !== undefined ? (
         <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-surface-3 text-[0.75rem] font-bold tabular text-muted-foreground">
-          {toBnDigits(rank)}
+          <Digits value={rank} />
         </span>
       ) : null}
       <Avatar name={pick(scholar.name)} color={scholar.avatarColor} size="md" verified={scholar.verified} />
@@ -322,7 +327,7 @@ export function ScholarRow({
         </div>
         <div>
           <p className="font-display text-[0.875rem] font-bold tabular leading-none text-foreground">
-            {toBnDigits(scholar.responseTimeHours)}h
+            <Digits value={scholar.responseTimeHours} />h
           </p>
           <p className="mt-0.5 text-[0.625rem] text-subtle-foreground">{t("label.responseTime")}</p>
         </div>

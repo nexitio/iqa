@@ -22,6 +22,7 @@ import { DEPARTMENTS, getDepartment } from "@/lib/data/departments";
 import { SCHOLARS } from "@/lib/data/scholars";
 import { useI18n } from "@/lib/i18n";
 import { toBnDigits } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import {
   Button,
   Callout,
@@ -56,7 +57,13 @@ interface RankedScholar {
 }
 
 /** Score a scholar against the chosen departments, 0–99. */
-function rankScholar(scholar: Scholar, chosen: string[]): RankedScholar | null {
+function rankScholar(
+  scholar: Scholar,
+  chosen: string[],
+  isBn: boolean,
+): RankedScholar | null {
+  // The routing reasons are prose, so their figures follow the reader too.
+  const digits = (value: number) => (isBn ? toBnDigits(value) : String(value));
   const chosenDepartments = chosen
     .map((slug) => getDepartment(slug))
     .filter((d): d is NonNullable<typeof d> => Boolean(d));
@@ -87,16 +94,18 @@ function rankScholar(scholar: Scholar, chosen: string[]): RankedScholar | null {
       `${matched
         .slice(0, 2)
         .map((d) => d.name.bn)
-        .join(" ও ")} — এই ${toBnDigits(matched.length)}টি বিভাগেই তাঁর বিশেষজ্ঞতা রয়েছে`,
+        .join(" ও ")} — এই ${digits(matched.length)}টি বিভাগেই তাঁর বিশেষজ্ঞতা রয়েছে`,
     );
   } else {
     reasons.push(`${matched[0].name.bn} বিভাগে তিনি বিশেষজ্ঞ হিসেবে তালিকাভুক্ত`);
   }
-  reasons.push(`এই বিভাগে তাঁর ${toBnDigits(scholar.stats.answers)}টি উত্তর ও ${toBnDigits(scholar.stats.fatwas)}টি ফতোয়া`);
+  reasons.push(
+    `এই বিভাগে তাঁর ${digits(scholar.stats.answers)}টি উত্তর ও ${digits(scholar.stats.fatwas)}টি ফতোয়া`,
+  );
   reasons.push(
     scholar.availableForQuestions
-      ? `প্রশ্নের জন্য সক্রিয় · সাধারণত ${toBnDigits(scholar.responseTimeHours)} ঘণ্টায় উত্তর দেন`
-      : `বর্তমানে ব্যস্ত · সাধারণত ${toBnDigits(scholar.responseTimeHours)} ঘণ্টায় উত্তর দেন`,
+      ? `প্রশ্নের জন্য সক্রিয় · সাধারণত ${digits(scholar.responseTimeHours)} ঘণ্টায় উত্তর দেন`
+      : `বর্তমানে ব্যস্ত · সাধারণত ${digits(scholar.responseTimeHours)} ঘণ্টায় উত্তর দেন`,
   );
   if (scholar.verified) reasons.push("যোগ্যতা যাচাইকৃত প্রোফাইল");
 
@@ -117,11 +126,11 @@ export function AskForm() {
 
   const ranked = useMemo<RankedScholar[]>(() => {
     if (departments.length === 0) return [];
-    return SCHOLARS.map((scholar) => rankScholar(scholar, departments))
+    return SCHOLARS.map((scholar) => rankScholar(scholar, departments, isBn))
       .filter((r): r is RankedScholar => r !== null)
       .sort((a, b) => b.score - a.score || a.scholar.responseTimeHours - b.scholar.responseTimeHours)
       .slice(0, 6);
-  }, [departments]);
+  }, [departments, isBn]);
 
   const titleError = touched && title.trim().length < 12;
   const departmentsError = touched && departments.length === 0;
@@ -430,7 +439,7 @@ export function AskForm() {
                             : "grid size-6 shrink-0 place-items-center rounded-full bg-surface-3 text-[0.6875rem] font-bold tabular text-muted-foreground"
                         }
                       >
-                        {toBnDigits(index + 1)}
+                        <Digits value={index + 1} />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-1.5">
@@ -467,7 +476,7 @@ export function AskForm() {
                   <Clock className="mt-0.5 size-3.5 shrink-0 text-info" aria-hidden />
                   <span>
                     <span className="font-semibold text-foreground">{t("qa.waitTime")}: </span>
-                    সাধারণত {toBnDigits(waitEstimate.fastest)}–{toBnDigits(waitEstimate.slowest)} ঘণ্টা।
+                    সাধারণত <Digits value={waitEstimate.fastest} />–<Digits value={waitEstimate.slowest} /> ঘণ্টা।
                     এটি কেবল আলেমদের পূর্ববর্তী সাড়ার ভিত্তিতে একটি ধারণা, কোনো প্রতিশ্রুতি নয়।
                   </span>
                 </p>

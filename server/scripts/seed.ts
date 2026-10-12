@@ -193,7 +193,10 @@ function buildUsers(): SeedUser[] {
     placeholderEmails += 1;
     byId.set(scholar.id, {
       id: scholar.id,
-      name: scholar.name.bn,
+      // The user row has a single name field and no honourific column, so the
+      // two are composed once here; the profile and the feed read the title
+      // from the scholars row, which keeps it out of the name itself.
+      name: `${scholar.honorific.bn} ${scholar.name.bn}`,
       email: `${scholar.slug}@seed.invalid`,
       role: "scholar",
       avatarColor: scholar.avatarColor,

@@ -86,7 +86,11 @@ export default function DepartmentsPage() {
           <StatTile
             label="উত্তর সম্পন্ন"
             value={<Num value={ANSWERED_QUESTIONS} />}
-            hint={`${ANSWERS.length}টি উত্তর প্রকাশিত হয়েছে`}
+            hint={
+              <>
+                <Num value={ANSWERS.length} />টি উত্তর প্রকাশিত হয়েছে
+              </>
+            }
             icon={Sparkles}
             tone="success"
           />

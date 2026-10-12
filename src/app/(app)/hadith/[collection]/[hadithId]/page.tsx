@@ -14,7 +14,7 @@ import {
   UserRound,
 } from "@/components/icons";
 import { GradeBadge, HadithCard, HadithRef } from "@/components/hadith";
-import { Pick } from "@/components/i18n-text";
+import { Num, Pick } from "@/components/i18n-text";
 import {
   Badge,
   Button,
@@ -27,7 +27,6 @@ import {
   PageHeader,
   SectionHeader,
 } from "@/components/ui";
-import { formatNumber } from "@/lib/bn";
 import {
   HADITHS,
   getCollection,
@@ -121,7 +120,7 @@ export default async function HadithDetailPage({
           { label: "হোম", href: "/" },
           { label: "হাদীস", href: "/hadith" },
           { label: collection.name.bn, href: `/hadith/${collection.slug}` },
-          { label: `হাদীস ${formatNumber(hadith.number, "bn")}` },
+          { label: <>হাদীস <Num value={hadith.number} /></> },
         ]}
         actions={
           <>
@@ -154,7 +153,7 @@ export default async function HadithDetailPage({
                   { label: "অধ্যায়", value: hadith.bookName.bn, icon: Layers },
                   {
                     label: "হাদীস নম্বর",
-                    value: formatNumber(hadith.number, "bn"),
+                    value: <Num value={hadith.number} />,
                     icon: ScrollText,
                   },
                   { label: "বর্ণনাকারী", value: hadith.narrator.bn, icon: UserRound },

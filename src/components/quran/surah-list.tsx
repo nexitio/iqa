@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
 import { getSurah } from "@/lib/data/quran";
 import { useI18n } from "@/lib/i18n";
 import type { QuranSurah } from "@/lib/types";
@@ -37,7 +37,7 @@ export function SurahListRow({ surah, className }: { surah: QuranSurah; classNam
       <span
         className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft font-display text-[0.875rem] font-bold leading-none text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
       >
-        {toBnDigits(surah.number)}
+        {formatNumber(surah.number, locale)}
       </span>
 
       <span className="min-w-0 flex-1">

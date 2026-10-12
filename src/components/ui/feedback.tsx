@@ -141,7 +141,12 @@ export function Callout({
   action,
   className,
 }: {
-  title?: string;
+  /*
+   * ReactNode, not string: a console page renders its heading through the `<T>`
+   * localisation bridge, and a prop typed `string` forced those pages to print
+   * Bangla chrome in English mode.
+   */
+  title?: ReactNode;
   children: ReactNode;
   tone?: Tone;
   icon?: LucideIcon;

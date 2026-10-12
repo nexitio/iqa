@@ -243,8 +243,8 @@ export function describePrayerCard(
       fasting ? maghrib.time : fajr.time,
       now,
     );
-    const suhoorEnds = `${bn ? "সেহরি শেষ" : "Suhoor ends"} ${toBnDigits(fajr.time)}`;
-    const iftar = `${bn ? "ইফতার" : "Iftar"} ${toBnDigits(maghrib.time)}`;
+    const suhoorEnds = `${bn ? "সেহরি শেষ" : "Suhoor ends"} ${bn ? toBnDigits(fajr.time) : fajr.time}`;
+    const iftar = `${bn ? "ইফতার" : "Iftar"} ${bn ? toBnDigits(maghrib.time) : maghrib.time}`;
 
     return {
       jumuah,
@@ -256,7 +256,7 @@ export function describePrayerCard(
       startAnchor: fasting ? suhoorEnds : iftar,
       // The fast's far end is named after the salah, so the bar is anchored to
       // the same word the list uses for that row.
-      endAnchor: fasting ? `${nameOf(maghrib)} ${toBnDigits(maghrib.time)}` : suhoorEnds,
+      endAnchor: fasting ? `${nameOf(maghrib)} ${bn ? toBnDigits(maghrib.time) : maghrib.time}` : suhoorEnds,
       ...span,
     };
   }
@@ -300,8 +300,8 @@ export function describePrayerCard(
             : "No salah window",
     eventLabel: labelOfSegment(segment),
     note: segment.note ?? null,
-    startAnchor: `${bn ? "শুরু" : "Started"} ${toBnDigits(segment.start)}`,
-    endAnchor: `${labelOfSegment(next)} ${toBnDigits(next.start)}`,
+    startAnchor: `${bn ? "শুরু" : "Started"} ${bn ? toBnDigits(segment.start) : segment.start}`,
+    endAnchor: `${labelOfSegment(next)} ${bn ? toBnDigits(next.start) : next.start}`,
     ...windowBetween(segment.start, segment.end, now),
   };
 }

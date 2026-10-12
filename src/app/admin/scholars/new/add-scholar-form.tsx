@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { DEPARTMENTS, getDepartment } from "@/lib/data/departments";
 import { SCHOLARS, getScholarsByDepartment } from "@/lib/data/scholars";
-import { districtOptions, findDistrict, formatNumber, toBnDigits } from "@/lib/bn";
+import { districtOptions, findDistrict, formatNumber } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import { useI18n } from "@/lib/i18n";
 import {
   Badge,
@@ -43,6 +44,19 @@ const HONORIFICS = [
   { value: "shaykh", label: "শায়খ", en: "Shaykh" },
 ];
 
+/**
+ * Spoken languages the scholar may be listed with. The state holds the id and
+ * the dictionary holds the label, so the same selection reads correctly in both
+ * languages.
+ */
+const LANGUAGES: { id: string; key: string }[] = [
+  { id: "bn", key: "admin.scholars.form.langBn" },
+  { id: "ar", key: "admin.scholars.form.langAr" },
+  { id: "en", key: "admin.scholars.form.langEn" },
+  { id: "ur", key: "admin.scholars.form.langUr" },
+  { id: "fa", key: "admin.scholars.form.langFa" },
+];
+
 interface CredentialRow {
   id: string;
   title: string;
@@ -68,7 +82,7 @@ const newCredential = (): CredentialRow => ({
  * control here reflects real state.
  */
 export function AddScholarForm() {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale, isBn } = useI18n();
 
   const [honorific, setHonorific] = useState("mufti");
   const [nameBn, setNameBn] = useState("");
@@ -84,7 +98,7 @@ export function AddScholarForm() {
   const [available, setAvailable] = useState(true);
   const [sendInvite, setSendInvite] = useState(true);
   const [fiqhFocus, setFiqhFocus] = useState<string[]>(["hanafi"]);
-  const [languages, setLanguages] = useState<string[]>(["বাংলা", "আরবি"]);
+  const [languages, setLanguages] = useState<string[]>(["bn", "ar"]);
   const [submitted, setSubmitted] = useState(false);
 
   const toggleDepartment = (slug: string) => {
@@ -138,11 +152,12 @@ export function AddScholarForm() {
 
   const valid = nameBn.trim().length > 1 && departmentIds.length > 0;
   const blockers: string[] = [];
-  if (nameBn.trim().length <= 1) blockers.push("বাংলায় আলেমের পুরো নাম লিখুন");
-  if (departmentIds.length === 0) blockers.push("অন্তত একটি বিভাগ নির্বাচন করুন");
-  if (!primaryDepartment) blockers.push("প্রধান বিভাগ নির্ধারণ করুন");
+  if (nameBn.trim().length <= 1) blockers.push(t("admin.scholars.form.blockerName"));
+  if (departmentIds.length === 0) blockers.push(t("admin.scholars.form.blockerDepartment"));
+  if (!primaryDepartment) blockers.push(t("admin.scholars.form.blockerPrimary"));
 
-  const honorificLabel = HONORIFICS.find((h) => h.value === honorific)?.label ?? "";
+  const honorificEntry = HONORIFICS.find((h) => h.value === honorific);
+  const honorificLabel = honorificEntry ? (isBn ? honorificEntry.label : honorificEntry.en) : "";
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
@@ -157,23 +172,23 @@ export function AddScholarForm() {
         <Card>
           <CardHeader
             icon={UserPlus}
-            title="মূল তথ্য"
-            subtitle="নাম, পরিচয় ও অবস্থান — প্রকাশ্য প্রোফাইলে এগুলোই দেখানো হবে"
+            title={t("admin.basicInfo")}
+            subtitle={t("admin.scholars.form.basicInfoHelp")}
           />
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <Field label="উপাধি" htmlFor="honorific" required>
+            <Field label={t("admin.scholars.form.honorific")} htmlFor="honorific" required>
               <Select
                 id="honorific"
                 value={honorific}
                 onChange={setHonorific}
                 options={HONORIFICS.map((h) => ({
                   value: h.value,
-                  label: `${h.label} (${h.en})`,
+                  label: isBn ? `${h.label} (${h.en})` : h.en,
                   keywords: h.en,
                 }))}
               />
             </Field>
-            <Field label="জেলা" htmlFor="district" required>
+            <Field label={t("label.district")} htmlFor="district" required>
               <Select
                 id="district"
                 value={district}
@@ -181,35 +196,48 @@ export function AddScholarForm() {
                 options={districtOptions(locale)}
               />
             </Field>
-            <Field label="পুরো নাম (বাংলা)" htmlFor="name-bn" required hint="যেভাবে প্রোফাইলে দেখা যাবে">
+            <Field
+              label={t("admin.scholars.form.nameBn")}
+              htmlFor="name-bn"
+              required
+              hint={t("admin.scholars.form.nameBnHelp")}
+            >
               <Input
                 id="name-bn"
                 value={nameBn}
                 onChange={(e) => setNameBn(e.target.value)}
-                placeholder="মুফতি আব্দুল্লাহ আল-মামুন"
+                placeholder={t("admin.scholars.form.nameBnPlaceholder")}
               />
             </Field>
-            <Field label="নাম (ইংরেজি)" htmlFor="name-en" hint="ইংরেজি মোডের জন্য">
+            <Field
+              label={t("admin.scholars.form.nameEn")}
+              htmlFor="name-en"
+              hint={t("admin.scholars.form.nameEnHelp")}
+            >
               <Input
                 id="name-en"
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
-                placeholder="Mufti Abdullah Al Mamun"
+                placeholder={t("admin.scholars.form.nameEnPlaceholder")}
               />
             </Field>
-            <Field label="মাদরাসা বা প্রতিষ্ঠান" htmlFor="madrasah" className="sm:col-span-2">
+            <Field
+              label={t("admin.scholars.form.madrasah")}
+              htmlFor="madrasah"
+              className="sm:col-span-2"
+            >
               <Input
                 id="madrasah"
                 value={madrasah}
                 onChange={(e) => setMadrasah(e.target.value)}
-                placeholder="জামিয়া আহলিয়া দারুল উলূম মুঈনুল ইসলাম, হাটহাজারী"
+                placeholder={t("admin.scholars.form.madrasahPlaceholder")}
               />
             </Field>
             <Field
-              label="ইমেইল"
+              label={t("label.email")}
               htmlFor="email"
               className="sm:col-span-2"
-              hint="এই ঠিকানায় যাচাইয়ের অনুরোধ ও আমন্ত্রণ পাঠানো হবে"
+              hint={t("admin.scholars.form.emailHelp")}
             >
               <Input
                 id="email"
@@ -219,12 +247,12 @@ export function AddScholarForm() {
                 placeholder="scholar@example.com"
               />
             </Field>
-            <Field label="সংক্ষিপ্ত পরিচয়" htmlFor="bio" className="sm:col-span-2">
+            <Field label={t("admin.scholars.form.bio")} htmlFor="bio" className="sm:col-span-2">
               <Textarea
                 id="bio"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                placeholder="শিক্ষা, বিশেষজ্ঞতা ও দীর্ঘ অভিজ্ঞতার সংক্ষিপ্ত বিবরণ…"
+                placeholder={t("admin.scholars.form.bioPlaceholder")}
               />
             </Field>
           </div>
@@ -235,11 +263,11 @@ export function AddScholarForm() {
           <CardHeader
             icon={Users}
             tone="primary"
-            title="বিভাগ নির্ধারণ"
-            subtitle="একজন আলেম একাধিক বিভাগে থাকতে পারেন — প্রশ্ন এসব বিভাগ থেকেই আসবে"
+            title={t("admin.assignDepartments")}
+            subtitle={t("admin.scholars.form.departmentsHelp")}
           />
           <div className="mt-5">
-            <ChipList label="বিভাগ নির্বাচন">
+            <ChipList label={t("admin.scholars.form.selectDepartments")}>
               {DEPARTMENTS.map((department) => (
                 <Chip
                   key={department.slug}
@@ -247,7 +275,7 @@ export function AddScholarForm() {
                   size="md"
                   active={departmentIds.includes(department.slug)}
                   onClick={() => toggleDepartment(department.slug)}
-                  count={department.scholarIds.length}
+                  count={<Digits value={department.scholarIds.length} />}
                 >
                   {pick(department.name)}
                 </Chip>
@@ -257,36 +285,38 @@ export function AddScholarForm() {
 
           <div className="mt-5">
             <Field
-              label="প্রধান বিভাগ"
+              label={t("admin.primaryDepartment")}
               htmlFor="primary-dept"
               required
-              hint="রাউটিং প্রথমে এই বিভাগের প্রশ্ন পাঠায়, তাই আলেমের মূল বিশেষজ্ঞতাই বেছে নিন"
+              hint={t("admin.scholars.form.primaryDepartmentHelp")}
             >
               <Select
                 id="primary-dept"
                 value={primaryDepartment}
                 onChange={setPrimaryDepartment}
                 disabled={departmentIds.length === 0}
-                placeholder="— নির্বাচন করুন —"
+                placeholder={t("admin.scholars.form.selectPlaceholder")}
                 searchable={departmentIds.length > 8}
                 options={departmentIds.flatMap((slug) => {
                   const department = getDepartment(slug);
                   return department
-                    ? [{ value: slug, label: department.name.bn, keywords: department.name.en }]
+                    ? [{ value: slug, label: pick(department.name), keywords: department.name.en }]
                     : [];
                 })}
               />
             </Field>
             {departmentIds.length === 0 ? (
               <p className="mt-2 text-[0.75rem] text-warning">
-                আগে উপরের তালিকা থেকে বিভাগ নির্বাচন করুন।
+                {t("admin.scholars.form.pickDepartmentFirst")}
               </p>
             ) : null}
           </div>
 
           {departmentIds.length > 0 ? (
             <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-border pt-4">
-              <span className="text-[0.75rem] font-medium text-muted-foreground">নির্বাচিত:</span>
+              <span className="text-[0.75rem] font-medium text-muted-foreground">
+                {t("admin.scholars.form.selectedLabel")}
+              </span>
               {departmentIds.map((slug) => {
                 const department = getDepartment(slug);
                 if (!department) return null;
@@ -299,7 +329,7 @@ export function AddScholarForm() {
                     onRemove={() => toggleDepartment(slug)}
                   >
                     {pick(department.name)}
-                    {isPrimary ? " · প্রধান" : ""}
+                    {isPrimary ? t("admin.scholars.form.primarySuffix") : ""}
                   </Chip>
                 );
               })}
@@ -312,8 +342,8 @@ export function AddScholarForm() {
           <CardHeader
             icon={GraduationCap}
             tone="accent"
-            title="যোগ্যতা ও শিক্ষা"
-            subtitle="দাওরা-এ-হাদীস, ইফতা কোর্স বা সমমানের যোগ্যতা যাচাইয়ের জন্য জরুরি"
+            title={t("admin.credentialsSection")}
+            subtitle={t("admin.scholars.form.credentialsHelp")}
           />
           <ul className="mt-5 space-y-3">
             {credentials.map((row, index) => (
@@ -328,8 +358,12 @@ export function AddScholarForm() {
                       prev.map((c) => (c.id === row.id ? { ...c, title: e.target.value } : c)),
                     )
                   }
-                  placeholder={index === 0 ? "দাওরা-এ-হাদীস" : "যোগ্যতা"}
-                  aria-label={`যোগ্যতা ${index + 1}`}
+                  placeholder={
+                    index === 0
+                      ? t("admin.scholars.form.credentialFirstPlaceholder")
+                      : t("admin.scholars.form.credentialPlaceholder")
+                  }
+                  aria-label={t("admin.scholars.form.credentialAria", { count: index + 1 })}
                 />
                 <Input
                   value={row.institution}
@@ -338,8 +372,8 @@ export function AddScholarForm() {
                       prev.map((c) => (c.id === row.id ? { ...c, institution: e.target.value } : c)),
                     )
                   }
-                  placeholder="প্রতিষ্ঠান"
-                  aria-label={`প্রতিষ্ঠান ${index + 1}`}
+                  placeholder={t("admin.scholars.form.institutionPlaceholder")}
+                  aria-label={t("admin.scholars.form.institutionAria", { count: index + 1 })}
                 />
                 <Input
                   value={row.year}
@@ -348,15 +382,15 @@ export function AddScholarForm() {
                       prev.map((c) => (c.id === row.id ? { ...c, year: e.target.value } : c)),
                     )
                   }
-                  placeholder="সন"
-                  aria-label={`সন ${index + 1}`}
+                  placeholder={t("admin.scholars.form.yearPlaceholder")}
+                  aria-label={t("admin.scholars.form.yearAria", { count: index + 1 })}
                 />
                 <div className="flex items-center gap-1">
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="যোগ্যতা মুছুন"
+                    aria-label={t("admin.scholars.form.removeCredential")}
                     disabled={credentials.length === 1}
                     onClick={() =>
                       setCredentials((prev) => prev.filter((c) => c.id !== row.id))
@@ -376,7 +410,7 @@ export function AddScholarForm() {
             className="mt-3"
             onClick={() => setCredentials((prev) => [...prev, newCredential()])}
           >
-            আরেকটি যোগ্যতা যোগ করুন
+            {t("admin.scholars.form.addCredential")}
           </Button>
         </Card>
 
@@ -385,59 +419,63 @@ export function AddScholarForm() {
           <CardHeader
             icon={BadgeCheck}
             tone="success"
-            title="অ্যাকাউন্ট ও অনুমতি"
-            subtitle="যাচাই ও প্রাপ্যতা নিয়ন্ত্রণ করে কে প্রশ্ন পাবেন তা নির্ধারিত হয়"
+            title={t("admin.scholars.form.accountPermissions")}
+            subtitle={t("admin.scholars.form.accountPermissionsHelp")}
           />
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <Switch
               id="verify"
               checked={verifyProfile}
               onChange={setVerifyProfile}
-              label="প্রোফাইল যাচাই করে প্রকাশ করুন"
-              description="যাচাইকৃত আলেম রাউটিংয়ে অগ্রাধিকার পান ও প্রোফাইলে যাচাই চিহ্ন পায়।"
+              label={t("admin.scholars.board.verifyPublish")}
+              description={t("admin.scholars.form.verifyPublishHelp")}
             />
             <Switch
               id="available"
               checked={available}
               onChange={setAvailable}
-              label="প্রশ্নের জন্য উপলব্ধ"
-              description="বন্ধ রাখলে নতুন প্রশ্ন রাউট হবে না, তবে পুরনো উত্তর অপরিবর্তিত থাকবে।"
+              label={t("label.available")}
+              description={t("admin.scholars.form.availableHelp")}
             />
             <Switch
               id="invite"
               checked={sendInvite}
               onChange={setSendInvite}
-              label="আমন্ত্রণ ইমেইল পাঠান"
-              description="লগইন করার আমন্ত্রণ ও পাসওয়ার্ড নির্ধারণের লিংক পাঠানো হবে।"
+              label={t("admin.scholars.form.invite")}
+              description={t("admin.scholars.form.inviteHelp")}
             />
             <div className="rounded-xl border border-border bg-surface p-3.5">
-              <p className="text-[0.875rem] font-medium text-foreground">ভাষা</p>
+              <p className="text-[0.875rem] font-medium text-foreground">{t("label.languages")}</p>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {["বাংলা", "আরবি", "ইংরেজি", "উর্দু", "ফারসি"].map((lang) => (
+                {LANGUAGES.map((lang) => (
                   <Chip
-                    key={lang}
+                    key={lang.id}
                     size="sm"
-                    active={languages.includes(lang)}
+                    active={languages.includes(lang.id)}
                     onClick={() =>
                       setLanguages((prev) =>
-                        prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang],
+                        prev.includes(lang.id)
+                          ? prev.filter((l) => l !== lang.id)
+                          : [...prev, lang.id],
                       )
                     }
                   >
-                    {lang}
+                    {t(lang.key)}
                   </Chip>
                 ))}
               </div>
             </div>
           </div>
           <div className="mt-4 border-t border-border pt-4">
-            <p className="text-[0.75rem] font-semibold text-foreground">ফিকহি দৃষ্টিভঙ্গি</p>
+            <p className="text-[0.75rem] font-semibold text-foreground">
+              {t("admin.scholars.form.fiqhFocus")}
+            </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {[
-                { id: "hanafi", label: "হানাফী (বাংলাদেশে প্রচলিত)" },
-                { id: "general", label: "সাধারণ" },
-                { id: "usul", label: "উসূলুল ফিকহ" },
-                { id: "comparative", label: "তুলনামূলক ফিকহ" },
+                { id: "hanafi", key: "admin.scholars.form.fiqhHanafi" },
+                { id: "general", key: "admin.scholars.form.fiqhGeneral" },
+                { id: "usul", key: "admin.scholars.form.fiqhUsul" },
+                { id: "comparative", key: "admin.scholars.form.fiqhComparative" },
               ].map((option) => (
                 <Chip
                   key={option.id}
@@ -450,7 +488,7 @@ export function AddScholarForm() {
                     )
                   }
                 >
-                  {option.label}
+                  {t(option.key)}
                 </Chip>
               ))}
             </div>
@@ -461,64 +499,81 @@ export function AddScholarForm() {
         <Card>
           <CardHeader
             icon={Save}
-            title="সারসংক্ষেপ"
-            subtitle="সাবমিটের আগে নিশ্চিত হয়ে নিন — অনুমোদনের সাথে সাথেই প্রশ্ন রাউট শুরু হবে"
+            title={t("admin.scholars.form.summary")}
+            subtitle={t("admin.scholars.form.summaryHelp")}
           />
           <dl className="mt-5 grid gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">আলেম</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("admin.scholars.form.scholarLabel")}
+              </dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
-                {nameBn ? `${honorificLabel} ${nameBn}` : "— নাম দেওয়া হয়নি —"}
+                {nameBn ? `${honorificLabel} ${nameBn}` : t("admin.scholars.form.noName")}
               </dd>
             </div>
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">অবস্থান</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("admin.scholars.form.location")}
+              </dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
-                {findDistrict(district).name.bn}
+                {pick(findDistrict(district).name)}
               </dd>
             </div>
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">বিভাগ</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("label.department")}
+              </dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
                 {departmentIds.length > 0
                   ? departmentIds
-                      .map((slug) => getDepartment(slug)?.name.bn)
+                      .map((slug) => {
+                        const department = getDepartment(slug);
+                        return department ? pick(department.name) : null;
+                      })
                       .filter(Boolean)
                       .join("، ")
-                  : "— নির্বাচন করা হয়নি —"}
+                  : t("admin.scholars.form.noSelection")}
               </dd>
             </div>
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">প্রধান বিভাগ</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("admin.primaryDepartment")}
+              </dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
-                {primaryDepartment ? getDepartment(primaryDepartment)?.name.bn : "—"}
+                {primaryDepartment ? pick(getDepartment(primaryDepartment)?.name, "—") : "—"}
               </dd>
             </div>
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">যোগ্যতা</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("admin.scholars.credentials")}
+              </dt>
               <dd className="mt-1 text-[0.875rem] font-medium text-foreground">
-                {formatNumber(credentials.filter((c) => c.title.trim()).length, locale)}টি যুক্ত
+                {t("admin.scholars.form.credentialsAttached", {
+                  count: credentials.filter((c) => c.title.trim()).length,
+                })}
               </dd>
             </div>
             <div>
-              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">অবস্থা</dt>
+              <dt className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
+                {t("label.status")}
+              </dt>
               <dd className="mt-1 flex flex-wrap gap-1.5">
                 {verifyProfile ? (
                   <Badge tone="success" size="xs">
-                    যাচাইকৃত
+                    {t("label.verified")}
                   </Badge>
                 ) : (
                   <Badge tone="neutral" size="xs">
-                    যাচাই ছাড়া
+                    {t("admin.scholars.form.unverifiedBadge")}
                   </Badge>
                 )}
                 {available ? (
                   <Badge tone="primary" size="xs">
-                    উপলব্ধ
+                    {t("admin.scholars.form.availableBadge")}
                   </Badge>
                 ) : (
                   <Badge tone="warning" size="xs">
-                    অনুপলব্ধ
+                    {t("label.unavailable")}
                   </Badge>
                 )}
               </dd>
@@ -526,7 +581,12 @@ export function AddScholarForm() {
           </dl>
 
           {blockers.length > 0 ? (
-            <Callout tone="warning" icon={Info} className="mt-5" title="সম্পূর্ণ করতে হবে">
+            <Callout
+              tone="warning"
+              icon={Info}
+              className="mt-5"
+              title={t("admin.scholars.form.completeRequired")}
+            >
               <ul className="list-inside list-disc space-y-1">
                 {blockers.map((b) => (
                   <li key={b}>{b}</li>
@@ -536,20 +596,25 @@ export function AddScholarForm() {
           ) : null}
 
           {submitted ? (
-            <Callout tone="success" icon={BadgeCheck} className="mt-5" title="প্রোফাইল প্রস্তুত">
-              {nameBn} এর প্রোফাইল তৈরি হয়েছে। সংরক্ষণ করে ডেটাবেসে লেখা হবে — বর্তমানে এটি ফ্রন্টএন্ড প্রিভিউ।
+            <Callout
+              tone="success"
+              icon={BadgeCheck}
+              className="mt-5"
+              title={t("admin.scholars.form.profileReady")}
+            >
+              {t("admin.scholars.form.profileReadyBody", { name: nameBn })}
             </Callout>
           ) : null}
 
           <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-5">
             <Button type="submit" icon={UserPlus} disabled={!valid}>
-              {sentLabel(valid, verifyProfile)}
+              {sentLabel(t, valid, verifyProfile)}
             </Button>
             <Button type="button" variant="outline" icon={Save} disabled={!valid}>
-              খসড়া সংরক্ষণ
+              {t("action.saveDraft")}
             </Button>
             <Button href="/admin/scholars" variant="ghost">
-              বাতিল
+              {t("action.cancel")}
             </Button>
           </div>
         </Card>
@@ -561,26 +626,29 @@ export function AddScholarForm() {
           <CardHeader
             icon={Sparkles}
             tone="accent"
-            title="প্রশ্ন রাউটিং প্রিভিউ"
-            subtitle="এই বিভাগগুলোর প্রশ্ন প্রথমে যাদের কাছে যাবে"
+            title={t("admin.routingPreview")}
+            subtitle={t("admin.routingPreviewHelp")}
           />
 
           {departmentIds.length === 0 ? (
             <p className="mt-4 rounded-card border border-dashed border-border-strong bg-surface-2 p-4 text-[0.8125rem] leading-relaxed text-muted-foreground">
-              বিভাগ নির্বাচন করুন — তখনই দেখানো হবে এই নতুন আলেম কতটা প্রশ্নভার নেবেন এবং কোন আলেমদের সাথে রাউটিং ভাগ
-              করবেন।
+              {t("admin.scholars.form.routingEmpty")}
             </p>
           ) : (
             <>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-card border border-border bg-surface-2 p-3.5">
-                  <p className="text-[0.6875rem] text-subtle-foreground">সম্ভাব্য প্রশ্নভার</p>
+                  <p className="text-[0.6875rem] text-subtle-foreground">
+                    {t("admin.scholars.form.inheritedVolume")}
+                  </p>
                   <p className="mt-1 font-display text-lg font-bold tabular text-foreground">
                     {formatNumber(inheritedVolume, locale)}
                   </p>
                 </div>
                 <div className="rounded-card border border-border bg-surface-2 p-3.5">
-                  <p className="text-[0.6875rem] text-subtle-foreground">উত্তরহীন এখন</p>
+                  <p className="text-[0.6875rem] text-subtle-foreground">
+                    {t("admin.scholars.form.unansweredNow")}
+                  </p>
                   <p className="mt-1 font-display text-lg font-bold tabular text-warning">
                     {formatNumber(inheritedUnanswered, locale)}
                   </p>
@@ -588,7 +656,7 @@ export function AddScholarForm() {
               </div>
 
               <p className="mt-4 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-                যাঁরা এখন এই বিভাগগুলো সামলাচ্ছেন
+                {t("admin.scholars.form.currentCoverage")}
               </p>
               <ul className="mt-3 space-y-3">
                 {coveringScholars.map(({ scholar, score }) => (
@@ -596,38 +664,40 @@ export function AddScholarForm() {
                     <ScholarMiniCard scholar={scholar} />
                     <MatchScoreBar score={score} className="mt-2.5" />
                     <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted-foreground">
-                      {formatNumber(scholar.stats.answers, locale)}টি উত্তর · সাধারণত{" "}
-                      {toBnDigits(scholar.responseTimeHours)} ঘণ্টায় সাড়া
+                      {t("admin.scholars.form.scholarStats", {
+                        answers: scholar.stats.answers,
+                        hours: scholar.responseTimeHours,
+                      })}
                     </p>
                   </li>
                 ))}
               </ul>
 
               <Callout tone="info" className="mt-4">
-                নতুন আলেম যোগ হলে এই বিভাগের প্রশ্নভার ভাগ হয়ে যাবে, ফলে উত্তর পাওয়ার সময় কমবে।
+                {t("admin.scholars.form.volumeNote")}
               </Callout>
             </>
           )}
         </Card>
 
         <Card>
-          <CardHeader icon={Building2} tone="info" title="স্মরণ রাখুন" />
+          <CardHeader icon={Building2} tone="info" title={t("admin.scholars.form.reminders")} />
           <ul className="mt-3 space-y-2.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
             <li className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-              একজন আলেম একাধিক বিভাগে থাকতে পারেন, তবে প্রধান বিভাগটি তাঁর মূল বিশেষজ্ঞতা হওয়া উচিত।
+              {t("admin.scholars.form.reminder1")}
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-              ফতোয়া দেওয়ার অনুমতি যোগ্যতার সাথে সম্পর্কিত — সব আলেমকে ফতোয়ায় রাখবেন না।
+              {t("admin.scholars.form.reminder2")}
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-              যোগ্যতা যাচাই না করে অনুমোদন দিলে প্ল্যাটফর্মের বিশ্বাসযোগ্যতা ক্ষতিগ্রস্ত হয়।
+              {t("admin.scholars.form.reminder3")}
             </li>
           </ul>
           <p className="mt-3 border-t border-border pt-3 text-[0.6875rem] text-subtle-foreground">
-            বর্তমানে ডেটাসেটে {toBnDigits(SCHOLARS.length)}জন আলেম আছেন।
+            {t("admin.scholars.form.datasetNote", { count: SCHOLARS.length })}
           </p>
         </Card>
       </aside>
@@ -636,7 +706,7 @@ export function AddScholarForm() {
 }
 
 /** The submit label reflects what will actually happen. */
-function sentLabel(valid: boolean, verify: boolean) {
-  if (!valid) return "তথ্য সম্পূর্ণ করুন";
-  return verify ? "যাচাই করে যোগ করুন" : "আলেম যোগ করুন";
+function sentLabel(t: (key: string) => string, valid: boolean, verify: boolean) {
+  if (!valid) return t("admin.scholars.form.submitIncomplete");
+  return verify ? t("admin.scholars.form.submitVerified") : t("admin.scholars.form.submitAdd");
 }

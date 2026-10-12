@@ -11,7 +11,7 @@ import {
   Tag,
   Users,
 } from "@/components/icons";
-import { T } from "@/components/i18n-text";
+import { Num, T, TimeAgo } from "@/components/i18n-text";
 import { DiscussionRow, ModerationNotice, ReplyCard } from "@/components/knowledge";
 import { ScholarMiniCard } from "@/components/people";
 import {
@@ -28,8 +28,7 @@ import { DISCUSSIONS, getDiscussion, getRepliesForDiscussion } from "@/lib/data/
 import { getDepartment } from "@/lib/data/departments";
 import { getUser } from "@/lib/data/personal";
 import { SCHOLAR_BY_ID } from "@/lib/data/scholars";
-import { formatNumber } from "@/lib/bn";
-import { relativeTime, toParagraphs } from "@/lib/utils";
+import { toParagraphs } from "@/lib/utils";
 import { ReplyComposer } from "./reply-composer";
 
 export function generateStaticParams() {
@@ -121,7 +120,7 @@ export default async function DiscussionDetailPage({
               ))}
               <span className="ml-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-subtle-foreground">
                 <Clock className="size-3.5" aria-hidden />
-                {relativeTime(discussion.createdAt, "bn")}
+                <TimeAgo iso={discussion.createdAt} />
               </span>
             </div>
 
@@ -137,15 +136,15 @@ export default async function DiscussionDetailPage({
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <MessagesSquare className="size-3.5" aria-hidden />
-                  {formatNumber(discussion.replyCount, "bn")} উত্তর
+                  <Num value={discussion.replyCount} /> উত্তর
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <ArrowBigUp className="size-3.5" aria-hidden />
-                  {formatNumber(discussion.upvotes, "bn")}
+                  <Num value={discussion.upvotes} />
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Eye className="size-3.5" aria-hidden />
-                  {formatNumber(discussion.viewCount, "bn")}
+                  <Num value={discussion.viewCount} />
                 </span>
               </div>
 
@@ -181,11 +180,19 @@ export default async function DiscussionDetailPage({
           <section>
             <SectionHeader
               icon={MessagesSquare}
-              title={`উত্তর (${formatNumber(sorted.length, "bn")})`}
+              title={
+                <>
+                  উত্তর (<Num value={sorted.length} />)
+                </>
+              }
               description={
-                scholarReplies.length > 0
-                  ? `${formatNumber(scholarReplies.length, "bn")}টি উত্তরে আলেম অংশ নিয়েছেন`
-                  : "সদস্যরা আলোচনায় অংশ নিচ্ছেন"
+                scholarReplies.length > 0 ? (
+                  <>
+                    <Num value={scholarReplies.length} />টি উত্তরে আলেম অংশ নিয়েছেন
+                  </>
+                ) : (
+                  "সদস্যরা আলোচনায় অংশ নিচ্ছেন"
+                )
               }
             />
 

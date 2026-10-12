@@ -92,12 +92,6 @@ const ROLE_TONE = {
   user: "user",
 } as const;
 
-const ROLE_LABEL = {
-  admin: "অ্যাডমিন",
-  scholar: "আলেম",
-  user: "ব্যবহারকারী",
-} as const;
-
 /* --------------------------------------------------------------- scholars */
 
 export function ScholarTable({
@@ -191,7 +185,7 @@ export function ScholarTable({
                 </Badge>
               ) : (
                 <Badge tone="warning" size="sm" icon={ShieldAlert}>
-                  যাচাই বাকি
+                  {t("console.verificationPending")}
                 </Badge>
               )}
               <p className="mt-1.5 text-[0.6875rem] text-subtle-foreground">
@@ -229,7 +223,7 @@ export function ApplicationCard({
   application: ScholarApplication;
   className?: string;
 }) {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale } = useI18n();
 
   return (
     <Card className={cn("flex flex-col", className)}>
@@ -245,7 +239,7 @@ export function ApplicationCard({
               <MapPin className="size-3" aria-hidden />
               {pick(findDistrict(application.district).name)}
               <span aria-hidden>·</span>
-              {formatNumber(application.experienceYears, locale)} বছরের অভিজ্ঞতা
+              {t("console.yearsExperience", { years: application.experienceYears })}
             </p>
           </div>
         </div>
@@ -253,10 +247,10 @@ export function ApplicationCard({
           status={application.status}
           label={
             application.status === "pending"
-              ? "অপেক্ষমাণ"
+              ? t("status.pending")
               : application.status === "approved"
-                ? "অনুমোদিত"
-                : "প্রত্যাখ্যাত"
+                ? t("status.approved")
+                : t("status.rejected")
           }
         />
       </header>
@@ -265,7 +259,7 @@ export function ApplicationCard({
         <div>
           <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
             <Building2 className="size-3.5" aria-hidden />
-            মাদরাসা
+            {t("label.madrasah")}
           </p>
           <p className="mt-1 text-[0.8125rem] text-foreground">{application.madrasahBn}</p>
           <p className="mt-2 inline-flex items-center gap-1.5 text-[0.75rem] text-muted-foreground">
@@ -276,7 +270,7 @@ export function ApplicationCard({
         <div>
           <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
             <GraduationCap className="size-3.5" aria-hidden />
-            যোগ্যতা
+            {t("console.qualifications")}
           </p>
           <ul className="mt-1.5 space-y-1">
             {application.credentialsBn.map((credential) => (
@@ -303,16 +297,16 @@ export function ApplicationCard({
 
       <footer className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
         <span className="mr-auto text-[0.6875rem] text-subtle-foreground">
-          জমা দিয়েছেন {relativeTime(application.submittedAt, locale)}
+          {t("console.submittedBy", { time: relativeTime(application.submittedAt, locale) })}
         </span>
         <Button size="sm" icon={Check} disabled={application.status !== "pending"}>
-          {application.status === "pending" ? "অনুমোদন" : "অনুমোদিত"}
+          {application.status === "pending" ? t("action.approve") : t("status.approved")}
         </Button>
         <Button variant="outline" size="sm" icon={Eye}>
-          পর্যালোচনা
+          {t("console.review")}
         </Button>
         <Button variant="ghost" size="sm" icon={X} disabled={application.status !== "pending"}>
-          প্রত্যাখ্যান
+          {t("action.reject")}
         </Button>
       </footer>
     </Card>
@@ -328,7 +322,7 @@ export function ReviewQueueTable({
   items: ReviewItem[];
   className?: string;
 }) {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale } = useI18n();
 
   return (
     <TableShell
@@ -336,15 +330,15 @@ export function ReviewQueueTable({
       minWidth={960}
       head={
         <>
-          <Th>কনটেন্ট</Th>
-          <Th>লেখক</Th>
-          <Th>বিভাগ</Th>
-          <Th className="text-center">শব্দ</Th>
-          <Th className="text-center">রেফারেন্স</Th>
-          <Th className="text-center">সতর্কতা</Th>
-          <Th>জমা</Th>
-          <Th>অবস্থা</Th>
-          <Th className="text-right">কার্যক্রম</Th>
+          <Th>{t("console.content")}</Th>
+          <Th>{t("console.author")}</Th>
+          <Th>{t("label.department")}</Th>
+          <Th className="text-center">{t("console.words")}</Th>
+          <Th className="text-center">{t("label.references")}</Th>
+          <Th className="text-center">{t("console.warnings")}</Th>
+          <Th>{t("console.submitted")}</Th>
+          <Th>{t("label.status")}</Th>
+          <Th className="text-right">{t("console.actions")}</Th>
         </>
       }
     >
@@ -367,7 +361,7 @@ export function ReviewQueueTable({
               <div className="min-w-0">
                 <p className="max-w-72 font-medium leading-snug text-foreground">{item.titleBn}</p>
                 <p className="mt-0.5 text-[0.6875rem] text-subtle-foreground">
-                  {item.kind === "article" ? "প্রবন্ধ" : "ফতোয়া"}
+                  {item.kind === "article" ? t("label.article") : t("label.fatwa")}
                 </p>
               </div>
             </div>
@@ -399,7 +393,7 @@ export function ReviewQueueTable({
               </Badge>
             ) : (
               <Badge tone="success" size="sm" icon={Check}>
-                ঠিক আছে
+                {t("console.allClear")}
               </Badge>
             )}
           </Td>
@@ -411,16 +405,16 @@ export function ReviewQueueTable({
               status={item.status}
               label={
                 item.status === "pending"
-                  ? "অপেক্ষমাণ"
+                  ? t("status.pending")
                   : item.status === "in-review"
-                    ? "পর্যালোচনায়"
-                    : "পরিবর্তন প্রয়োজন"
+                    ? t("status.inReview")
+                    : t("status.changesRequested")
               }
             />
           </Td>
           <Td className="text-right">
             <Button variant="outline" size="xs" icon={Eye}>
-              পর্যালোচনা
+              {t("console.review")}
             </Button>
           </Td>
         </tr>
@@ -438,7 +432,7 @@ export function ReportTable({
   reports: ContentReport[];
   className?: string;
 }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
 
   return (
     <TableShell
@@ -446,15 +440,15 @@ export function ReportTable({
       minWidth={960}
       head={
         <>
-          <Th>কনটেন্ট</Th>
-          <Th>ধরন</Th>
-          <Th>কারণ</Th>
-          <Th>রিপোর্টকারী</Th>
-          <Th>সময়</Th>
-          <Th className="text-center">গুরুত্ব</Th>
-          <Th>দায়িত্বে</Th>
-          <Th>অবস্থা</Th>
-          <Th className="text-right">কার্যক্রম</Th>
+          <Th>{t("console.content")}</Th>
+          <Th>{t("console.type")}</Th>
+          <Th>{t("console.reason")}</Th>
+          <Th>{t("console.reportedBy")}</Th>
+          <Th>{t("console.time")}</Th>
+          <Th className="text-center">{t("console.severity")}</Th>
+          <Th>{t("console.assignedTo")}</Th>
+          <Th>{t("label.status")}</Th>
+          <Th className="text-right">{t("console.actions")}</Th>
         </>
       }
     >
@@ -467,16 +461,16 @@ export function ReportTable({
           <Td>
             <Badge tone="neutral" size="sm">
               {report.contentType === "question"
-                ? "প্রশ্ন"
+                ? t("label.question")
                 : report.contentType === "answer"
-                  ? "উত্তর"
+                  ? t("label.answer")
                   : report.contentType === "article"
-                    ? "প্রবন্ধ"
+                    ? t("label.article")
                     : report.contentType === "fatwa"
-                      ? "ফতোয়া"
+                      ? t("label.fatwa")
                       : report.contentType === "discussion"
-                        ? "আলোচনা"
-                        : "মন্তব্য"}
+                        ? t("label.discussion")
+                        : t("console.comment")}
             </Badge>
           </Td>
           <Td className="max-w-64 text-muted-foreground">{report.reasonLabelBn}</Td>
@@ -489,7 +483,11 @@ export function ReportTable({
               tone={report.severity === "high" ? "danger" : report.severity === "medium" ? "warning" : "neutral"}
               size="sm"
             >
-              {report.severity === "high" ? "উচ্চ" : report.severity === "medium" ? "মধ্যম" : "নিম্ন"}
+              {report.severity === "high"
+                ? t("console.severityHigh")
+                : report.severity === "medium"
+                  ? t("console.severityMedium")
+                  : t("console.severityLow")}
             </Badge>
           </Td>
           <Td className="whitespace-nowrap text-[0.75rem] text-muted-foreground">
@@ -500,10 +498,10 @@ export function ReportTable({
               status={report.status}
               label={
                 report.status === "pending"
-                  ? "অপেক্ষমাণ"
+                  ? t("status.pending")
                   : report.status === "resolved"
-                    ? "নিষ্পত্তি"
-                    : "খারিজ"
+                    ? t("console.resolved")
+                    : t("console.dismissed")
               }
             />
           </Td>
@@ -511,14 +509,14 @@ export function ReportTable({
             {report.status === "pending" ? (
               <div className="inline-flex items-center gap-1.5">
                 <Button size="xs" icon={Check}>
-                  নিষ্পত্তি
+                  {t("console.resolve")}
                 </Button>
                 <Button variant="ghost" size="xs" icon={ThumbsDown}>
-                  খারিজ
+                  {t("console.dismiss")}
                 </Button>
               </div>
             ) : (
-              <span className="text-[0.75rem] text-subtle-foreground">সম্পন্ন</span>
+              <span className="text-[0.75rem] text-subtle-foreground">{t("status.closed")}</span>
             )}
           </Td>
         </tr>
@@ -552,7 +550,7 @@ export function UserTable({
           <Th>{t("label.name")}</Th>
           <Th>{t("label.role")}</Th>
           <Th>{t("label.district")}</Th>
-          <Th className="text-center">অবদান</Th>
+          <Th className="text-center">{t("console.contributions")}</Th>
           <Th>{t("label.joinedOn")}</Th>
           <Th>{t("label.status")}</Th>
           <Th className="text-right">{t("action.more")}</Th>
@@ -583,7 +581,7 @@ export function UserTable({
           </Td>
           <Td>
             <Badge tone={ROLE_TONE[user.role]} size="sm" icon={user.role === "scholar" ? GraduationCap : UserRound}>
-              {ROLE_LABEL[user.role]}
+              {t(`console.role.${user.role}`)}
             </Badge>
           </Td>
           <Td className="whitespace-nowrap text-muted-foreground">
@@ -598,12 +596,18 @@ export function UserTable({
           <Td>
             <StatusBadge
               status={user.status}
-              label={user.status === "active" ? "সক্রিয়" : user.status === "suspended" ? "স্থগিত" : "অপেক্ষমাণ"}
+              label={
+                user.status === "active"
+                  ? t("console.statusActive")
+                  : user.status === "suspended"
+                    ? t("status.suspended")
+                    : t("status.pending")
+              }
             />
           </Td>
           <Td className="text-right">
             <Button variant="ghost" size="xs" disabled={user.status === "suspended"}>
-              {user.status === "suspended" ? "স্থগিত" : "স্থগিত করুন"}
+              {user.status === "suspended" ? t("status.suspended") : t("action.suspend")}
             </Button>
           </Td>
         </tr>
@@ -632,7 +636,7 @@ export function DepartmentTable({
           <Th>{t("label.department")}</Th>
           <Th>{t("admin.scholarCount")}</Th>
           <Th className="text-center">{t("label.questions")}</Th>
-          <Th className="text-center">উত্তর দেওয়া</Th>
+          <Th className="text-center">{t("console.answered")}</Th>
           <Th className="text-center">{t("label.articles")}</Th>
           <Th className="text-center">{t("label.fatwas")}</Th>
           <Th className="text-center">{t("label.followers")}</Th>

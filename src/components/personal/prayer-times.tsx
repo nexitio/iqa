@@ -120,11 +120,19 @@ function pad(n: number) {
   return String(Math.floor(n)).padStart(2, "0");
 }
 
-function clockFromSeconds(total: number) {
+/**
+ * A ticking clock, in the digits of the reader's language.
+ *
+ * This used to convert unconditionally, which is why the countdown stayed
+ * ০৭:০৩:১৮ after the interface was switched to English — the surrounding words
+ * changed and the clock did not.
+ */
+function clockFromSeconds(total: number, isBn: boolean) {
   const hours = Math.floor(total / 3600);
   const minutes = Math.floor((total % 3600) / 60);
   const seconds = total % 60;
-  return toBnDigits(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`);
+  const clock = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  return isBn ? toBnDigits(clock) : clock;
 }
 
 /**
@@ -199,7 +207,7 @@ export function PrayerTimesWidget({
   // window, the fast, or the night that ends at suhoor.
   const day = describePrayerCard(schedule, now, locale);
   const style = PHASE_STYLE[day.phase];
-  const countdown = clockFromSeconds(day.remaining);
+  const countdown = clockFromSeconds(day.remaining, isBn);
   // The whole day as intervals, plus which one is running: the list and the
   // headline are then two readings of a single model rather than two opinions.
   const segments = daySegments(schedule);
@@ -479,12 +487,12 @@ function DayRow({
                 : "text-muted-foreground",
           )}
         >
-          {toBnDigits(segment.start)}
+          {isBn ? toBnDigits(segment.start) : segment.start}
         </span>
         <span className="mx-1" aria-hidden>
           –
         </span>
-        {toBnDigits(segment.end)}
+        {isBn ? toBnDigits(segment.end) : segment.end}
       </span>
     </li>
   );
@@ -506,7 +514,7 @@ export function NextPrayerChip({
   districtId?: string;
   className?: string;
 }) {
-  const { t, pick } = useI18n();
+  const { t, pick, locale } = useI18n();
   const [selected] = useDistrictPreference(districtId);
   const [madhab] = useMadhab();
   const { schedule, now } = usePrayerClock(selected, madhab);
@@ -532,7 +540,7 @@ export function NextPrayerChip({
       <MoonStar className="size-3.5 shrink-0 text-primary" aria-hidden />
       <span className="text-subtle-foreground">{t("label.nextPrayer")}</span>
       <span className="font-semibold text-foreground">{pick(schedule.nextPrayer.label)}</span>
-      <span className="tabular text-primary">{clockFromSeconds(secondsLeft)}</span>
+      <span className="tabular text-primary">{clockFromSeconds(secondsLeft, locale === "bn")}</span>
     </Link>
   );
 }
@@ -579,9 +587,11 @@ export function NextPrayerBanner({
             {isFriday ? "জুমার দিন" : t("label.todaysDate")}
           </p>
           <p className="mt-1 font-display text-lg font-bold leading-snug text-foreground">
-            {now ? gregorianDateBn(now) : "…"}
+            {now ? gregorianDateBn(now, locale) : "…"}
           </p>
-          <p className="mt-0.5 text-[0.8125rem] font-medium text-accent">{now ? hijriDate(now) : "…"}</p>
+          <p className="mt-0.5 text-[0.8125rem] font-medium text-accent">
+            {now ? hijriDate(now, locale) : "…"}
+          </p>
         </div>
 
         <div className="flex shrink-0 items-center gap-4">
@@ -593,10 +603,14 @@ export function NextPrayerBanner({
               {schedule ? pick(schedule.nextPrayer.label) : "…"}
             </p>
             <p className="mt-1.5 font-mono text-[0.9375rem] font-bold tabular text-primary">
-              {secondsLeft !== null ? clockFromSeconds(secondsLeft) : "…"}
+              {secondsLeft !== null ? clockFromSeconds(secondsLeft, locale === "bn") : "…"}
             </p>
             <p className="mt-0.5 text-[0.6875rem] text-muted-foreground">
-              {schedule ? toBnDigits(schedule.nextPrayer.time) : ""}
+              {schedule
+                ? locale === "bn"
+                  ? toBnDigits(schedule.nextPrayer.time)
+                  : schedule.nextPrayer.time
+                : ""}
             </p>
           </div>
           <div className="hidden flex-col gap-2 sm:flex">

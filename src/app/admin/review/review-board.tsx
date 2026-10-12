@@ -19,7 +19,7 @@ import type { ReviewItem } from "@/lib/data/admin";
 import { ARTICLE_BY_SLUG, FATWA_BY_SLUG, REFERENCES } from "@/lib/data/content";
 import { getDepartment } from "@/lib/data/departments";
 import { useI18n } from "@/lib/i18n";
-import { formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
 import { cn, relativeTime } from "@/lib/utils";
 import {
   Badge,
@@ -37,12 +37,14 @@ import { ReferenceList } from "@/components/knowledge";
 
 type Decision = "pending" | "in-review" | "changes-requested" | "approved" | "rejected";
 
-const DECISION_META: Record<Decision, { label: string; status: string }> = {
-  pending: { label: "অপেক্ষমাণ", status: "pending" },
-  "in-review": { label: "পর্যালোচনায়", status: "in-review" },
-  "changes-requested": { label: "পরিবর্তন প্রয়োজন", status: "changes-requested" },
-  approved: { label: "অনুমোদিত", status: "published" },
-  rejected: { label: "প্রত্যাখ্যাত", status: "rejected" },
+/* Keys, not labels: the table is at module scope where no hook can translate
+ * it, so the wording is resolved where the badge is rendered. */
+const DECISION_META: Record<Decision, { labelKey: string; status: string }> = {
+  pending: { labelKey: "status.pending", status: "pending" },
+  "in-review": { labelKey: "status.inReview", status: "in-review" },
+  "changes-requested": { labelKey: "status.changesRequested", status: "changes-requested" },
+  approved: { labelKey: "status.approved", status: "published" },
+  rejected: { labelKey: "status.rejected", status: "rejected" },
 };
 
 /**
@@ -133,18 +135,23 @@ export function ReviewBoard({
     <div className={cn("space-y-4", className)}>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "অপেক্ষমাণ", value: counters.pending, tone: "warning" as const, icon: Clock },
-          { label: "পর্যালোচনায়", value: counters.inReview, tone: "info" as const, icon: Eye },
+          { labelKey: "status.pending", value: counters.pending, tone: "warning" as const, icon: Clock },
+          { labelKey: "status.inReview", value: counters.inReview, tone: "info" as const, icon: Eye },
           {
-            label: "সতর্ক রেফারেন্স",
+            labelKey: "admin.queue.flaggedRefs",
             value: counters.flagged,
             tone: counters.flagged > 0 ? ("danger" as const) : ("success" as const),
             icon: AlertTriangle,
           },
-          { label: "এই সেশনে নিষ্পত্তি", value: totalResolved, tone: "success" as const, icon: Check },
+          {
+            labelKey: "admin.queue.resolvedThisSession",
+            value: totalResolved,
+            tone: "success" as const,
+            icon: Check,
+          },
         ].map((stat) => (
           <div
-            key={stat.label}
+            key={stat.labelKey}
             className="flex items-center gap-3 rounded-panel border border-border bg-surface p-4 shadow-card"
           >
             <span
@@ -159,7 +166,7 @@ export function ReviewBoard({
               <stat.icon className="size-5" />
             </span>
             <div>
-              <p className="text-[0.6875rem] text-subtle-foreground">{stat.label}</p>
+              <p className="text-[0.6875rem] text-subtle-foreground">{t(stat.labelKey)}</p>
               <p className="font-display text-xl font-bold tabular leading-none text-foreground">
                 {formatNumber(stat.value, locale)}
               </p>
@@ -171,9 +178,9 @@ export function ReviewBoard({
       <div className="flex flex-wrap items-center gap-2">
         {(
           [
-            { id: "to-review" as const, label: "পর্যালোচনার অপেক্ষায়" },
-            { id: "flagged" as const, label: "সতর্ক রেফারেন্স" },
-            { id: "all" as const, label: "সব জমা" },
+            { id: "to-review" as const, labelKey: "admin.queue.filterToReview" },
+            { id: "flagged" as const, labelKey: "admin.queue.flaggedRefs" },
+            { id: "all" as const, labelKey: "admin.queue.filterAllSubmissions" },
           ]
         ).map((option) => (
           <Button
@@ -183,7 +190,7 @@ export function ReviewBoard({
             onClick={() => setFilter(option.id)}
             aria-pressed={filter === option.id}
           >
-            {option.label}
+            {t(option.labelKey)}
           </Button>
         ))}
       </div>
@@ -195,8 +202,8 @@ export function ReviewBoard({
               <EmptyState
                 icon={ClipboardCheck}
                 tone="success"
-                title="এই তালিকা খালি"
-                description="নির্বাচিত ফিল্টারে কোনো কনটেন্ট নেই। সব জমা দেখতে ফিল্টার বদলান।"
+                title={t("admin.queue.listEmpty")}
+                description={t("admin.queue.emptyReviewBody")}
                 className="rounded-panel border border-border bg-surface"
               />
             </li>
@@ -238,7 +245,7 @@ export function ReviewBoard({
                         <div className="flex flex-wrap items-center gap-2">
                           <StatusBadge
                             status={DECISION_META[decision].status}
-                            label={DECISION_META[decision].label}
+                            label={t(DECISION_META[decision].labelKey)}
                             size="xs"
                           />
                           <Badge tone={item.kind === "article" ? "primary" : "accent"} size="xs">
@@ -246,7 +253,7 @@ export function ReviewBoard({
                           </Badge>
                           {item.flaggedReferences > 0 && decision !== "approved" ? (
                             <Badge tone="danger" size="xs" icon={AlertTriangle}>
-                              {toBnDigits(item.flaggedReferences)}টি দুর্বল রেফারেন্স
+                              {t("admin.queue.weakRefs", { count: item.flaggedReferences })}
                             </Badge>
                           ) : null}
                         </div>
@@ -255,7 +262,10 @@ export function ReviewBoard({
                           {item.titleBn}
                         </p>
                         <p className="mt-1 text-[0.75rem] text-muted-foreground">
-                          {item.authorNameBn} · জমা {relativeTime(item.submittedAt, locale)}
+                          {item.authorNameBn} ·{" "}
+                          {t("admin.queue.submittedSuffix", {
+                            time: relativeTime(item.submittedAt, locale),
+                          })}
                         </p>
 
                         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
@@ -271,11 +281,15 @@ export function ReviewBoard({
                           ))}
                           <span className="inline-flex items-center gap-1 text-[0.6875rem] tabular text-subtle-foreground">
                             <ScrollText className="size-3" aria-hidden />
-                            {formatNumber(item.wordCount, locale)} শব্দ
+                            {t("admin.queue.wordsCount", {
+                              count: formatNumber(item.wordCount, locale),
+                            })}
                           </span>
                           <span className="inline-flex items-center gap-1 text-[0.6875rem] tabular text-subtle-foreground">
                             <BookOpen className="size-3" aria-hidden />
-                            {formatNumber(item.referenceCount, locale)} রেফারেন্স
+                            {t("admin.queue.refsCount", {
+                              count: formatNumber(item.referenceCount, locale),
+                            })}
                           </span>
                         </div>
                       </div>
@@ -291,7 +305,7 @@ export function ReviewBoard({
                           decide(item.id, "approved");
                         }}
                       >
-                        অনুমোদন
+                        {t("action.approve")}
                       </Button>
                       <Button
                         size="sm"
@@ -302,7 +316,7 @@ export function ReviewBoard({
                           decide(item.id, "changes-requested");
                         }}
                       >
-                        পরিবর্তন চান
+                        {t("admin.queue.requestChanges")}
                       </Button>
                       <Button
                         size="sm"
@@ -313,7 +327,7 @@ export function ReviewBoard({
                           decide(item.id, "rejected");
                         }}
                       >
-                        প্রত্যাখ্যান
+                        {t("action.reject")}
                       </Button>
                       {decision !== (item.status as Decision) ? (
                         <Button
@@ -329,7 +343,7 @@ export function ReviewBoard({
                             });
                           }}
                         >
-                          আগের অবস্থায় ফেরান
+                          {t("admin.queue.revert")}
                         </Button>
                       ) : null}
                     </footer>
@@ -346,14 +360,14 @@ export function ReviewBoard({
               <CardHeader
                 icon={Eye}
                 tone="primary"
-                title="পর্যালোচনা প্যানেল"
+                title={t("admin.queue.reviewPanel")}
                 subtitle={selected.titleBn}
               />
 
               <div className="mt-4 flex flex-wrap items-center gap-1.5">
                 <StatusBadge
                   status={DECISION_META[resolve(selected)].status}
-                  label={DECISION_META[resolve(selected)].label}
+                  label={t(DECISION_META[resolve(selected)].labelKey)}
                   size="xs"
                 />
                 <Badge tone="neutral" size="xs">
@@ -361,30 +375,34 @@ export function ReviewBoard({
                 </Badge>
                 {selected.flaggedReferences > 0 ? (
                   <Badge tone="danger" size="xs" icon={AlertTriangle}>
-                    {toBnDigits(selected.flaggedReferences)}টি রেফারেন্স যাচাই প্রয়োজন
+                    {t("admin.queue.refsToVerify", { count: selected.flaggedReferences })}
                   </Badge>
                 ) : (
                   <Badge tone="success" size="xs" icon={Check}>
-                    রেফারেন্স সতর্কতা নেই
+                    {t("admin.queue.noRefWarnings")}
                   </Badge>
                 )}
               </div>
 
               <div className="mt-4 grid grid-cols-3 gap-3 rounded-card border border-border bg-surface-2 p-3">
                 <div>
-                  <p className="text-[0.625rem] text-subtle-foreground">শব্দ</p>
+                  <p className="text-[0.625rem] text-subtle-foreground">{t("admin.queue.words")}</p>
                   <p className="font-display text-base font-bold tabular text-foreground">
                     {formatNumber(selected.wordCount, locale)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[0.625rem] text-subtle-foreground">রেফারেন্স</p>
+                  <p className="text-[0.625rem] text-subtle-foreground">
+                    {t("label.references")}
+                  </p>
                   <p className="font-display text-base font-bold tabular text-foreground">
                     {formatNumber(selected.referenceCount, locale)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[0.625rem] text-subtle-foreground">যাচাই বাকি</p>
+                  <p className="text-[0.625rem] text-subtle-foreground">
+                    {t("admin.queue.toVerify")}
+                  </p>
                   <p
                     className={cn(
                       "font-display text-base font-bold tabular",
@@ -399,7 +417,9 @@ export function ReviewBoard({
               {resolvedContent ? (
                 <>
                   <div className="mt-4 flex items-center justify-between gap-3">
-                    <p className="text-[0.75rem] font-semibold text-foreground">মূল লেখা</p>
+                    <p className="text-[0.75rem] font-semibold text-foreground">
+                      {t("admin.queue.originalText")}
+                    </p>
                     <Badge tone={resolvedContent.kind === "article" ? "primary" : "accent"} size="xs">
                       {resolvedContent.kind === "article" ? t("label.article") : t("label.fatwa")}
                     </Badge>
@@ -411,7 +431,7 @@ export function ReviewBoard({
                   {resolvedContent.references.length > 0 ? (
                     <div className="mt-4">
                       <p className="mb-2 text-[0.75rem] font-semibold text-foreground">
-                        লেখায় উদ্ধৃত দলিল
+                        {t("admin.queue.citedInText")}
                       </p>
                       <div className="max-h-56 overflow-y-auto">
                         <ReferenceList
@@ -422,19 +442,21 @@ export function ReviewBoard({
                     </div>
                   ) : (
                     <Callout tone="warning" className="mt-4" icon={AlertTriangle}>
-                      লেখাটিতে স্পষ্টভাবে চিহ্নিত কোনো দলিল পাওয়া যায়নি — অনুমোদনের আগে রেফারেন্স যুক্ত করতে বলুন।
+                      {t("admin.queue.noCitations")}
                     </Callout>
                   )}
                 </>
               ) : (
                 <Callout tone="info" className="mt-4" icon={Sparkles}>
-                  এই আইটেমের মূল লেখা এখনো প্রকাশিত সংকলনে নেই, তাই শুধু মেটাডেটা দেখা যাচ্ছে।
+                  {t("admin.queue.notInCorpus")}
                 </Callout>
               )}
 
               <div className="mt-4">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[0.6875rem] text-subtle-foreground">রেফারেন্স যাচাইয়ের অগ্রগতি</p>
+                  <p className="text-[0.6875rem] text-subtle-foreground">
+                    {t("admin.queue.verifyProgress")}
+                  </p>
                   <span className="text-[0.6875rem] tabular text-muted-foreground">
                     {formatNumber(
                       resolve(selected) === "approved" ? selected.referenceCount : 0,
@@ -461,37 +483,41 @@ export function ReviewBoard({
 
               <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
                 <Button size="sm" icon={Check} onClick={() => decide(selected.id, "approved")}>
-                  অনুমোদন করে প্রকাশ করুন
+                  {t("admin.queue.approveAndPublish")}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => decide(selected.id, "changes-requested")}
                 >
-                  পরিবর্তন চেয়ে ফেরত
+                  {t("admin.queue.requestChangesAndReturn")}
                 </Button>
               </div>
             </Card>
           ) : null}
 
           <Card>
-            <CardHeader icon={ClipboardCheck} tone="info" title="পর্যালোচনার মানদণ্ড" />
+            <CardHeader
+              icon={ClipboardCheck}
+              tone="info"
+              title={t("admin.queue.reviewCriteria")}
+            />
             <ul className="mt-3 space-y-2.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                প্রতিটি আয়াত ও হাদীসের রেফারেন্স যাচাই করুন — ভুল সন্বর্ধনা বা ভুল সূত্র সবচেয়ে বড় ক্ষতি।
+                {t("admin.queue.criterion1")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                দলাদলিমূলক বা কোনো দলকে আক্রমণ করে এমন ভাষা থাকলে প্রকাশ করা যাবে না।
+                {t("admin.queue.criterion2")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                শর্তহীন বা অতি-কঠোর রায় হলে কারণ ও ব্যতিক্রম স্পষ্ট করা লাগবে।
+                {t("admin.queue.criterion3")}
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-                বিভাগ ঠিক আছে কি না দেখুন — ভুল বিভাগে প্রকাশিত ফতোয়া ভুল পাঠকের কাছে পৌঁছায়।
+                {t("admin.queue.criterion4")}
               </li>
             </ul>
           </Card>

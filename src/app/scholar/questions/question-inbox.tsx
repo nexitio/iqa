@@ -54,7 +54,7 @@ export function QuestionInbox({
   /** The scholar's department labels, in Bangla, resolved on the server. */
   departmentNames: string[];
 }) {
-  const { t, locale } = useI18n();
+  const { t, tList, locale } = useI18n();
   const [active, setActive] = useState<FilterId>("all");
 
   const questions = useMemo(() => items.map((item) => item.question), [items]);
@@ -88,10 +88,10 @@ export function QuestionInbox({
             icon={Sparkles}
             tone="accent"
             title={t("console.priorityInbox")}
-            subtitle="আপনার কাছে রাউট করা প্রশ্ন, অগ্রাধিকার অনুসারে সাজানো"
+            subtitle={t("scholar.tools.inbox.subtitle")}
             action={
               <Badge tone="primary" size="sm">
-                {formatNumber(items.length, locale)}টি
+                {t("scholar.tools.inbox.count", { count: items.length })}
               </Badge>
             }
           />
@@ -109,8 +109,8 @@ export function QuestionInbox({
           <Card>
             <EmptyState
               icon={MessageCircleQuestion}
-              title="এই ফিল্টারে কোনো প্রশ্ন নেই"
-              description="অন্য ফিল্টার বেছে নিন, অথবা সব প্রশ্ন দেখুন।"
+              title={t("scholar.tools.inbox.emptyTitle")}
+              description={t("scholar.tools.inbox.emptyDescription")}
             />
           </Card>
         ) : (
@@ -135,21 +135,21 @@ export function QuestionInbox({
             value={formatNumber(items.length, locale)}
             icon={Sparkles}
             tone="primary"
-            hint={`${formatNumber(unanswered, locale)}টি এখনো উত্তরহীন`}
+            hint={t("scholar.tools.inbox.unansweredHint", { count: unanswered })}
           />
           <StatTile
-            label="জরুরি প্রশ্ন"
+            label={t("scholar.tools.inbox.urgentLabel")}
             value={formatNumber(urgent, locale)}
             icon={Zap}
             tone={urgent > 0 ? "danger" : "success"}
-            hint="দ্রুত সাড়া প্রয়োজন"
+            hint={t("scholar.tools.inbox.urgentHint")}
           />
           <StatTile
-            label="ফতোয়া চাওয়া হয়েছে"
+            label={t("scholar.tools.inbox.fatwaLabel")}
             value={formatNumber(fatwaRequested, locale)}
             icon={Scale}
             tone="accent"
-            hint="আনুষ্ঠানিক রায় প্রয়োজন"
+            hint={t("scholar.tools.inbox.fatwaHint")}
           />
         </div>
 
@@ -157,7 +157,7 @@ export function QuestionInbox({
           <CardHeader
             icon={Sparkles}
             title={t("console.yourDepartments")}
-            subtitle="যে বিভাগের প্রশ্ন প্রথমে আপনার কাছে আসে"
+            subtitle={t("scholar.tools.inbox.departmentsSubtitle")}
           />
           <div className="mt-3 flex flex-wrap gap-1.5">
             {departmentNames.map((name) => (
@@ -167,13 +167,15 @@ export function QuestionInbox({
             ))}
           </div>
           <div className="mt-5">
-            <p className="text-[0.75rem] font-medium text-muted-foreground">উত্তর দেওয়ার হার</p>
+            <p className="text-[0.75rem] font-medium text-muted-foreground">
+              {t("scholar.tools.inbox.answerRate")}
+            </p>
             <p className="mt-1.5 font-display text-2xl font-bold tabular text-foreground">
               {formatNumber(answeredRate, locale)}%
             </p>
             <Progress value={answeredRate} tone="success" size="sm" className="mt-2.5" />
             <p className="mt-2 text-[0.6875rem] leading-relaxed text-subtle-foreground">
-              আপনার কাছে আসা প্রশ্নের মধ্যে এতগুলোতে উত্তর দেওয়া হয়েছে।
+              {t("scholar.tools.inbox.answerRateHint")}
             </p>
           </div>
         </Card>
@@ -182,16 +184,11 @@ export function QuestionInbox({
           <SectionHeader
             size="sm"
             icon={Sparkles}
-            title="রাউটিং কীভাবে কাজ করে"
+            title={t("scholar.tools.inbox.howRoutingTitle")}
             className="mb-3"
           />
           <ol className="space-y-3">
-            {[
-              "ব্যবহারকারী প্রশ্ন করার সময় এক বা একাধিক বিভাগ বেছে নেন।",
-              "প্ল্যাটফর্ম সেই বিভাগের আলেমদের দক্ষতা, প্রশ্নের চাপ ও সাড়া দেওয়ার গতি মিলিয়ে স্কোর করে।",
-              "সবচেয়ে বেশি স্কোর পাওয়া আলেম প্রথমে প্রশ্নটি পান — বাকিরা তালিকায় পরের অবস্থানে থাকেন।",
-              "কেউ উত্তর না দিলে প্রশ্নটি পরের আলেমের কাছে চলে যায়, ফলে কোনো প্রশ্ন অনাদর থাকে না।",
-            ].map((step, index) => (
+            {tList("scholar.tools.inbox.routingSteps").map((step, index) => (
               <li key={step} className="flex items-start gap-3">
                 <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary-soft text-[0.6875rem] font-bold text-primary">
                   {formatNumber(index + 1, locale)}

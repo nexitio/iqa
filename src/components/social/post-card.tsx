@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Avatar, Badge, VerifiedMark } from "@/components/ui";
 import { useI18n } from "@/lib/i18n";
-import { toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
 import { cn, relativeTime, truncate } from "@/lib/utils";
 import type { ResolvedPost } from "./resolve";
 
@@ -43,8 +43,8 @@ import type { ResolvedPost } from "./resolve";
  * carry all of the weight.
  */
 
-function fmt(n: number) {
-  return toBnDigits(new Intl.NumberFormat("en-IN").format(n));
+function fmt(n: number, locale: "bn" | "en") {
+  return formatNumber(n, locale);
 }
 
 /**
@@ -74,7 +74,7 @@ export function ReactionBar({
   stats: ResolvedPost["stats"];
   className?: string;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   // Optimistic local state so the interaction feels immediate; the backend will
   // own these counters.
   const [liked, setLiked] = useState(false);
@@ -115,7 +115,7 @@ export function ReactionBar({
         aria-hidden
       />
       <span className="hidden sm:inline">{label}</span>
-      {count > 0 ? <span className="tabular">{fmt(count)}</span> : null}
+      {count > 0 ? <span className="tabular">{fmt(count, locale)}</span> : null}
     </button>
   );
 
@@ -124,7 +124,7 @@ export function ReactionBar({
     // line a row should carry is the one that ends it, or the eye cannot tell
     // the row's boundary from a divider it drew itself.
     <div className={cn("flex items-center gap-0.5", className)}>
-      {item(liked, Heart, "সহায়ক", stats.likes + (liked ? 1 : 0), () => setLiked((v) => !v))}
+      {item(liked, Heart, t("label.helpful"), stats.likes + (liked ? 1 : 0), () => setLiked((v) => !v))}
       {item(false, MessageCircle, t("label.answers"), stats.comments, undefined, "text-primary")}
       {item(saved, Bookmark, t("action.save"), stats.saves + (saved ? 1 : 0), () => setSaved((v) => !v), "text-primary")}
       {item(copied, copied ? Check : Link2, copied ? t("action.copied") : t("action.share"), 0, onShare, "text-success")}
@@ -133,8 +133,30 @@ export function ReactionBar({
 }
 
 export function PostCard({ post, className }: { post: ResolvedPost; className?: string }) {
-  const { pick, locale } = useI18n();
+  const { t, pick, locale } = useI18n();
   const badge = locale === "bn" ? post.badge.labelBn : post.badge.labelEn;
+  /**
+   * A post field that may exist in Bangla only.
+   *
+   * Where the source data carries an English twin — an article's title, an
+   * ayah's surah name, a hadith's own `refEn`, a department's English name —
+   * the reader in English gets it. Where it does not (an authored question, a
+   * fatwa's ruling) `pick` falls back to the Bangla, because that is what the
+   * words are; an empty line would be worse than a language change.
+   */
+  const text = (bn: string, en?: string) => pick({ bn, en: en ?? "" });
+  /**
+   * The author's name, in the reader's language.
+   *
+   * The title is not part of the name — the record keeps it separately — so it
+   * is composed here once, in the same language as the name it precedes.
+   */
+  const authorName = post.author
+    ? `${text(post.author.honorificBn ?? "", post.author.honorificEn)} ${text(
+        post.author.nameBn,
+        post.author.nameEn,
+      )}`.trim()
+    : "ইলম";
 
   return (
     <article
@@ -157,7 +179,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
         {post.author ? (
           <Link href={post.author.href ?? "#"} className="shrink-0">
             <Avatar
-              name={post.author.nameBn}
+              name={text(post.author.nameBn, post.author.nameEn)}
               color={post.author.color}
               size="md"
               verified={post.author.verified}
@@ -172,11 +194,9 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center gap-1.5">
             <span className="truncate text-[0.875rem] font-semibold text-foreground">
-              {post.author
-                ? `${pick({ bn: post.author.honorificBn ?? "", en: post.author.honorificEn ?? "" })} ${post.author.nameBn}`.trim()
-                : "ইলম"}
+              {authorName}
             </span>
-            {post.author?.verified ? <VerifiedMark label="যাচাইকৃত" /> : null}
+            {post.author?.verified ? <VerifiedMark label={t("label.verified")} /> : null}
             <Badge tone={post.badge.tone} size="xs">
               {badge}
             </Badge>
@@ -197,7 +217,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
             <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1 gap-y-0.5">
               {post.author?.metaBn ? (
                 <>
-                  <span className="truncate">{post.author.metaBn}</span>
+                  <span className="truncate">{text(post.author.metaBn, post.author.metaEn)}</span>
                   <span aria-hidden>·</span>
                 </>
               ) : null}
@@ -206,7 +226,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
                 <>
                   <span aria-hidden>·</span>
                   <span className="whitespace-nowrap font-medium text-primary">
-                    {fmt(post.referenceCount)} রেফারেন্স
+                    {fmt(post.referenceCount, locale)} {t("label.references")}
                   </span>
                 </>
               ) : null}
@@ -220,7 +240,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
             {post.stats.views > 0 ? (
               <span className="inline-flex shrink-0 items-center gap-1 tabular">
                 <Eye className="size-3" aria-hidden />
-                {fmt(post.stats.views)}
+                {fmt(post.stats.views, locale)}
               </span>
             ) : null}
           </div>
@@ -231,7 +251,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
       <div className={cn(CONTENT_COLUMN, "pb-4 pt-1")}>
         <Link href={post.href} className="block">
           <h3 className="font-display text-[1rem] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
-            {post.titleBn}
+            {text(post.titleBn, post.titleEn)}
           </h3>
         </Link>
 
@@ -249,14 +269,14 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
               </p>
             ) : null}
             {post.refBn ? (
-              <p className="mt-2 text-[0.6875rem] font-medium text-primary">{post.refBn}</p>
+              <p className="mt-2 text-[0.6875rem] font-medium text-primary">{text(post.refBn, post.refEn)}</p>
             ) : null}
           </div>
         ) : null}
 
         {post.rulingBn ? (
           <div className="mt-2.5 border-l-2 border-primary/50 bg-primary-soft/60 px-3.5 py-3">
-            <p className="eyebrow mb-1 text-primary-soft-foreground">ফতোয়ার জবাব</p>
+            <p className="eyebrow mb-1 text-primary-soft-foreground">{t("label.ruing")}</p>
             <p className="text-[0.875rem] font-medium leading-relaxed text-primary-soft-foreground">
               {post.rulingBn}
             </p>
@@ -272,7 +292,7 @@ export function PostCard({ post, className }: { post: ResolvedPost; className?: 
         {post.contextBn ? (
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
             <Badge tone="neutral" size="xs">
-              {post.contextBn}
+              {text(post.contextBn, post.contextEn)}
             </Badge>
           </div>
         ) : null}

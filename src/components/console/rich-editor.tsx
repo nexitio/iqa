@@ -249,7 +249,9 @@ export function RichTextEditor({
       const start = el.selectionStart;
       const end = el.selectionEnd;
       const chosen = el.value.slice(start, end);
-      const inner = chosen || (marker === "**" ? "গুরুত্বপূর্ণ" : "প্রবল");
+      const inner =
+        chosen ||
+        t(marker === "**" ? "console.editorBoldDefault" : "console.editorItalicDefault");
       const text = `${el.value.slice(0, start)}${marker}${inner}${marker}${el.value.slice(end)}`;
       const cursor = start + marker.length;
       return { text, start: cursor, end: cursor + inner.length };

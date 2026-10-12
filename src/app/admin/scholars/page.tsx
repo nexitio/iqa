@@ -3,7 +3,7 @@ import { BadgeCheck, Building2, GraduationCap, UserPlus, Users } from "@/compone
 import { SCHOLAR_APPLICATIONS } from "@/lib/data/admin";
 import { DEPARTMENTS } from "@/lib/data/departments";
 import { SCHOLARS } from "@/lib/data/scholars";
-import { T } from "@/components/i18n-text";
+import { Digits, Pick, T } from "@/components/i18n-text";
 import {
   Button,
   Callout,
@@ -13,7 +13,6 @@ import {
   SectionHeader,
   StatTile,
 } from "@/components/ui";
-import { toBnDigits } from "@/lib/bn";
 import { ApplicationBoard } from "./application-board";
 import { ScholarDirectory } from "./scholar-directory";
 
@@ -31,7 +30,7 @@ export default function AdminScholarsPage() {
       <PageHeader
         eyebrow={<T k="admin.title" />}
         title={<T k="admin.scholarsTable" />}
-        description="আলেম যোগ করা, যোগ্যতা যাচাই করা এবং বিভাগ নির্ধারণ করা — এই তিনটিই প্রশ্ন রাউটিংয়ের ভিত্তি। কোনো বিভাগে আলেম না থাকলে সেই বিভাগের প্রশ্ন উত্তরহীন থেকে যায়।"
+        description={<T k="admin.scholars.intro" />}
         icon={Users}
         tone="admin"
         actions={
@@ -40,7 +39,7 @@ export default function AdminScholarsPage() {
               <T k="admin.addScholar" />
             </Button>
             <Button href="/admin/departments" variant="outline" icon={Building2}>
-              বিভাগ ব্যবস্থাপনা
+              <T k="admin.departmentManagement" />
             </Button>
           </>
         }
@@ -49,42 +48,59 @@ export default function AdminScholarsPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
           label={<T k="admin.totalScholars" />}
-          value={toBnDigits(SCHOLARS.length)}
+          value={<Digits value={SCHOLARS.length} />}
           icon={GraduationCap}
           tone="scholar"
-          hint={`${toBnDigits(totalAnswers)}টি উত্তর মোট`}
+          hint={<T k="admin.scholars.totalAnswersHint" vars={{ count: totalAnswers }} />}
         />
         <StatTile
           label={<T k="label.verifiedScholar" />}
-          value={toBnDigits(verified)}
+          value={<Digits value={verified} />}
           icon={BadgeCheck}
           tone="success"
           hint={
-            unverified > 0
-              ? `${toBnDigits(unverified)}টি প্রোফাইল এখনো যাচাই হয়নি`
-              : "সবাই যাচাইকৃত"
+            unverified > 0 ? (
+              <T k="admin.scholars.unverifiedHint" vars={{ count: unverified }} />
+            ) : (
+              <T k="admin.scholars.allVerified" />
+            )
           }
         />
         <StatTile
           label={<T k="admin.pendingApplications" />}
-          value={toBnDigits(pending)}
+          value={<Digits value={pending} />}
           icon={UserPlus}
           tone={pending > 0 ? "warning" : "success"}
-          hint="যাচাই বাকি"
+          hint={<T k="admin.scholars.awaitingVerification" />}
         />
         <StatTile
-          label="বিভাগ কভারেজ"
-          value={`${toBnDigits(covered)}/${toBnDigits(DEPARTMENTS.length)}`}
+          label={<T k="admin.scholars.deptCoverage" />}
+          value={
+            <>
+              <Digits value={covered} />/<Digits value={DEPARTMENTS.length} />
+            </>
+          }
           icon={Building2}
           tone={covered === DEPARTMENTS.length ? "success" : "warning"}
-          hint={covered === DEPARTMENTS.length ? "প্রতিটি বিভাগে আলেম আছে" : "কিছু বিভাগে আলেম নেই"}
+          hint={
+            <T
+              k={
+                covered === DEPARTMENTS.length
+                  ? "admin.scholars.allDeptsCovered"
+                  : "admin.scholars.someDeptsUncovered"
+              }
+            />
+          }
         />
       </div>
 
       {unverified > 0 ? (
-        <Callout tone="warning" icon={BadgeCheck} title="যাচাই বাকি প্রোফাইল">
-          {toBnDigits(unverified)}জন আলেমের প্রোফাইল এখনো যাচাই করা হয়নি। যাচাইকৃত আলেমরা প্রশ্ন রাউটিংয়ে অগ্রাধিকার পান,
-          তাই যোগ্যতা দেখে যাচাই সম্পন্ন করুন।
+        <Callout
+          tone="warning"
+          icon={BadgeCheck}
+          title={<T k="admin.scholars.pendingProfiles" />}
+        >
+          <T k="admin.scholars.pendingProfilesBody" vars={{ count: unverified }} />
         </Callout>
       ) : null}
 
@@ -96,8 +112,8 @@ export default function AdminScholarsPage() {
         <CardHeader
           icon={Building2}
           tone="info"
-          title="বিভাগ অনুসারে আলেম বণ্টন"
-          subtitle="প্রতিটি বিভাগে কতজন আলেম দায়িত্বে আছেন, এবং কতটি প্রশ্ন এসেছে"
+          title={<T k="admin.scholars.byDepartment" />}
+          subtitle={<T k="admin.scholars.byDepartmentHelp" />}
         />
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {DEPARTMENTS.map((department) => {
@@ -111,17 +127,20 @@ export default function AdminScholarsPage() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-[0.8125rem] font-semibold leading-snug text-foreground">
-                    {department.name.bn}
+                    <Pick value={department.name} />
                   </p>
                   <span className="shrink-0 rounded-md bg-surface px-1.5 py-0.5 text-[0.6875rem] font-semibold tabular text-muted-foreground">
-                    {toBnDigits(department.scholarIds.length)} জন
+                    <T k="admin.scholars.deptScholarCount" vars={{ count: department.scholarIds.length }} />
                   </span>
                 </div>
                 <p className="mt-1.5 line-clamp-2 text-[0.6875rem] leading-relaxed text-subtle-foreground">
-                  {names.length > 0 ? names.join("، ") : "এখনো কোনো আলেম দায়িত্বে নেই"}
+                  {names.length > 0 ? names.join("، ") : <T k="admin.scholars.noScholars" />}
                 </p>
                 <p className="mt-2 text-[0.6875rem] tabular text-muted-foreground">
-                  {toBnDigits(department.stats.questions)}টি প্রশ্ন · {toBnDigits(department.stats.answered)}টি উত্তর
+                  <T
+                    k="admin.scholars.deptStats"
+                    vars={{ questions: department.stats.questions, answers: department.stats.answered }}
+                  />
                 </p>
               </li>
             );
@@ -132,26 +151,26 @@ export default function AdminScholarsPage() {
       <SectionHeader
         size="sm"
         icon={Users}
-        title="প্রোফাইল যাচাইয়ের নীতি"
-        description="যাচাই ছাড়া আলেম প্রশ্ন পাবেন না"
+        title={<T k="admin.scholars.policyTitle" />}
+        description={<T k="admin.scholars.policyIntro" />}
       />
       <Card>
         <ul className="space-y-2.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
           <li className="flex gap-2">
             <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-            দাওরা-এ-হাদীস, ইফতা কোর্স বা সমমানের যোগ্যতা ছাড়া প্রোফাইল অনুমোদন করা হয় না।
+            <T k="admin.scholars.policy1" />
           </li>
           <li className="flex gap-2">
             <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-            প্রতিটি আলেমকে তাঁর প্রকৃত বিশেষজ্ঞতার বিভাগে রাখুন — অতিরিক্ত বিভাগ দিলে ভুল প্রশ্ন চলে যায়।
+            <T k="admin.scholars.policy2" />
           </li>
           <li className="flex gap-2">
             <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-            একাধিক বিভাগে থাকা আলেমের জন্য প্রধান বিভাগ নির্ধারণ করা বাধ্যতামূলক, কারণ রাউটিং প্রথমে সেখানেই যায়।
+            <T k="admin.scholars.policy3" />
           </li>
           <li className="flex gap-2">
             <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-            যাচাই প্রত্যাহার করলে প্রোফাইল পাবলিক থাকে কিন্তু প্রশ্ন পাওয়া বন্ধ হয় — এবং সেটি অডিট লগে লেখা থাকে।
+            <T k="admin.scholars.policy4" />
           </li>
         </ul>
       </Card>

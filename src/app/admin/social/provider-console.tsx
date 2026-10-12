@@ -26,6 +26,7 @@ import {
   Switch,
 } from "@/components/ui";
 import { relativeTime } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import {
   deleteSocialProvider,
   inspectSocialProvider,
@@ -59,16 +60,24 @@ import { ProviderForm, draftFrom, draftToInput, type Draft } from "./provider-fo
  * this page hiding itself is convenience and never the control.
  */
 
+/**
+ * A notice held as a key and its vars rather than a finished sentence, so that
+ * switching language while it is on screen re-renders it instead of leaving one
+ * language's sentence behind.
+ */
+type Message = { key: string; vars?: Record<string, string | number> };
+
 export function ProviderConsole() {
+  const { t, pick, locale } = useI18n();
   /** `null` while the first read is in flight, so the list can be a skeleton. */
   const [providers, setProviders] = useState<AdminSocialProvider[] | null>(null);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   /** The provider whose form is open. One at a time: the forms are long. */
   const [openId, setOpenId] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const [lead, setLead] = useState<string | null>(null);
+  const [lead, setLead] = useState<Message | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Message | null>(null);
   /** The one thing that could not be sent, per form. */
   const [blocked, setBlocked] = useState<Record<string, string>>({});
   const [inspections, setInspections] = useState<Record<string, ProviderInspection>>({});
@@ -80,7 +89,7 @@ export function ProviderConsole() {
   const applyLoaded = useCallback((result: AuthResult<AdminSocialProvider[]>) => {
     if (!result.ok) {
       setProviders([]);
-      setLead("প্রোভাইডার তালিকা আনা যায়নি");
+      setLead({ key: "admin.social.loadFailed" });
       setDetail(result.message);
       return;
     }
@@ -113,8 +122,8 @@ export function ProviderConsole() {
     };
   }, [applyLoaded]);
 
-  function fail(nextLead: string, message: string) {
-    setLead(nextLead);
+  function fail(nextLeadKey: string, message: string) {
+    setLead({ key: nextLeadKey });
     setDetail(message);
     setNotice(null);
   }
@@ -155,14 +164,14 @@ export function ProviderConsole() {
     setBusy(null);
 
     if (!result.ok) {
-      fail("সংরক্ষণ করা যায়নি", result.message);
+      fail("admin.social.saveFailed", result.message);
       return;
     }
 
     applyProvider(result.data);
     setLead(null);
     setDetail(null);
-    setNotice(`${result.data.name.bn} সংরক্ষিত হয়েছে।`);
+    setNotice({ key: "admin.social.saved", vars: { name: pick(result.data.name) } });
   }
 
   async function toggleEnabled(provider: AdminSocialProvider, enabled: boolean) {
@@ -172,16 +181,15 @@ export function ProviderConsole() {
     setBusy(null);
 
     if (!result.ok) {
-      fail("অবস্থা বদলানো যায়নি", result.message);
+      fail("admin.social.toggleFailed", result.message);
       return;
     }
 
     applyProvider(result.data);
-    setNotice(
-      enabled
-        ? `${result.data.name.bn} চালু করা হয়েছে — এখন সাইন-ইন পাতায় এর বোতাম দেখাবে।`
-        : `${result.data.name.bn} বন্ধ করা হয়েছে — সাইন-ইন পাতায় আর দেখাবে না।`,
-    );
+    setNotice({
+      key: enabled ? "admin.social.enabledNotice" : "admin.social.disabledNotice",
+      vars: { name: pick(result.data.name) },
+    });
   }
 
   async function inspect(provider: AdminSocialProvider) {
@@ -191,7 +199,7 @@ export function ProviderConsole() {
     setBusy(null);
 
     if (!result.ok) {
-      fail("যাচাই করা যায়নি", result.message);
+      fail("admin.social.inspectFailed", result.message);
       return;
     }
 
@@ -208,13 +216,13 @@ export function ProviderConsole() {
     setConfirming(null);
 
     if (!result.ok) {
-      fail("মুছে ফেলা যায়নি", result.message);
+      fail("admin.social.deleteFailed", result.message);
       return;
     }
 
     setProviders((prev) => (prev ? prev.filter((row) => row.id !== provider.id) : prev));
     setOpenId((prev) => (prev === provider.id ? null : prev));
-    setNotice(`${provider.name.bn} মুছে ফেলা হয়েছে।`);
+    setNotice({ key: "admin.social.deleted", vars: { name: pick(provider.name) } });
   }
 
   /**
@@ -234,14 +242,14 @@ export function ProviderConsole() {
   return (
     <div className="space-y-5">
       {lead ? (
-        <Callout tone="danger" icon={AlertTriangle} title={lead}>
+        <Callout tone="danger" icon={AlertTriangle} title={t(lead.key, lead.vars)}>
           {detail}
         </Callout>
       ) : null}
 
       {notice ? (
-        <Callout tone="success" icon={BadgeCheck} title="সম্পন্ন">
-          {notice}
+        <Callout tone="success" icon={BadgeCheck} title={t("admin.social.done")}>
+          {t(notice.key, notice.vars)}
         </Callout>
       ) : null}
 
@@ -249,8 +257,8 @@ export function ProviderConsole() {
         <CardHeader
           icon={KeyRound}
           tone="admin"
-          title="প্রোভাইডারসমূহ"
-          subtitle="সাইন-ইন পাতায় ঠিক যেসব বোতাম এই তালিকায় চালু আছে সেগুলোই দেখা যায় — বাকিগুলো অদৃশ্য থাকে।"
+          title={t("admin.social.providersTitle")}
+          subtitle={t("admin.social.providersSubtitle")}
           action={
             <Button
               size="sm"
@@ -260,7 +268,7 @@ export function ProviderConsole() {
               disabled={providers === null}
               onClick={() => void refresh()}
             >
-              রিফ্রেশ
+              {t("admin.social.refresh")}
             </Button>
           }
         />
@@ -268,9 +276,13 @@ export function ProviderConsole() {
         {providers === null ? (
           <SkeletonList count={2} />
         ) : providers.length === 0 ? (
-          <Callout tone="warning" icon={AlertTriangle} className="mt-5" title="কোনো প্রোভাইডার নেই">
-            সিড করা গুগল ও ফেসবুক সারি পাওয়া যায়নি। সারিগুলো ফিরিয়ে আনতে server/scripts/seed.ts চালান —
-            এখানে যোগ করা যায় না, কারণ নতুন প্রোভাইডারের endpoints ও claim ম্যাপিং কোডের অংশ।
+          <Callout
+            tone="warning"
+            icon={AlertTriangle}
+            className="mt-5"
+            title={t("admin.social.noneTitle")}
+          >
+            {t("admin.social.noneBody")}
           </Callout>
         ) : (
           <div className="mt-5 space-y-4">
@@ -288,7 +300,7 @@ export function ProviderConsole() {
                     title={
                       <span className="flex flex-wrap items-center gap-2">
                         {providerMark(provider.slug)}
-                        {provider.name.bn}
+                        {pick(provider.name)}
                         <span className="font-mono text-[0.75rem] font-normal text-subtle-foreground">
                           /{provider.slug}
                         </span>
@@ -296,30 +308,32 @@ export function ProviderConsole() {
                     }
                     subtitle={
                       <span>
-                        সর্বশেষ পরিবর্তন {relativeTime(provider.updatedAt, "bn")}
-                        {provider.updatedBy ? ` · ${provider.updatedBy}` : ""} ·{" "}
+                        {t("admin.social.updatedAt", {
+                          at: relativeTime(provider.updatedAt, locale),
+                        })}{" "}
                         {provider.hasClientSecret
-                          ? "সিক্রেট সংরক্ষিত আছে"
-                          : "কোনো সিক্রেট সংরক্ষিত নেই"}
+                          ? t("admin.social.secretStored")
+                          : t("admin.social.secretMissing")}
+                        {provider.updatedBy ? ` · ${provider.updatedBy}` : ""}
                       </span>
                     }
                     action={
                       <div className="flex items-center gap-2">
                         {placeholder ? (
                           <Badge tone="warning" size="xs">
-                            প্লেসহোল্ডার
+                            {t("admin.social.placeholder")}
                           </Badge>
                         ) : null}
                         <StatusBadge
                           status={provider.enabled ? "active" : "inactive"}
-                          label={provider.enabled ? "চালু" : "বন্ধ"}
+                          label={provider.enabled ? t("admin.social.on") : t("admin.social.off")}
                         />
                         <Button
                           size="sm"
                           variant={open ? "ghost" : "outline"}
                           onClick={() => setOpenId(open ? null : provider.id)}
                         >
-                          {open ? "গোপন করুন" : "কনফিগার"}
+                          {open ? t("admin.social.hide") : t("admin.social.configure")}
                         </Button>
                       </div>
                     }
@@ -328,9 +342,13 @@ export function ProviderConsole() {
                   {open && draft ? (
                     <div className="mt-5">
                       {placeholder ? (
-                        <Callout tone="warning" icon={AlertTriangle} className="mb-5" title="আসল ক্রেডেনশিয়াল বসানো হয়নি">
-                          এই সারিতে এখনও প্রোভাইডারের ড্যাশবোর্ড থেকে পাওয়া ক্লায়েন্ট আইডি ও সিক্রেট বসানো হয়নি। বসিয়ে
-                          চালু করার আগে বোতামটি ক্লিক করলে প্রোভাইডার নিজেই ত্রুটি দেখাবে।
+                        <Callout
+                          tone="warning"
+                          icon={AlertTriangle}
+                          className="mb-5"
+                          title={t("admin.social.placeholderTitle")}
+                        >
+                          {t("admin.social.placeholderBody")}
                         </Callout>
                       ) : null}
 
@@ -342,20 +360,25 @@ export function ProviderConsole() {
                       />
 
                       {blocked[provider.id] ? (
-                        <Callout tone="danger" icon={AlertTriangle} className="mt-4" title="এখনই ঠিক করতে হবে">
-                          {blocked[provider.id]}
+                        <Callout
+                          tone="danger"
+                          icon={AlertTriangle}
+                          className="mt-4"
+                          title={t("admin.social.fixNow")}
+                        >
+                          {t(blocked[provider.id])}
                         </Callout>
                       ) : null}
 
                       {info ? (
                         <div className="mt-4 rounded-card border border-border bg-surface p-4">
                           <p className="text-[0.8125rem] font-semibold text-foreground">
-                            প্রোভাইডারের ড্যাশবোর্ডে বসানোর তথ্য
+                            {t("admin.social.dashboardTitle")}
                           </p>
 
                           <div className="mt-3">
                             <p className="text-[0.6875rem] uppercase tracking-wide text-subtle-foreground">
-                              Redirect URI — হুবহু একই অক্ষরে
+                              {t("admin.social.redirectLabel")}
                             </p>
                             <div className="mt-1 flex items-start gap-2">
                               <code className="min-w-0 flex-1 break-all rounded-lg border border-border bg-surface-2 px-2.5 py-2 font-mono text-[0.75rem] text-foreground">
@@ -365,16 +388,16 @@ export function ProviderConsole() {
                                 size="icon-sm"
                                 variant="outline"
                                 icon={copied === "redirect" ? Check : Copy}
-                                aria-label="Redirect URI কপি করুন"
+                                aria-label={t("admin.social.copyRedirect")}
                                 onClick={() => void copy(info.redirectUri, "redirect")}
                               />
                             </div>
                           </div>
 
                           <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted-foreground">
-                            সিক্রেটটি পাঠানো ও ডিক্রিপ্ট করা গেছে — অর্থাৎ এই ডিপ্লয়মেন্টের{" "}
-                            <span className="font-mono">ILM_SECRET_KEY</span> অপরিবর্তিত আছে এবং কনফিগারেশনটি পাঠানোর মতো
-                            অবস্থায় আছে। scopes:{" "}
+                            {t("admin.social.secretVerified")}{" "}
+                            <span className="font-mono">ILM_SECRET_KEY</span>{" "}
+                            {t("admin.social.secretVerifiedTail")}{" "}
                             <span className="font-mono">{info.scopes.join(" ") || "—"}</span>
                           </p>
 
@@ -386,7 +409,7 @@ export function ProviderConsole() {
                             iconRight={ExternalLink}
                             className="mt-3"
                           >
-                            প্রোভাইডারের অনুমোদন স্ক্রিন খুলে দেখুন
+                            {t("admin.social.openAuth")}
                           </Button>
                         </div>
                       ) : null}
@@ -398,7 +421,7 @@ export function ProviderConsole() {
                             loading={busy === provider.id}
                             onClick={() => void save(provider)}
                           >
-                            সংরক্ষণ করুন
+                            {t("admin.social.save")}
                           </Button>
                           <Button
                             variant="outline"
@@ -406,7 +429,7 @@ export function ProviderConsole() {
                             disabled={busy === provider.id}
                             onClick={() => void inspect(provider)}
                           >
-                            যাচাই
+                            {t("admin.social.verify")}
                           </Button>
                         </div>
 
@@ -415,7 +438,7 @@ export function ProviderConsole() {
                             id={`${provider.id}-enabled`}
                             checked={provider.enabled}
                             onChange={(next) => void toggleEnabled(provider, next)}
-                            label="সাইন-ইন চালু"
+                            label={t("admin.social.enableSignIn")}
                             className="min-w-[15rem]"
                           />
 
@@ -428,14 +451,14 @@ export function ProviderConsole() {
                                 loading={busy === provider.id}
                                 onClick={() => void remove(provider)}
                               >
-                                মুছে ফেলুন
+                                {t("action.delete")}
                               </Button>
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setConfirming(null)}
                               >
-                                বাতিল
+                                {t("action.cancel")}
                               </Button>
                             </div>
                           ) : (
@@ -445,17 +468,20 @@ export function ProviderConsole() {
                               icon={Trash2}
                               onClick={() => setConfirming(provider.id)}
                             >
-                              মুছুন
+                              {t("admin.social.remove")}
                             </Button>
                           )}
                         </div>
                       </CardFooter>
 
                       {confirming === provider.id ? (
-                        <Callout tone="danger" icon={AlertTriangle} className="mt-4" title="মুছে ফেললে কী হবে">
-                          রেকর্ডটি যায়, এবং এই প্রোভাইডার দিয়ে তৈরি অ্যাকাউন্ট-সংযোগগুলোও (linked identities) মুছে যায়।
-                          যেসব ব্যবহারকারীর পাসওয়ার্ড নেই, তারা অন্য কোনো উপায় ছাড়া অ্যাকাউন্টে ঢুকতে পারবেন না —
-                          তাই আগে চালু বন্ধ করে দেখা যায় কি না, তা বিবেচনা করুন।
+                        <Callout
+                          tone="danger"
+                          icon={AlertTriangle}
+                          className="mt-4"
+                          title={t("admin.social.confirmTitle")}
+                        >
+                          {t("admin.social.confirmBody")}
                         </Callout>
                       ) : null}
                     </div>

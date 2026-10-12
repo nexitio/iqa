@@ -36,7 +36,7 @@ export default function ScholarQuestionsPage() {
         icon={MessageCircleQuestion}
         eyebrow={<T k="console.title" />}
         title={<T k="console.priorityInbox" />}
-        description="ব্যবহারকারীর প্রশ্ন আপনার বিভাগ অনুযায়ী রাউট হয়েছে। প্রতিটি প্রশ্নে দেখা যাবে কেন সেটি আপনার কাছে এসেছে — যাতে রাউটিং বিশ্বাসযোগ্য থাকে।"
+        description={<T k="scholar.core.inboxDescription" />}
         patterned
       />
 

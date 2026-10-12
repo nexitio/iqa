@@ -19,7 +19,6 @@ import {
 import { getScholarsByDepartment } from "@/lib/data/scholars";
 import { FATWAS, getArticlesByDepartment } from "@/lib/data/content";
 import { QUESTIONS } from "@/lib/data/questions";
-import { formatNumber } from "@/lib/bn";
 import {
   Badge,
   Button,
@@ -35,7 +34,7 @@ import {
 } from "@/components/ui";
 import { ScholarCard, departmentIcon } from "@/components/people";
 import { ArticleCard, FatwaCard, QuestionRow } from "@/components/knowledge";
-import { T, Pick } from "@/components/i18n-text";
+import { Digits, Num, T, Pick } from "@/components/i18n-text";
 
 export function generateStaticParams() {
   return DEPARTMENTS.map((department) => ({ slug: department.slug }));
@@ -118,28 +117,32 @@ export default async function DepartmentPage({
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile
             label={<T k="label.questions" />}
-            value={formatNumber(department.stats.questions, "bn")}
-            hint={`${formatNumber(answerRate, "bn")}% উত্তরের হার`}
+            value={<Num value={department.stats.questions} />}
+            hint={
+              <>
+                <Num value={answerRate} />% উত্তরের হার
+              </>
+            }
             icon={MessageCircleQuestion}
             tone="info"
           />
           <StatTile
             label={<T k="label.answers" />}
-            value={formatNumber(department.stats.answered, "bn")}
+            value={<Num value={department.stats.answered} />}
             hint="উত্তর দেওয়া প্রশ্ন"
             icon={Users}
             tone="success"
           />
           <StatTile
             label={<T k="label.articles" />}
-            value={formatNumber(department.stats.articles, "bn")}
+            value={<Num value={department.stats.articles} />}
             hint="প্রকাশিত প্রবন্ধ"
             icon={FileText}
             tone="primary"
           />
           <StatTile
             label={<T k="label.fatwas" />}
-            value={formatNumber(department.stats.fatwas, "bn")}
+            value={<Num value={department.stats.fatwas} />}
             hint="যাচাইকৃত ফিকহি রায়"
             icon={Scale}
             tone="accent"
@@ -250,7 +253,7 @@ export default async function DepartmentPage({
                     key={topic.slug}
                     href={`/topics/${topic.slug}`}
                     tone={department.tone}
-                    count={topic.contentCount}
+                    count={<Digits value={topic.contentCount} />}
                   >
                     <Pick value={topic.name} />
                   </Chip>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BookOpen, BookmarkCheck, Eye, FileText, PenLine, RefreshCw } from "@/components/icons";
 import { ArticleCard } from "@/components/knowledge";
-import { T, Num } from "@/components/i18n-text";
+import { Digits, Num, T } from "@/components/i18n-text";
 import {
   Button,
   Card,
@@ -56,42 +56,42 @@ export default async function ScholarArticlesPage({
         icon={FileText}
         eyebrow={<T k="console.title" />}
         title={<T k="console.myArticles" />}
-        description="আপনার লেখা প্রবন্ধের অবস্থা, পাঠকসংখ্যা ও পর্যালোচনার অবস্থা এক জায়গায়। খসড়া থেকে প্রকাশ পর্যন্ত পুরো প্রক্রিয়া এখানে দেখা যাবে।"
+        description={<T k="scholar.core.articlesDescription" />}
         actions={
           <Button href="/scholar/write" icon={PenLine}>
-            নতুন প্রবন্ধ লিখুন
+            <T k="scholar.core.newArticle" />
           </Button>
         }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
-          label="মোট প্রবন্ধ"
+          label={<T k="scholar.core.statTotalArticles" />}
           value={<Num value={all.length} />}
           icon={FileText}
           tone="primary"
-          hint="সব অবস্থা মিলিয়ে"
+          hint={<T k="scholar.core.hintAllStatuses" />}
         />
         <StatTile
-          label="প্রকাশিত"
+          label={<T k="status.published" />}
           value={<Num value={published.length} />}
           icon={BookOpen}
           tone="success"
-          hint="পাঠকের জন্য উন্মুক্ত"
+          hint={<T k="scholar.core.hintOpenToReaders" />}
         />
         <StatTile
-          label="খসড়া"
+          label={<T k="status.draft" />}
           value={<Num value={drafts.length} />}
           icon={PenLine}
           tone={drafts.length > 0 ? "warning" : "success"}
-          hint="অসম্পূর্ণ লেখা"
+          hint={<T k="scholar.core.hintUnfinished" />}
         />
         <StatTile
-          label="মোট পাঠ"
+          label={<T k="scholar.core.statTotalViews" />}
           value={<Num value={totalViews} />}
           icon={Eye}
           tone="info"
-          hint={`${totalSaves} বার সংরক্ষিত`}
+          hint={<T k="scholar.core.hintSavedTimes" vars={{ count: totalSaves }} />}
         />
       </div>
 
@@ -99,8 +99,8 @@ export default async function ScholarArticlesPage({
         <SectionHeader
           size="sm"
           icon={BookmarkCheck}
-          title="অবস্থা অনুসারে"
-          description="প্রবন্ধের প্রকাশনার অবস্থা বেছে নিন"
+          title={<T k="scholar.core.byStatus" />}
+          description={<T k="scholar.core.byStatusHint" />}
           className="mb-3"
         />
         <ChipList label="অবস্থা">
@@ -109,9 +109,9 @@ export default async function ScholarArticlesPage({
               key={filter.id}
               href={`/scholar/articles${filter.id === "all" ? "" : `?status=${filter.id}`}`}
               active={active === filter.id}
-              count={countFor(filter.id)}
+              count={<Digits value={countFor(filter.id)} />}
             >
-              {filter.key ? <T k={filter.key} /> : "সব"}
+              {filter.key ? <T k={filter.key} /> : <T k="scholar.core.all" />}
             </Chip>
           ))}
         </ChipList>
@@ -121,11 +121,11 @@ export default async function ScholarArticlesPage({
         <Card>
           <EmptyState
             icon={FileText}
-            title="এই অবস্থায় কোনো প্রবন্ধ নেই"
-            description="অন্য অবস্থা বেছে নিন, অথবা একটি নতুন প্রবন্ধ লেখা শুরু করুন।"
+            title={<T k="scholar.core.noArticlesInStatus" />}
+            description={<T k="scholar.core.noArticlesHint" />}
             action={
               <Button href="/scholar/write" icon={PenLine}>
-                নতুন প্রবন্ধ লিখুন
+                <T k="scholar.core.newArticle" />
               </Button>
             }
           />
@@ -137,18 +137,19 @@ export default async function ScholarArticlesPage({
               <ArticleCard article={article} layout="list" />
               <div className="flex flex-wrap items-center gap-2 px-1">
                 <Button href={`/articles/${article.slug}`} variant="ghost" size="xs">
-                  প্রিভিউ
+                  <T k="console.preview" />
                 </Button>
                 <Button href="/scholar/write" variant="ghost" size="xs" icon={PenLine}>
-                  সম্পাদনা
+                  <T k="action.edit" />
                 </Button>
                 {article.status === "changes-requested" ? (
                   <Button variant="outline" size="xs" icon={RefreshCw}>
-                    পরিবর্তন করে পাঠান
+                    <T k="scholar.core.sendChanges" />
                   </Button>
                 ) : null}
                 <span className="ml-auto text-[0.6875rem] text-subtle-foreground">
-                  {article.referenceCount}টি রেফারেন্স · {article.commentCount}টি মন্তব্য
+                  <T k="scholar.core.referencesCount" vars={{ count: article.referenceCount }} /> ·{" "}
+                  <T k="scholar.core.commentsCount" vars={{ count: article.commentCount }} />
                 </span>
               </div>
             </div>

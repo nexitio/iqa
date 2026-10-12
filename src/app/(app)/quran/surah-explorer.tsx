@@ -39,7 +39,7 @@ type RevelationFilter = "all" | RevelationPlace;
  *   should not require scrolling back to the top first.
  */
 export function SurahExplorer({ surahs = QURAN_SURAHS }: { surahs?: QuranSurah[] }) {
-  const { t, isBn } = useI18n();
+  const { t, isBn, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [revelation, setRevelation] = useState<RevelationFilter>("all");
   const [juz, setJuz] = useState<number | "all">("all");
@@ -115,7 +115,7 @@ export function SurahExplorer({ surahs = QURAN_SURAHS }: { surahs?: QuranSurah[]
               { value: "all", label: isBn ? `সব ${t("label.juz")}` : `All ${t("label.juz")}` },
               ...juzNumbers.map((n) => ({
                 value: String(n),
-                label: `${t("label.juz")} ${formatNumber(n, "bn")}`,
+                label: `${t("label.juz")} ${formatNumber(n, locale)}`,
                 // The label carries Bengali numerals, so searching "15" needs the
                 // Latin number as a keyword.
                 keywords: `${t("label.juz")} ${n}`,
@@ -127,11 +127,11 @@ export function SurahExplorer({ surahs = QURAN_SURAHS }: { surahs?: QuranSurah[]
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-0.5 text-[0.75rem] text-subtle-foreground">
         <span className="font-medium text-muted-foreground">
-          {formatNumber(filtered.length, "bn")} {isBn ? "টি সূরা" : "surahs"}
+          {formatNumber(filtered.length, locale)} {isBn ? "টি সূরা" : "surahs"}
         </span>
         <span aria-hidden>·</span>
         <span>
-          {formatNumber(withTextCount, "bn")}{" "}
+          {formatNumber(withTextCount, locale)}{" "}
           {isBn ? "টির অনুবাদ প্রস্তুত" : "with a translation ready"}
         </span>
         {filteredBySomething ? (

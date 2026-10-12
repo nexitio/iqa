@@ -25,6 +25,7 @@ import { Avatar, Button, CountPill } from "@/components/ui";
 import { LocaleToggle, ThemeToggle } from "./toggles";
 import { NotificationBell } from "./notification-bell";
 import { SIDEBAR_GROUPS, SIDEBAR_TOP, ACCOUNT_NAV } from "./nav-config";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * The bar is 3.5rem (56px), not the 4.25rem it started at.
@@ -197,6 +198,14 @@ export function Topbar() {
                 and the account menu: the things a reader checks, not the thing
                 they do. */}
 
+            {/* The language switch is bar chrome, not an account setting: it
+                changes the words on every page the reader is about to open, so
+                it has to be reachable from all of them — including signed out,
+                where the account menu does not exist at all. The theme stays
+                inside the menu, which is where a reader goes to change how the
+                app itself looks. */}
+            <LocaleToggle collapseLabels />
+
             {/* Controlled here only so the two menus cannot be open at once:
                 opening the bell closes the account menu, and opening the account
                 menu closes the bell. */}
@@ -268,15 +277,19 @@ export function Topbar() {
                         <item.icon className="size-4 text-subtle-foreground" aria-hidden />
                         {pick(item.label)}
                         {item.href === "/notifications" && unread > 0 ? (
-                          <CountPill value={unread} tone="danger" className="ml-auto" />
+                          <CountPill value={<Digits value={unread} />} tone="danger" className="ml-auto" />
                         ) : null}
                       </Link>
                     ))}
                   </div>
 
-                  {/* Locale and theme live here too, so the bar stays calm. */}
+                  {/* Theme only. Language used to sit here beside it, which put
+                      the app's whole vocabulary two clicks deep behind a
+                      signed-in face; it now lives in the bar. */}
                   <div className="flex items-center justify-between gap-2 border-t border-border p-3">
-                    <LocaleToggle />
+                    <span className="text-[0.8125rem] font-medium text-foreground">
+                      {t("settings.appearance")}
+                    </span>
                     <ThemeToggle />
                   </div>
 

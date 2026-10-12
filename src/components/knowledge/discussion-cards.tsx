@@ -18,6 +18,7 @@ import { getDepartment } from "@/lib/data/departments";
 import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime, toParagraphs } from "@/lib/utils";
 import { formatNumber } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import {
   Avatar,
   Badge,
@@ -248,7 +249,9 @@ export function DiscussionRow({ discussion }: { discussion: Discussion }) {
         <span className="mt-1 flex flex-wrap items-center gap-x-2 text-[0.6875rem] text-subtle-foreground">
           <span>{relativeTime(discussion.createdAt, locale)}</span>
           <span aria-hidden>·</span>
-          <span>{discussion.replyCount} replies</span>
+          <span>
+            <Digits value={discussion.replyCount} /> replies
+          </span>
         </span>
       </span>
     </Link>

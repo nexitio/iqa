@@ -15,6 +15,7 @@ import {
   SearchInput,
 } from "@/components/ui";
 import { departmentIcon } from "@/components/people";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * Topic explorer.
@@ -132,7 +133,7 @@ export function TopicExplorer({
                 href={`/topics/${topic.slug}`}
                 tone="danger"
                 size="md"
-                count={topic.contentCount}
+                count={<Digits value={topic.contentCount} />}
               >
                 {pick(topic.name)}
               </Chip>
@@ -198,7 +199,7 @@ export function TopicExplorer({
                       href={`/topics/${topic.slug}`}
                       tone={dept?.tone ?? "neutral"}
                       size="sm"
-                      count={topic.contentCount}
+                      count={<Digits value={topic.contentCount} />}
                       title={pick(topic.description)}
                     >
                       {pick(topic.name)}

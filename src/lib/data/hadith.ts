@@ -1,3 +1,6 @@
+// Relative and explicitly `.ts` so the dataset also loads under bare Node in
+// `scripts/verify-data.ts`, which resolves no `@/` alias.
+import { toBnDigits } from "../bn.ts";
 import type { Hadith, HadithBook, HadithCollection, HadithGrade, Localized } from "@/lib/types";
 
 /**
@@ -697,7 +700,10 @@ export const HADITHS: Hadith[] = HADITH_SEEDS.map((seed) => {
     bookNumber: book.number,
     bookName: book.name,
     number: seed.number,
-    refBn: `${collection.bn} ${seed.number}`,
+    // `refBn` is the Bangla label, so its number is a Bangla number: the two
+    // strings exist precisely so each language reads its own citation, and
+    // "সহীহ বুখারী 5027" satisfied neither of them.
+    refBn: `${collection.bn} ${toBnDigits(seed.number)}`,
     refEn: `${collection.en} ${seed.number}`,
     arabic: seed.arabic,
     translationBn: seed.bn,

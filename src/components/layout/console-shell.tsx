@@ -7,6 +7,7 @@ import { ArrowLeft, ShieldCheck, GraduationCap } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Avatar, Badge, Button, CountPill } from "@/components/ui";
+import { Digits } from "@/components/i18n-text";
 import { LocaleToggle, ThemeToggle } from "./toggles";
 import { NotificationBell } from "./notification-bell";
 import { ADMIN_NAV, SCHOLAR_NAV } from "./nav-config";
@@ -134,7 +135,9 @@ export function ConsoleShell({
                           aria-hidden
                         />
                         <span className="truncate">{pick(item.label)}</span>
-                        {item.badge ? <CountPill value={item.badge} tone="primary" className="ml-auto" /> : null}
+                        {item.badge ? (
+                          <CountPill value={<Digits value={item.badge} />} tone="primary" className="ml-auto" />
+                        ) : null}
                       </Link>
                     </li>
                   );

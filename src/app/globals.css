@@ -239,12 +239,26 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /*
+   * Every stack lists both scripts, deliberately.
+   *
+   * Font fallback is per glyph, not per element, so a Latin-first stack that is
+   * asked to set a Bangla word should fall through to a Bangla face. It used to
+   * fall through to whatever the operating system happened to install (Nirmala UI
+   * on Windows, Noto on Android) — visibly wrong next to the app's own typeface,
+   * and the reason choosing English made the Bangla still on the page look
+   * broken. The Bangla faces therefore sit *inside* the Latin stacks rather than
+   * only under `--font-bangla`.
+   */
+  --font-sans: var(--font-geist-sans), var(--font-hind-siliguri), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), var(--font-hind-siliguri), ui-monospace, monospace;
   --font-bangla: var(--font-hind-siliguri), var(--font-geist-sans), sans-serif;
   --font-display: var(--font-noto-serif-bengali), var(--font-hind-siliguri), serif;
-  --font-arabic: var(--font-noto-naskh), "Traditional Arabic", serif;
-  --font-quran: var(--font-amiri), var(--font-noto-naskh), serif;
+  /* The English heading face, which keeps the Bangla display serif behind it so a
+     Bangla title on an English page is still set in the app's own type. */
+  --font-display-en: var(--font-geist-sans), var(--font-noto-serif-bengali), var(--font-hind-siliguri), serif;
+  --font-arabic: var(--font-noto-naskh), var(--font-hind-siliguri), "Traditional Arabic", serif;
+  --font-quran: var(--font-amiri), var(--font-noto-naskh), var(--font-hind-siliguri), serif;
 }
 
 @theme {
@@ -354,7 +368,7 @@ html[lang="en"] h1,
 html[lang="en"] h2,
 html[lang="en"] h3,
 html[lang="en"] h4 {
-  font-family: var(--font-sans);
+  font-family: var(--font-display-en);
   letter-spacing: -0.02em;
 }
 

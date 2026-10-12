@@ -7,15 +7,32 @@
  * functions so it can be used from anywhere.
  */
 
+import { toBnDigits } from "./bn";
 import type { Locale, Localized } from "./types";
-
-
-/** Chrome strings are single lines, except a few curated lists (e.g. rules). */
-type LangValue = { bn: string | string[]; en: string | string[] };
-
-type Dict = Record<string, LangValue>;
+import type { Dict } from "./dictionary/types";
+/*
+ * The console areas keep their own copy files under `src/lib/dictionary/`: the
+ * scholar and admin consoles are large enough that one file per area is the
+ * difference between one writer and a merge conflict. They are folded in first
+ * so that anything declared here still wins a duplicate key.
+ */
+import { ADMIN_QUEUE } from "./dictionary/admin-queue";
+import { ADMIN_SCHOLARS } from "./dictionary/admin-scholars";
+import { ADMIN_SOCIAL } from "./dictionary/admin-social";
+import { ADMIN_USERS } from "./dictionary/admin-users";
+import { CONSOLE_UI } from "./dictionary/console-ui";
+import { SCHOLAR_CORE } from "./dictionary/scholar-core";
+import { SCHOLAR_TOOLS } from "./dictionary/scholar-tools";
 
 export const DICTIONARY: Dict = {
+  ...ADMIN_SCHOLARS,
+  ...ADMIN_QUEUE,
+  ...ADMIN_USERS,
+  ...ADMIN_SOCIAL,
+  ...SCHOLAR_CORE,
+  ...SCHOLAR_TOOLS,
+  ...CONSOLE_UI,
+
   /* -------- navigation -------- */
   "nav.home": { bn: "হোম", en: "Home" },
   "nav.quran": { bn: "কুরআন", en: "Quran" },
@@ -416,6 +433,18 @@ export const DICTIONARY: Dict = {
     bn: "আপনার লাইব্রেরি খালি। কোনো আয়াত বা প্রবন্ধ সংরক্ষণ করে শুরু করুন।",
     en: "Your library is empty. Save an ayah or article to begin.",
   },
+  "library.savedKinds": {
+    bn: "{count}টি ধরনের কনটেন্ট সংরক্ষিত আছে",
+    en: "{count} kinds of content saved",
+  },
+  "library.showingItems": {
+    bn: "{count}টি আইটেম দেখানো হচ্ছে",
+    en: "{count} items shown",
+  },
+  "library.collectionItems": {
+    bn: "সংগ্রহ “{name}” থেকে {count}টি আইটেম",
+    en: "{count} items from “{name}”",
+  },
   "library.notes": { bn: "আমার নোট", en: "My notes" },
   "library.addNote": { bn: "নোট যোগ করুন", en: "Add note" },
 
@@ -453,6 +482,7 @@ export const DICTIONARY: Dict = {
   "settings.notifications": { bn: "বিজ্ঞপ্তি", en: "Notifications" },
   "settings.quranFontSize": { bn: "কুরআনের ফন্ট সাইজ", en: "Quran font size" },
   "settings.interests": { bn: "আগ্রহের বিষয়", en: "Interests" },
+  "settings.selectedCount": { bn: "{count}টি নির্বাচিত", en: "{count} selected" },
   "settings.interestsHelp": {
     bn: "আপনার ফিড এই বিষয়গুলোর ভিত্তিতে সাজানো হবে।",
     en: "Your feed is arranged around these topics.",
@@ -662,15 +692,37 @@ export const DICTIONARY: Dict = {
     en: "For important matters, consult a local scholar directly before deciding.",
   },
   "misc.dhikrNow": { bn: "এখন পড়ুন", en: "Recite now" },
+
+  /* -------- notifications -------- */
+  "notifications.unreadCount": { bn: "{count}টি অপঠিত বিজ্ঞপ্তি", en: "{count} unread notifications" },
+  "notifications.allRead": { bn: "সব বিজ্ঞপ্তি পড়া হয়েছে", en: "All notifications read" },
+  "notifications.showingTotal": {
+    bn: "মোট {count}টি বিজ্ঞপ্তি দেখানো হচ্ছে",
+    en: "Showing {count} notifications",
+  },
 };
 
 export type TKey = keyof typeof DICTIONARY;
 
-function interpolate(template: string, vars?: Record<string, string | number>) {
+/**
+ * Substitute `{name}` placeholders.
+ *
+ * A **number** substituted into a Bangla sentence is written in Bangla digits: the
+ * dictionary says where the number goes, and "৩টি অপঠিত বিজ্ঞপ্তি" is what a Bangla
+ * reader expects — `String(3)` produced "3টি", which is neither language. Strings
+ * are left alone, because a caller that passes a string has already formatted it.
+ */
+function interpolate(
+  template: string,
+  vars: Record<string, string | number> | undefined,
+  locale: Locale,
+) {
   if (!vars) return template;
-  return template.replace(/\{(\w+)\}/g, (_, k: string) =>
-    vars[k] === undefined ? `{${k}}` : String(vars[k]),
-  );
+  return template.replace(/\{(\w+)\}/g, (_, k: string) => {
+    const value = vars[k];
+    if (value === undefined) return `{${k}}`;
+    return typeof value === "number" && locale === "bn" ? toBnDigits(value) : String(value);
+  });
 }
 
 /** Collapse a dictionary entry to a single display string. */
@@ -697,7 +749,7 @@ export function translate(
 ) {
   const entry = DICTIONARY[key];
   if (!entry) return key;
-  return interpolate(asText(entry[locale] ?? entry.bn), vars);
+  return interpolate(asText(entry[locale] ?? entry.bn), vars, locale);
 }
 
 /** Resolve a dictionary list outside React. */

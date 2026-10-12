@@ -8,6 +8,7 @@ import type { QuranAyah } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ReaderControls, type ReciterId } from "@/components/quran";
 import { Badge, Callout, Card } from "@/components/ui";
+import { Digits } from "@/components/i18n-text";
 
 /**
  * Arabic size ladder — mirrors the ReaderControls levels.
@@ -285,7 +286,7 @@ export function AyahReader({
                     copying a verse never changes the height of the page. */}
                 <div className="flex items-center gap-2.5">
                   <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-primary-soft font-display text-[0.75rem] font-bold leading-none text-primary">
-                    {toBnDigits(ayah.number)}
+                    <Digits value={ayah.number} />
                   </span>
                   <span className="text-[0.6875rem] text-subtle-foreground">
                     <span className="sr-only">

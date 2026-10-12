@@ -6,7 +6,7 @@ import type { Department } from "@/lib/types";
 import { getScholarsByDepartment } from "@/lib/data/scholars";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { formatNumber, toBnDigits } from "@/lib/bn";
+import { formatNumber } from "@/lib/bn";
 import { DepartmentTable } from "@/components/console";
 import { ScholarMiniCard, departmentIcon } from "@/components/people";
 import {
@@ -117,7 +117,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
               {t("admin.departmentManagement")}
             </h2>
             <p className="mt-0.5 text-[0.75rem] text-muted-foreground">
-              বিভাগের নাম, বিবরণ ও চিহ্ন সম্পাদনা করুন এবং কোন আলেম কোন বিভাগে দায়িত্বে আছেন তা দেখুন।
+              {t("admin.departments.managerHelp")}
             </p>
           </div>
         </div>
@@ -126,15 +126,15 @@ export function DepartmentManager({ departments }: { departments: Department[] }
             id="only-empty"
             checked={onlyEmpty}
             onChange={setOnlyEmpty}
-            label="শুধু আলেমবিহীন বিভাগ"
+            label={t("admin.departments.onlyEmpty")}
           />
         </div>
       </div>
 
       {emptyDepartments > 0 ? (
-        <Callout tone="warning" icon={Users} title="আলেমবিহীন বিভাগ আছে">
-          {toBnDigits(emptyDepartments)}টি বিভাগে এখনো কোনো আলেম নেই। এসব বিভাগের প্রশ্ন রাউট হবে না, ফলে ব্যবহারকারীর
-          প্রশ্ন উত্তরহীন থেকে যেতে পারে — দ্রুত আলেম যোগ করুন।
+        <Callout tone="warning" icon={Users} title={t("admin.departments.emptyCalloutManagerTitle")}>
+          {t("admin.departments.emptyCalloutManager", { count: emptyDepartments })}
+
         </Callout>
       ) : null}
 
@@ -142,7 +142,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
 
       <div className="space-y-3">
         <h3 className="font-display text-[0.9375rem] font-semibold text-foreground">
-          বিভাগ সম্পাদনা ও আলেম বণ্টন
+          {t("admin.departments.editAndAssign")}
         </h3>
 
         <ul className="space-y-3">
@@ -186,21 +186,23 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                         ) : null}
                         {scholars.length === 0 ? (
                           <Badge tone="warning" size="xs">
-                            আলেম নেই
+                            {t("admin.departments.noScholarBadge")}
                           </Badge>
                         ) : null}
                       </span>
                       <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.6875rem] text-subtle-foreground">
                         <span className="tabular">
-                          {toBnDigits(scholars.length)} জন আলেম
+                          {t("admin.departments.scholarCount", { count: scholars.length })}
                         </span>
                         <span className="tabular">
-                          {formatNumber(department.stats.questions, locale)}টি প্রশ্ন
+                          {t("admin.departments.questionsCount", { count: department.stats.questions })}
                         </span>
-                        <span className="tabular">উত্তর হার {toBnDigits(answerRate)}%</span>
+                        <span className="tabular">
+                          {t("admin.departments.answerRate", { percent: answerRate })}
+                        </span>
                         {unanswered > 0 ? (
                           <span className="tabular text-warning">
-                            {formatNumber(unanswered, locale)}টি উত্তরহীন
+                            {t("admin.departments.unansweredCount", { count: unanswered })}
                           </span>
                         ) : null}
                       </span>
@@ -214,14 +216,14 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                   {open ? (
                     <div className="grid gap-5 border-t border-border p-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
                       <div className="space-y-4">
-                        <Field label="নাম (বাংলা)" htmlFor={`name-${department.slug}`}>
+                        <Field label={t("admin.departments.nameField")} htmlFor={`name-${department.slug}`}>
                           <Input
                             id={`name-${department.slug}`}
                             value={draft.nameBn}
                             onChange={(e) => update(department.slug, department, { nameBn: e.target.value })}
                           />
                         </Field>
-                        <Field label="বিবরণ" htmlFor={`desc-${department.slug}`}>
+                        <Field label={t("admin.departments.descriptionField")} htmlFor={`desc-${department.slug}`}>
                           <Textarea
                             id={`desc-${department.slug}`}
                             value={draft.descriptionBn}
@@ -232,7 +234,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                           />
                         </Field>
                         <div className="grid gap-4 sm:grid-cols-2">
-                          <Field label="চিহ্ন" htmlFor={`icon-${department.slug}`}>
+                          <Field label={t("admin.departments.iconField")} htmlFor={`icon-${department.slug}`}>
                             <Select
                               id={`icon-${department.slug}`}
                               value={draft.icon}
@@ -240,7 +242,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                               options={ICON_CHOICES.map((name) => ({ value: name, label: name }))}
                             />
                           </Field>
-                          <Field label="রঙ" htmlFor={`tone-${department.slug}`}>
+                          <Field label={t("admin.departments.toneField")} htmlFor={`tone-${department.slug}`}>
                             <Select
                               id={`tone-${department.slug}`}
                               value={draft.tone}
@@ -257,8 +259,8 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                           id={`trending-${department.slug}`}
                           checked={draft.trending}
                           onChange={(v) => update(department.slug, department, { trending: v })}
-                          label="আলোচিত হিসেবে চিহ্নিত করুন"
-                          description="আলোচিত বিভাগগুলো হোমপেজ ও বিষয় তালিকায় সামনে দেখানো হয়।"
+                          label={t("admin.departments.trendingSwitch")}
+                          description={t("admin.departments.trendingSwitchHelp")}
                         />
                         <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
                           <Button
@@ -269,7 +271,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                               setOpenSlug(null);
                             }}
                           >
-                            পরিবর্তন সংরক্ষণ
+                            {t("admin.departments.saveChanges")}
                           </Button>
                           <Button
                             size="sm"
@@ -283,11 +285,11 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                               })
                             }
                           >
-                            পরিবর্তন বাতিল
+                            {t("admin.departments.discardChanges")}
                           </Button>
                           {savedSlug === department.slug ? (
                             <Badge tone="success" size="xs">
-                              সংরক্ষিত
+                              {t("admin.departments.saved")}
                             </Badge>
                           ) : null}
                         </div>
@@ -296,11 +298,11 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                       <div className="rounded-card border border-border bg-surface-2 p-4">
                         <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
                           <Users className="size-3.5" aria-hidden />
-                          দায়িত্বে থাকা আলেম
+                          {t("admin.departments.scholarsOnDuty")}
                         </p>
                         {scholars.length === 0 ? (
                           <p className="mt-2 text-[0.8125rem] leading-relaxed text-warning">
-                            এই বিভাগে কোনো আলেম নেই — প্রশ্ন রাউট হবে না।
+                            {t("admin.departments.noScholarWarning")}
                           </p>
                         ) : (
                           <ul className="mt-3 space-y-3">
@@ -309,7 +311,7 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                                 <ScholarMiniCard scholar={scholar} />
                                 {scholar.primaryDepartmentId === department.slug ? (
                                   <Chip tone={draft.tone} size="sm" className="mt-2">
-                                    প্রধান বিভাগ
+                                    {t("admin.primaryDepartment")}
                                   </Chip>
                                 ) : null}
                               </li>
@@ -318,25 +320,31 @@ export function DepartmentManager({ departments }: { departments: Department[] }
                         )}
                         <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-3">
                           <div>
-                            <dt className="text-[0.6875rem] text-subtle-foreground">প্রশ্ন</dt>
+                            <dt className="text-[0.6875rem] text-subtle-foreground">
+                              {t("admin.departments.statsQuestions")}
+                            </dt>
                             <dd className="font-display text-base font-bold tabular text-foreground">
                               {formatNumber(department.stats.questions, locale)}
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-[0.6875rem] text-subtle-foreground">উত্তর</dt>
+                            <dt className="text-[0.6875rem] text-subtle-foreground">
+                              {t("admin.departments.statsAnswers")}
+                            </dt>
                             <dd className="font-display text-base font-bold tabular text-success">
                               {formatNumber(department.stats.answered, locale)}
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-[0.6875rem] text-subtle-foreground">ফতোয়া</dt>
+                            <dt className="text-[0.6875rem] text-subtle-foreground">
+                              {t("admin.departments.statsFatwas")}
+                            </dt>
                             <dd className="font-display text-base font-bold tabular text-foreground">
                               {formatNumber(department.stats.fatwas, locale)}
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-[0.6875rem] text-subtle-foreground">অনুসারী</dt>
+                            <dt className="text-[0.6875rem] text-subtle-foreground">{t("label.followers")}</dt>
                             <dd className="font-display text-base font-bold tabular text-foreground">
                               {formatNumber(department.stats.followers, locale)}
                             </dd>
@@ -356,12 +364,11 @@ export function DepartmentManager({ departments }: { departments: Department[] }
         <CardHeader
           icon={Pencil}
           tone="info"
-          title="নতুন বিভাগ"
-          subtitle="কোন বিভাগ যুক্ত করা হবে তা প্ল্যাটফর্মের বিষয়-কাঠামো নির্ধারণ করে"
+          title={t("admin.departments.newTitle")}
+          subtitle={t("admin.departments.newHelp")}
         />
         <p className="mt-3 text-[0.8125rem] leading-relaxed text-muted-foreground">
-          নতুন বিভাগ তৈরি করা ডেটাবেস পরিবর্তন ছাড়া সম্ভব নয়, তাই এই কাজটি অ্যাডমিন API যুক্ত হওয়ার পরেই চালু হবে।
-          আপাতত বিদ্যমান {toBnDigits(departments.length)}টি বিভাগ সম্পাদনা করা যাবে।
+          {t("admin.departments.newBody", { count: departments.length })}
         </p>
       </Card>
     </section>

@@ -15,7 +15,8 @@ import type { Question } from "@/lib/types";
 import { ROUTING_CANDIDATES } from "@/lib/data/questions";
 import { getDepartment } from "@/lib/data/departments";
 import { getScholar } from "@/lib/data/scholars";
-import { findDistrict, formatNumber, toBnDigits } from "@/lib/bn";
+import { findDistrict, formatNumber } from "@/lib/bn";
+import { Digits } from "@/components/i18n-text";
 import { useI18n } from "@/lib/i18n";
 import { cn, relativeTime } from "@/lib/utils";
 import { ScholarMiniCard } from "@/components/people";
@@ -33,12 +34,14 @@ import {
 
 type FilterId = "all" | "unanswered" | "urgent" | "fatwa" | "routed-none";
 
-const FILTERS: { id: FilterId; label: string; tone?: "danger" | "warning" | "accent" }[] = [
-  { id: "all", label: "সব প্রশ্ন" },
-  { id: "unanswered", label: "উত্তরহীন" },
-  { id: "routed-none", label: "রাউট হয়নি", tone: "danger" },
-  { id: "urgent", label: "জরুরি", tone: "warning" },
-  { id: "fatwa", label: "ফতোয়া চাওয়া", tone: "accent" },
+/* Keys rather than labels: the array lives at module scope, where no hook can
+ * translate it, so the label is resolved at render time. */
+const FILTERS: { id: FilterId; labelKey: string; tone?: "danger" | "warning" | "accent" }[] = [
+  { id: "all", labelKey: "admin.queue.filterAll" },
+  { id: "unanswered", labelKey: "admin.queue.unanswered" },
+  { id: "routed-none", labelKey: "admin.queue.notRouted", tone: "danger" },
+  { id: "urgent", labelKey: "admin.queue.filterUrgent", tone: "warning" },
+  { id: "fatwa", labelKey: "admin.queue.filterFatwa", tone: "accent" },
 ];
 
 const HOURS_24 = 24 * 60 * 60 * 1000;
@@ -132,9 +135,12 @@ export function QuestionMonitor({
   return (
     <div className={cn("space-y-4", className)}>
       {stale.length > 0 ? (
-        <Callout tone="warning" icon={AlertTriangle} title="২৪ ঘণ্টার বেশি উত্তরহীন প্রশ্ন">
-          {toBnDigits(stale.length)}টি প্রশ্ন একদিনের বেশি সময় ধরে উত্তরহীন। নিচের তালিকায় এই প্রশ্নগুলোর বিভাগ দেখে নিন —
-          যে বিভাগে আলেম সংকট, সেখানে নতুন আলেম যোগ করতে হবে।
+        <Callout
+          tone="warning"
+          icon={AlertTriangle}
+          title={t("admin.queue.staleTitle")}
+        >
+          {t("admin.queue.staleBody", { count: stale.length })}
         </Callout>
       ) : null}
 
@@ -147,8 +153,10 @@ export function QuestionMonitor({
             onClick={() => setFilter(option.id)}
             aria-pressed={filter === option.id}
           >
-            {option.label}
-            <span className="ml-1 tabular opacity-70">{toBnDigits(counts[option.id])}</span>
+            {t(option.labelKey)}
+            <span className="ml-1 tabular opacity-70">
+              <Digits value={counts[option.id]} />
+            </span>
           </Button>
         ))}
       </div>
@@ -158,8 +166,8 @@ export function QuestionMonitor({
           <CardHeader
             icon={Clock}
             tone="warning"
-            title="উত্তরহীন ব্যাকলগ"
-            subtitle="সর্বোচ্চ অপেক্ষার প্রশ্নগুলো আগে — কোন বিভাগে আলেম দরকার তা এখানেই বোঝা যায়"
+            title={t("admin.queue.backlogCard")}
+            subtitle={t("admin.queue.backlogCardHelp")}
           />
           <ul className="mt-4 space-y-2.5">
             {stale.slice(0, 5).map((question) => {
@@ -182,7 +190,7 @@ export function QuestionMonitor({
                     </span>
                     <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem] text-subtle-foreground">
                       <span className="tabular">
-                        অপেক্ষা {toBnDigits(ageHoursOf(question.createdAt, now))} ঘণ্টা
+                        {t("admin.queue.waitingHours", { count: ageHoursOf(question.createdAt, now) })}
                       </span>
                       <span aria-hidden>·</span>
                       <span>{pick(findDistrict(question.askerDistrict).name)}</span>
@@ -196,7 +204,7 @@ export function QuestionMonitor({
                   </span>
                   {!hasAlm ? (
                     <Badge tone="danger" size="xs" icon={AlertTriangle}>
-                      বিভাগে আলেম নেই
+                      {t("admin.queue.departmentHasNoScholars")}
                     </Badge>
                   ) : null}
                   <Button
@@ -206,7 +214,7 @@ export function QuestionMonitor({
                     disabled={wasNudged}
                     onClick={() => setNudged((prev) => [...prev, question.id])}
                   >
-                    {wasNudged ? "তাগাদা পাঠানো হয়েছে" : "আলেমদের তাগাদা দিন"}
+                    {wasNudged ? t("admin.queue.nudgeSent") : t("admin.queue.nudgeScholars")}
                   </Button>
                 </li>
               );
@@ -218,8 +226,8 @@ export function QuestionMonitor({
       {visible.length === 0 ? (
         <EmptyState
           icon={MessageCircleQuestion}
-          title="এই ফিল্টারে কোনো প্রশ্ন নেই"
-          description="রাউটিং স্বাভাবিক আছে — অন্য ফিল্টার দেখুন।"
+          title={t("admin.queue.emptyTitle")}
+          description={t("admin.queue.emptyBody")}
           className="rounded-panel border border-border bg-surface"
         />
       ) : (
@@ -267,12 +275,14 @@ export function QuestionMonitor({
                         ) : null}
                         {candidates.length === 0 ? (
                           <Badge tone="danger" size="xs" icon={Route}>
-                            রাউট হয়নি
+                            {t("admin.queue.notRouted")}
                           </Badge>
                         ) : null}
                         {isStaleQuestion(question, now) ? (
                           <Badge tone="warning" size="xs" icon={Clock}>
-                            {toBnDigits(ageHoursOf(question.createdAt, now))} ঘণ্টা অপেক্ষা
+                            {t("admin.queue.waitingHoursBadge", {
+                              count: ageHoursOf(question.createdAt, now),
+                            })}
                           </Badge>
                         ) : null}
                       </div>
@@ -286,11 +296,15 @@ export function QuestionMonitor({
                         <span>{relativeTime(question.createdAt, locale)}</span>
                         <span aria-hidden>·</span>
                         <span className="tabular">
-                          {formatNumber(question.views, locale)} জন দেখেছেন
+                          {t("admin.queue.viewedBy", {
+                            count: formatNumber(question.views, locale),
+                          })}
                         </span>
                         <span aria-hidden>·</span>
                         <span className="tabular">
-                          {formatNumber(question.answerCount, locale)}টি উত্তর
+                          {t("admin.queue.answersCount", {
+                            count: formatNumber(question.answerCount, locale),
+                          })}
                         </span>
                       </p>
 
@@ -304,7 +318,9 @@ export function QuestionMonitor({
                             className="h-6 px-2 text-[0.6875rem]"
                           >
                             {pick(department.shortName)}
-                            {department.scholarIds.length === 0 ? " · আলেম নেই" : ""}
+                            {department.scholarIds.length === 0
+                              ? t("admin.queue.noScholarsSuffix")
+                              : ""}
                           </Chip>
                         ))}
                       </div>
@@ -314,23 +330,27 @@ export function QuestionMonitor({
                       <div className="rounded-card border border-border bg-surface-2 p-3">
                         <p className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
                           <Users className="size-3.5" aria-hidden />
-                          রাউটিং
+                          {t("admin.queue.routing")}
                         </p>
                         {candidates.length === 0 ? (
                           <p className="mt-1.5 text-[0.75rem] leading-relaxed text-danger">
-                            কোনো আলেম খুঁজে পাওয়া যায়নি — সংশ্লিষ্ট বিভাগে আলেম যোগ করা প্রয়োজন।
+                            {t("admin.queue.routingNone")}
                           </p>
                         ) : (
                           <>
                             <p className="mt-1.5 text-[0.75rem] text-muted-foreground">
-                              {formatNumber(candidates.length, locale)} জন আলেমের কাছে পাঠানো হয়েছে
+                              {t("admin.queue.sentToScholars", {
+                                count: formatNumber(candidates.length, locale),
+                              })}
                             </p>
                             {topScholar ? (
                               <div className="mt-2.5 border-t border-border pt-2.5">
                                 <ScholarMiniCard scholar={topScholar} />
                                 <p className="mt-1.5 text-[0.6875rem] tabular text-subtle-foreground">
-                                  মিল {formatNumber(top.score, locale)}% · অগ্রাধিকার{" "}
-                                  {toBnDigits(top.priority)}
+                                  {t("admin.queue.matchScore", {
+                                    score: formatNumber(top.score, locale),
+                                    priority: formatNumber(top.priority, locale),
+                                  })}
                                 </p>
                               </div>
                             ) : null}
@@ -341,10 +361,10 @@ export function QuestionMonitor({
                       <div className="rounded-card border border-border bg-surface-2 p-3">
                         <div className="flex items-center justify-between">
                           <p className="text-[0.6875rem] font-semibold uppercase tracking-wide text-subtle-foreground">
-                            বিভাগ কভারেজ
+                            {t("admin.queue.departmentCoverage")}
                           </p>
                           <span className="text-[0.6875rem] tabular text-muted-foreground">
-                            {toBnDigits(coverage)}%
+                            <Digits value={coverage} />%
                           </span>
                         </div>
                         <Progress
@@ -353,7 +373,10 @@ export function QuestionMonitor({
                           tone={coverage === 100 ? "success" : coverage > 0 ? "warning" : "danger"}
                         />
                         <p className="mt-2 text-[0.625rem] leading-relaxed text-subtle-foreground">
-                          {toBnDigits(departmentsWithScholars)}/{toBnDigits(departments.length)} বিভাগে আলেম আছেন
+                          {t("admin.queue.coverageHint", {
+                            covered: departmentsWithScholars,
+                            total: departments.length,
+                          })}
                         </p>
                       </div>
 
@@ -364,7 +387,7 @@ export function QuestionMonitor({
                         full
                         iconRight={ArrowRight}
                       >
-                        প্রশ্নটি দেখুন
+                        {t("admin.queue.viewQuestion")}
                       </Button>
                     </div>
                   </div>

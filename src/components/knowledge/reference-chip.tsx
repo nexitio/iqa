@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { BookOpen, BookMarked, ChevronDown, ChevronRight, ScrollText, Quote } from "lucide-react";
+import { toBnDigits } from "@/lib/bn";
 import type { ContentReference } from "@/lib/types";
 import { citationDetailFor } from "@/lib/reference-index";
 import { useI18n } from "@/lib/i18n";
+import { Digits } from "@/components/i18n-text";
 import { cn } from "@/lib/utils";
 import { Badge, ReferenceDetailDialog, type CitationView, type Tone } from "@/components/ui";
 
@@ -50,7 +52,7 @@ export function ReferenceCount({ count, className }: { count: number; className?
   const { t } = useI18n();
   return (
     <Badge tone="primary" size="xs" icon={BookMarked} className={cn("tabular", className)}>
-      {count} {t("label.references")}
+      <Digits value={count} /> {t("label.references")}
     </Badge>
   );
 }
@@ -248,7 +250,7 @@ export function ReferenceList({
           {heading}
         </h3>
         <Badge tone="neutral" size="xs" className="tabular">
-          {references.length} {t("label.references")}
+          {isBn ? toBnDigits(references.length) : references.length} {t("label.references")}
         </Badge>
       </header>
 
